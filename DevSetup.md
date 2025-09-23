@@ -1,4 +1,4 @@
-# Project 3
+# Dev Setup Guide
 ## Installing Dependencies 
 
 * ### [VsCode](https://code.visualstudio.com/)  (recommended)
