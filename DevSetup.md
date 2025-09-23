@@ -1,9 +1,3 @@
----
-title: DevSetup
-layout: template
-filename: DevSetup.md
---- 
-
 # Project 3
 ## Installing Dependencies 
 
