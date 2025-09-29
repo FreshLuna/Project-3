@@ -1,4 +1,4 @@
-# Dev Setup Guide
+# Dev Frontend Setup Guide
 ## Installing Dependencies 
 
 * ### [VsCode](https://code.visualstudio.com/)  (recommended)
