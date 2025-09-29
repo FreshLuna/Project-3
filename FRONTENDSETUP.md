@@ -25,3 +25,4 @@ npm install # for installing the packages
 npm run dev # quick for running the project
 npm run build # slow to create publishable optimised build
 ```
+**File Location:** the front end project files are in the folder called "_.../program/src_"
