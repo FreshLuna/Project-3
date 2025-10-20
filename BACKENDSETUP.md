@@ -5,7 +5,7 @@
 3.  Run the Program: ```sh java EchoMultiServer```
 
 ## Coding the project
-1. It is important to run backend and frontend in different IDE windows, or potentiale just
+1. It is important to run backend and frontend in a different IDE window, Consider installing intelliJ.
 3. The backend files are located in the _backendp3_ folder.
 4. Make sure the backend is running while running the frontend part.
 
