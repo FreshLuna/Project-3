@@ -44,3 +44,5 @@ output/
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+Frontendp3/.svelte-kit/ambient.d.ts
+Frontendp3/.svelte-kit/generated/server/internal.js
