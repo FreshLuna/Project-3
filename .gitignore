@@ -46,3 +46,8 @@ yarn.lock
 pnpm-lock.yaml
 Frontendp3/.svelte-kit/ambient.d.ts
 Frontendp3/.svelte-kit/generated/server/internal.js
+/Frontendp3/node_modules
+/Frontendp3/.svelte-kit/generated
+/Frontendp3/.svelte-kit/generated
+/Frontendp3/.svelte-kit
+/Frontendp3/node_modules
