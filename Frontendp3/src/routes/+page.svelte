@@ -1,34 +1,34 @@
 <!--Row 1-->
 <div class="b">
-    <img class="one" src={activity1} alt="Activity 1">
-    <h3>Name of Activity</h3>
-    <h5>Activity Holder</h5>
-    <p>Date information</p>
-    <p>Age</p>
+    <img class="img" src={activity1} alt="Activity 1">
+    <h3>Juleklip for Mænd</h3>
+    <h5>Mandehørm</h5>
+    <p>🗓️ torsdag, 11. dec. kl. 12.00-17.00</p>
+    <p>🎂 15+</p>
 </div>
 <div class="b">
-    <img class="one" src={activity2} alt="Activity 2">
-    <h3>Name of Activity</h3>
-    <h5>Activity Holder</h5>
-    <p>Date information</p>
-    <p>Age</p>
+    <img class="img" src={activity2} alt="Activity 2">
+    <h3>Vinter Natteløb</h3>
+    <h5>Speedy Bambino</h5>
+    <p>🗓️ onsdag, 19. nov. kl. 20.00-23.00</p>
+    <p>🎂 16+</p>
 </div>
 <div class="b">
-    <img class="one" src={activity3} alt="Activity 3">
-    <h3>Name of Activity</h3>
-    <h5>Activity Holder</h5>
-    <p>Date information</p>
-    <p>Age</p>
+    <img class="img" src={activity3} alt="Activity 3">
+    <h3>Oplæsning af Ringenes Herrer</h3>
+    <h5>Aalborg Bibliotek</h5>
+    <p>🗓️ onsdag, 19. nov. kl. 14.00-16.00</p>
+    <p>🎂 14+</p>
 </div>
 <div class="b">
-    <img class="one" src={activity4} alt="Activity 4">
-    <h3>Name of Activity</h3>
-    <h5>Activity Holder</h5>
-    <p>Date information</p>
-    <p>Age</p>
+    <img class="img" src={activity4} alt="Activity 4">
+    <h3>Amatør Blomsterbinding</h3>
+    <h5>Interflora</h5>
+    <p>🗓️ torsdag, 27. nov. kl. 16.00-19.00</p>
+    <p>🎂 17+</p>
 </div>
 <div class="b">
-    <img class="one" src={activity5} alt="Activity 5">
+    <img class="img" src={activity5} alt="Activity 5">
     <h3>Name of Activity</h3>
     <h5>Activity Holder</h5>
     <p>Date information</p>
@@ -37,35 +37,35 @@
 
 <!--Row 2-->
 <div class="b">
-    <img class="one" src={activity6} alt="Activity 6">
+    <img class="img" src={activity6} alt="Activity 6">
     <h3>Name of Activity</h3>
     <h5>Activity Holder</h5>
     <p>Date information</p>
     <p>Age</p>
 </div>
 <div class="b">
-    <img class="one" src={activity7} alt="Activity 7">
+    <img class="img" src={activity7} alt="Activity 7">
     <h3>Name of Activity</h3>
     <h5>Activity Holder</h5>
     <p>Date information</p>
     <p>Age</p>
 </div>
 <div class="b">
-    <img class="one" src={activity8} alt="Activity 8">
+    <img class="img" src={activity8} alt="Activity 8">
     <h3>Name of Activity</h3>
     <h5>Activity Holder</h5>
     <p>Date information</p>
     <p>Age</p>
 </div>
 <div class="b">
-    <img class="one" src={activity9} alt="Activity 9">
+    <img class="img" src={activity9} alt="Activity 9">
     <h3>Name of Activity</h3>
     <h5>Activity Holder</h5>
     <p>Date information</p>
     <p>Age</p>
 </div>
 <div class="b">
-    <img class="one" src={activity10} alt="Activity 10">
+    <img class="img" src={activity10} alt="Activity 10">
     <h3>Name of Activity</h3>
     <h5>Activity Holder</h5>
     <p>Date information</p>
@@ -73,7 +73,7 @@
 </div>
 
 <style>
-/* modern font stack applied globally */
+/* font stack applied globally */
 :global(body) {
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     margin: 0;
@@ -94,7 +94,7 @@
     box-sizing: border-box;
 }
 
-.b .one {
+.b .img {
     border-radius: 12px;
     width: 100%;
     /* enforce a consistent image height so all cards look the same */
@@ -115,11 +115,23 @@
 .b h3 { font-size: 1.05rem; }
 .b h5 { font-size: 0.9rem; opacity: 0.95; }
 
+/* hover highlight; add a small lift and shadow for emphasis */
+.b {
+        transition: background-color 180ms ease, transform 140ms ease, box-shadow 180ms ease;
+}
+.b:hover,
+.b:focus-within {
+        background-color: #5e3b85ff;
+        transform: translateY(-6px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+        cursor: pointer;
+}
+
 @media (max-width: 800px) {
-  .b { width: 48%; }
+    .b { width: 48%; }
 }
 @media (max-width: 480px) {
-  .b { width: 100%; float: none; }
+    .b { width: 100%; float: none; transform: none; }
 }
 </style>
 
