@@ -1,9 +1,9 @@
-import com.sun.net.httpserver.HttpsConfigurator;
-import com.sun.net.httpserver.HttpsServer;
+import com.sun.net.httpserver.*;
 import javax.net.ssl.*;
 import java.io.*;
-import java.net.InetSocketAddress;
-import java.security.KeyStore;
+import java.net.*;
+import java.security.*;
+
 
 public class PostGetServer {
     public static void main(String[] args) throws Exception {
@@ -20,7 +20,7 @@ public class PostGetServer {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(kmf.getKeyManagers(), null, null);
 
-        // --- Create HTTPS server ---
+        // Creates HTTPS server
         HttpsServer server = HttpsServer.create(new InetSocketAddress(8443), 0);
         server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
 
@@ -29,28 +29,11 @@ public class PostGetServer {
             exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
 
-            String method = exchange.getRequestMethod();
-            String response;
-
-            switch (method) {
-                case "OPTIONS":
-                    exchange.sendResponseHeaders(204, -1);
-                    return;
-
-                case "GET":
-                    response = "test";
-                    break;
-
-                case "POST":
-                    String body = new String(exchange.getRequestBody().readAllBytes());
-                    response = body.equals(".") ? "bye" : body;
-                    break;
-
-                default:
-                    response = "Unsupported method: " + method;
-            }
+            // Compacted The methodSwitch see getHandler and postHandler to add methods :D
+            String response = methodSwitch(exchange);
 
 
+            //sends response back to client computer
             byte[] bytes = response.getBytes();
             exchange.sendResponseHeaders(200, bytes.length);
             try (OutputStream os = exchange.getResponseBody()) {
@@ -62,10 +45,34 @@ public class PostGetServer {
         server.start();
         System.out.println("HTTPS server running on https://localhost:8443/server");
     }
+
+
+
+    private static String methodSwitch(HttpExchange exchange) throws IOException {
+        String method = exchange.getRequestMethod();
+        String response;
+
+        GetHandler getHandler = new GetHandler();
+        PostHandler postHandler = new PostHandler();
+
+        switch (method) {
+            case "OPTIONS":
+                exchange.sendResponseHeaders(204, -1);
+                return "";
+
+            case "GET":
+                response = getHandler.handle(exchange);
+                break;
+
+            case "POST":
+                response = postHandler.handle(exchange);
+
+                break;
+
+            default:
+                response = "Unsupported method: " + method;
+        }
+
+        return response;
+    }
 }
-
-// en fil hver til POST, GET
-
-//POST: lave et activity, create account, modify activities, register user osv...
-
-//GET: hente activities osv.. 
