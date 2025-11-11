@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte';
+    import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles } from '@sveltestrap/sveltestrap'; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
 
     // -------- Dynamic activities (runtime fetch from static/activities.txt) --------
     let activities = [];
@@ -131,6 +132,7 @@
   </div>
 </div>
 
+<div>
     <!-- DYNAMIC ACTIVITIES -->
     <section class="dynamicActivities">
         {#if activities.length === 0}
@@ -153,7 +155,6 @@
             </div>
         {/if}
     </section>
-
 </div>
 
 <!-- CSS STYLE -->
