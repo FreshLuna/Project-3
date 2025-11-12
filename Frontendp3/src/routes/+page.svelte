@@ -128,7 +128,14 @@
         </Dropdown>
       </DropdownMenu>
     </Dropdown>
-    
+
+    <div>
+    <form action="/action_page.php">
+        <input type="radio" id="Solsikketilbud" name="Solsikketilbud" value="Solsikketilbud">
+        <label for="javascript">Solsikketilbud</label>
+    </form>
+</div>
+
   </div>
 </div>
 
