@@ -1,9 +1,18 @@
-<script>
+<script lang="ts">
     import { onMount } from 'svelte';
     import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles } from '@sveltestrap/sveltestrap'; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
 
     // -------- Dynamic activities (runtime fetch from static/activities.txt) --------
-    let activities = [];
+      type activity = {
+    imgFile: string;
+    imgUrl: string | null;
+    title: string;
+    organization: string;
+    date: string;
+    time: string;
+    age: string;
+  };
+  let activities: activity[] = [];
 
     /* Build a lookup table of image filename -> resolved URL.
     We use Vite's import.meta.glob with { eager: true } so the modules
@@ -13,6 +22,7 @@
 
     // Convert the glob result into a simple map: { 'activity1.avif': '/url/to/activity1.avif', ... }
     const imageMap = Object.fromEntries(
+        // @ts-ignore
         Object.entries(imagesGlob).map(([path, mod]) => [path.split('/').pop(), mod.default])
     );
 
@@ -28,35 +38,33 @@
      * from the file matches a key in imageMap, we attach the resolved URL to imgUrl;
      * otherwise imgUrl is null and the UI will show a placeholder.
      */
-    async function loadActivities() {
-        try {
-            const res = await fetch('/activities.txt');
-            if (!res.ok) {
-                // If the file isn't available, log and exit early.
-                console.error('Could not fetch /activities.txt', res.status);
-                return;
-            }
+  async function loadActivities() {
+    try {
+      const res = await fetch('/activities.txt');
+      if (!res.ok) {
+        console.error('Could not fetch /activities.txt', res.status);
+        return;
+      }
 
-            const raw = await res.text();
+      const raw = await res.text();
 
-            activities = raw
-                // split into lines (support both Windows and Unix line endings)
-                .split(/\r?\n/)
-                // remove whitespace-only lines
-                .map(l => l.trim())
-                .filter(Boolean)
-                // parse each line into an activity object
-                .map(line => {
-                    // split fields by pipe | and trim each field
-                    const [img, title, organization, date, time, age] = line.split('|').map(s => s?.trim());
-                    return {
-                        imgFile: img, // original filename from the text file
-                        imgUrl: imageMap[img] ?? null, // resolved URL or null if missing
-                        title: title ?? '',
-                        organization: organization ?? '',
-                        date: date ?? '',
-                        time: time ?? '',
-                        age: age ?? ''
+      activities = raw
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .map((line) => {
+          const [img, title, organization, date, time, age] = line
+            .split('|')
+            .map((s) => s?.trim());
+
+          return {
+            imgFile: img ?? '',
+            imgUrl: imageMap[img] ?? null,
+            title: title ?? '',
+            organization: organization ?? '',
+            date: date ?? '',
+            time: time ?? '',
+            age: age ?? ''
                     };
                 });
         } catch (err) {
@@ -171,13 +179,6 @@
     padding-bottom: 30px;
     display: flex;
     
-  }
-
-  .homepage {
-    padding-left: 50px;
-    padding-right: 50px;
-    padding-top: 30px;
-    align-items: center;
   }
 
   .searchbar {
