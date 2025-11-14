@@ -1,0 +1,1 @@
+{"firstname":"Joe","lastname":"Mama","age":30,"email":"yay@gmail.com","education":"AAU"}
