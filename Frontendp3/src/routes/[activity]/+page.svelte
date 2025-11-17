@@ -227,13 +227,13 @@
     }
 
     .formField input,
-    .formField select {
+    /*.formField select {
         padding: 0.5rem;
         border: 1px solid black;
         border-radius: 4px;
         box-sizing: border-box;
         min-width: 0;
-    }
+    }*/
 
     /* Width classes */
     .formField.half {
@@ -282,9 +282,9 @@
             flex-direction: column;
         }
 
-        .formRow {
+        /* .formRow {
             flex-direction: column;
-        }
+        } */
 
         .formField.half,
         .formField.quarter {

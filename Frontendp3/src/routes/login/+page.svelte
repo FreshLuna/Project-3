@@ -21,7 +21,7 @@
         </form>
         
         <p>Not registered?
-            <a href="#" style="text-decoration: none;">
+            <a href="/" style="text-decoration: none;">
                 Create an account
             </a>
         </p>

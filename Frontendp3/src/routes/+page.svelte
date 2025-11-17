@@ -1,6 +1,17 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles } from '@sveltestrap/sveltestrap'; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
+    
+    // test server request that gets a list of users
+    onMount(async () => {
+      const res = await fetch("https://localhost:8443/server");
+      const text = await res.text();
+      console.log("RAW:", text);
+      //console.log("hej")
+      //fetch("https://localhost:8443/server/users")
+      //.then(response => response.json())
+      //.then(data => console.log(data));
+    })
 
     // -------- Dynamic activities (runtime fetch from static/activities.txt) --------
       type activity = {
