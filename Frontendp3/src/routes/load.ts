@@ -2,4 +2,4 @@
 
 // fetches data through LocalHost
 
-console.log(fetch("https://localhost:8443/server/status"));
+console.log(fetch("a/status"));

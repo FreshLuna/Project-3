@@ -7,6 +7,7 @@ import java.net.*;
 import java.security.*;
 
 
+
 public class PostGetServer {
     public static void main(String[] args) throws Exception {
 
@@ -22,16 +23,25 @@ public class PostGetServer {
         // maybe use following instead of try block?
         // ks.load(new FileInputStream("keystore.jks"), passphrase);
 
-        // The specific algorithm and protocol is defined.
+        // The specific algorithm and protocol is defined
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
         kmf.init(ks, passphrase);
 
-        SSLContext sslContext = SSLContext.getInstance("TLS");
+        SSLContext sslContext = SSLContext.getInstance("TLSv1.3"); // forced TLS 1.3
         sslContext.init(kmf.getKeyManagers(), null, null);
 
         // Creates HTTPS server on localport 8443
         HttpsServer server = HttpsServer.create(new InetSocketAddress(8443), 0);
-        server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
+        server.setHttpsConfigurator(new HttpsConfigurator(sslContext) {
+            public void configure(HttpsParameters p) {
+                SSLEngine e = sslContext.createSSLEngine();
+                p.setProtocols(new String[]{"TLSv1.3"});
+                p.setCipherSuites(e.getEnabledCipherSuites());
+                SSLParameters sp = sslContext.getDefaultSSLParameters();
+                sp.setProtocols(new String[]{"TLSv1.3"});
+                p.setSSLParameters(sp);
+            }
+        });
 
         // we allow different methods and headers this will be seen by the users pc so it knows methods and such
         server.createContext("/server", exchange -> {
@@ -63,11 +73,9 @@ public class PostGetServer {
         GetHandler getHandler = new GetHandler();
         PostHandler postHandler = new PostHandler();
 
-
         // We find out what method (get, post or options) the user has requested
         String method = exchange.getRequestMethod();
         String response;
-
 
         switch (method) {    // this switch redirects the exchange to the correct handler.
             case "OPTIONS":  // options returns response headers that we defined previously

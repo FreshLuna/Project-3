@@ -1,20 +1,29 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Styles } from '@sveltestrap/sveltestrap'; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
-    
-    // test server request that gets a list of users
-    onMount(async () => {
-      const res = await fetch("https://localhost:8443/server");
-      const text = await res.text();
-      console.log("RAW:", text);
-      //console.log("hej")
-      //fetch("https://localhost:8443/server/users")
-      //.then(response => response.json())
-      //.then(data => console.log(data));
-    })
+  import { onMount } from "svelte";
+  import {
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    Styles,
+  } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
+  import { writable } from "svelte/store";
+  // import { error } from "@sveltejs/kit";
 
-    // -------- Dynamic activities (runtime fetch from static/activities.txt) --------
-      type activity = {
+  // test server request that gets a list of users
+  //onMount(async () => {
+  //const res = await fetch("https://localhost:8443/server");
+  //const text = await res.text();
+  //console.log("RAW:", text);
+  //console.log("hej")
+  //fetch("https://localhost:8443/server/users")
+  //.then(response => response.json())
+  //.then(data => console.log(data));
+  //})
+
+  // maybe not needed? we don"t use it anyway
+  // -------- Dynamic activities (runtime fetch from static/activities.txt) --------
+  interface activity {
     imgFile: string;
     imgUrl: string | null;
     title: string;
@@ -22,76 +31,103 @@
     date: string;
     time: string;
     age: string;
-  };
-  let activities: activity[] = [];
-
-    /* Build a lookup table of image filename -> resolved URL.
-    We use Vite's import.meta.glob with { eager: true } so the modules
+  }
+  //let activities: activity[] = [];
+  export const activities = writable<activity[]>([]);
+  /* Build a lookup table of image imgFile -> resolved URL.
+    We use Vite"s import.meta.glob with { eager: true } so the modules
     are imported at build/SSR time and `mod.default` contains the final URL.
-    Example: '../lib/assets/activity1.avif' -> { default: '/_app/immutable/..../activity1.abcd.avif' }*/
-    const imagesGlob = import.meta.glob('../lib/assets/*.avif', { eager: true });
+    Example: "../lib/assets/activity1.avif" -> { default: "/_app/immutable/..../activity1.abcd.avif" }*/
+  // const imagesGlob = import.meta.glob("../lib/assets/*.avif", { eager: true });
 
-    // Convert the glob result into a simple map: { 'activity1.avif': '/url/to/activity1.avif', ... }
-    const imageMap = Object.fromEntries(
-        // @ts-ignore
-        Object.entries(imagesGlob).map(([path, mod]) => [path.split('/').pop(), mod.default])
-    );
+  // Convert the glob result into a simple map: { "activity1.avif": "/url/to/activity1.avif", ... }
+  // const imageMap = Object.fromEntries(
+  //   // @ts-ignore
+  //   Object.entries(imagesGlob).map(([path, mod]) => [
+  //     path.split("/").pop(),
+  //     mod.default, // what is mod???
+  //   ])
+  // );
 
-    /**
-     * Load activities from the static text file at /activities.txt
-     * Expected file format (one activity per line):
-     *   imageFileName|Activityname|Organization|Date|Age
-     * Example:
-     *   activity1.avif|Summer Camp|John Doe|tirsdag, 11. nov.|18+
-     *
-     * This function fetches the file, splits it into lines, trims empty lines,
-     * and converts each line into an object used by the UI. If an image filename
-     * from the file matches a key in imageMap, we attach the resolved URL to imgUrl;
-     * otherwise imgUrl is null and the UI will show a placeholder.
-     */
+  /*
+   * Load activities from the static text file at /activities.txt
+   * Expected file format (one activity per line):
+   *   imageimgFile|Activityname|Organization|Date|Age
+   * Example:
+   *   activity1.avif|Summer Camp|John Doe|tirsdag, 11. nov.|18+
+   *
+   * This function fetches the file, splits it into lines, trims empty lines,
+   * and converts each line into an object used by the UI. If an image imgFile
+   * from the file matches a key in imageMap, we attach the resolved URL to imgUrl;
+   * otherwise imgUrl is null and the UI will show a placeholder.
+   */
   async function loadActivities() {
     try {
-      const res = await fetch('/activities.txt');
-      if (!res.ok) {
-        console.error('Could not fetch /activities.txt', res.status);
-        return;
-      }
+      const res = await fetch("https://localhost:8443/server/activities");
+      console.log("JSON:", res);
 
-      const raw = await res.text();
+      if (!res.ok) throw new Error("Could not fetch /activities.txt");
 
-      activities = raw
-        .split(/\r?\n/)
-        .map((l) => l.trim())
-        .filter(Boolean)
-        .map((line) => {
-          const [img, title, organization, date, time, age] = line
-            .split('|')
-            .map((s) => s?.trim());
+      const data = await res.json();
 
-          return {
-            imgFile: img ?? '',
-            imgUrl: imageMap[img] ?? null,
-            title: title ?? '',
-            organization: organization ?? '',
-            date: date ?? '',
-            time: time ?? '',
-            age: age ?? ''
-                    };
-                });
-        } catch (err) {
-            // Any unexpected error (network, parsing, etc.) is logged for debugging
-            console.error('Error loading activities:', err);
-        }
+      const mappedActivities: activity[] = data.map((item: activity) => ({
+        imgFile: item.imgFile ?? "",
+        imgUrl: item.imgFile ?? null, // only displaying image link
+        title: item.title ?? "",
+        organization: item.organization ?? "",
+        date: item.date ?? "",
+        time: item.time ?? "",
+        age: item.age ?? "",
+      }));
+
+      activities.set(mappedActivities);
+    } catch (err) {
+      console.error("Error loading activities:", err);
     }
+  }
 
-    // Run the loader when the component mounts in the browser
-    onMount(loadActivities);
+  // try {
+  //   const res = await fetch("/activities.txt");
+  //   if (!res.ok) {
+  //     console.error("Could not fetch /activities.txt", res.status);
+  //     return;
+  //   }
+
+  //   const raw = await res.text();
+
+  //   activities = raw
+  //     .split(/\r?\n/)
+  //     .map((l) => l.trim())
+  //     .filter(Boolean) // bruh
+  //     .map((line) => {
+  //       const [img, title, organization, date, time, age] = line
+  //         .split("|")
+  //         .map((s) => s?.trim());
+
+  //       return {
+  //         imgFile: img ?? "",
+  //         imgUrl: imageMap[img] ?? null,
+  //         title: title ?? "",
+  //         organization: organization ?? "",
+  //         date: date ?? "",
+  //         time: time ?? "",
+  //         age: age ?? ""
+  //                 };
+  //             });
+  //     } catch (err) {
+  //         // Any unexpected error (network, parsing, etc.) is logged for debugging
+  //         console.error("Error loading activities:", err);
+  //     }
+  // }
+
+  // Run the loader when the component mounts in the browser
+  onMount(loadActivities);
 </script>
 
 <head>
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+  />
 </head>
 
 <div class="ActivityList">
@@ -109,7 +145,9 @@
           <DropdownMenu>
             <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
             <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}>Charlie</DropdownItem>
+            <DropdownItem on:click={() => alert("Charlie!")}
+              >Charlie</DropdownItem
+            >
           </DropdownMenu>
         </Dropdown>
         <DropdownItem divider />
@@ -118,12 +156,13 @@
           <DropdownMenu>
             <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
             <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}>Charlie</DropdownItem>
+            <DropdownItem on:click={() => alert("Charlie!")}
+              >Charlie</DropdownItem
+            >
           </DropdownMenu>
         </Dropdown>
       </DropdownMenu>
     </Dropdown>
-
 
     <Dropdown>
       <DropdownToggle color="primary" caret>Menu</DropdownToggle>
@@ -133,7 +172,9 @@
           <DropdownMenu>
             <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
             <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}>Charlie</DropdownItem>
+            <DropdownItem on:click={() => alert("Charlie!")}
+              >Charlie</DropdownItem
+            >
           </DropdownMenu>
         </Dropdown>
         <DropdownItem divider />
@@ -142,45 +183,54 @@
           <DropdownMenu>
             <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
             <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}>Charlie</DropdownItem>
+            <DropdownItem on:click={() => alert("Charlie!")}
+              >Charlie</DropdownItem
+            >
           </DropdownMenu>
         </Dropdown>
       </DropdownMenu>
     </Dropdown>
 
     <div>
-    <form action="/action_page.php">
-        <input type="radio" id="Solsikketilbud" name="Solsikketilbud" value="Solsikketilbud">
+      <form action="/action_page.php">
+        <input
+          type="radio"
+          id="Solsikketilbud"
+          name="Solsikketilbud"
+          value="Solsikketilbud"
+        />
         <label for="javascript">Solsikketilbud</label>
-    </form>
-</div>
-
+      </form>
+    </div>
   </div>
 </div>
 
 <div>
-    <!-- DYNAMIC ACTIVITIES -->
-    <section class="dynamicActivities">
-        {#if activities.length === 0}
-            <p>Loading dynamic activities...</p>
-        {:else}
-            <div class="ActivityList">
-                {#each activities as a}
-                    <div class="b">
-                        {#if a.imgUrl}
-                            <img class="img" src={a.imgUrl} alt={a.title} />
-                        {:else}
-                            <div class="img" style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"></div>
-                        {/if}
-                        <h3>{a.title}</h3>
-                        <h5>{a.organization}</h5>
-                        <p>🗓️{a.date} {a.time}</p>
-                        <p>🎂{a.age}</p>
-                    </div>
-                {/each}
-            </div>
-        {/if}
-    </section>
+  <!-- DYNAMIC ACTIVITIES -->
+  <section class="dynamicActivities">
+    {#if $activities.length === 0}
+      <p>Loading dynamic activities...</p>
+    {:else}
+      <div class="ActivityList">
+        {#each $activities as a}
+          <div class="b">
+            {#if a.imgUrl}
+              <img class="img" src={a.imgUrl} alt={a.title} />
+            {:else}
+              <div
+                class="img"
+                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"
+              ></div>
+            {/if}
+            <h3>{a.title}</h3>
+            <h5>{a.organization}</h5>
+            <p>🗓️{a.date} {a.time}</p>
+            <p>🎂{a.age}</p>
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </section>
 </div>
 
 <!-- CSS STYLE -->
@@ -189,7 +239,6 @@
     padding-top: 30px;
     padding-bottom: 30px;
     display: flex;
-    
   }
 
   .searchbar {
@@ -199,8 +248,8 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     margin-right: 20px;
-    margin-left: 20px; 
-    max-width: 300px; 
+    margin-left: 20px;
+    max-width: 300px;
   }
 
   /* font stack applied globally */
@@ -286,4 +335,3 @@
     }
   }
 </style>
-
