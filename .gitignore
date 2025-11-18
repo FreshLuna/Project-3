@@ -48,3 +48,7 @@ pnpm-lock.yaml
 /Frontendp3/.svelte-kit
 
 
+localCA.pem
+*.jks
+*.crt
+*.key

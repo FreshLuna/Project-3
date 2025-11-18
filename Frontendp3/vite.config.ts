@@ -16,7 +16,7 @@ export default defineConfig({
       '/server': {
         target: 'https://localhost:8443',
         changeOrigin: true,
-        secure: false // IMPORTANT: make sure to change to true later // MUST DO, PLEASE FIX, THIS IS BAD, 
+        secure: true, 
       }
     }
   }
