@@ -1,11 +1,9 @@
 package Server;
 import com.sun.net.httpserver.HttpExchange;
-import java.io.IOException;
-import static Database.DatabaseToStringReader.readFileToString;
-import static Database.DatabaseToStringReader.readAbsoluteFile;;
+import static Database.DatabaseToStringReader.fileReader;
 
 public class GetHandler {
-    public String handle(HttpExchange exchange) throws IOException {
+    public String handle(HttpExchange exchange) {
         // we retrieve the full path the user attempts to access
         String path = exchange.getRequestURI().getPath();
 
@@ -14,11 +12,10 @@ public class GetHandler {
         return switch (path) {
             case "/server/users" -> "List of users";
             case "/server/status" -> "Server is running";
-            case "/server/activities" -> readAbsoluteFile("/home/lunaw/Documents/GitHub/Project-3/Backendp3/src/main/resources/activities.txt");
+            case "/server/activities" -> fileReader("activities.json");
             case "/server" -> "this is what it says on the server!!!";
             default -> "Unknown GET path: " + path;
         };
 
-        // shit old code uggo
     }
 }

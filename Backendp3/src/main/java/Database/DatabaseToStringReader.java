@@ -1,26 +1,21 @@
 package Database;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
 
 
 public class DatabaseToStringReader {
-    // public static String readFileToString(String path) throws IOException {
-    //     System.out.println("test");
+    public static String fileReader(String filePath) {
+        try (InputStream inputStream = DatabaseToStringReader.class.getClassLoader()
+                .getResourceAsStream(filePath)) {
 
-    //     return Files.readString(Path.of(path));
-    // }
-
-    // new way to do it?
-    public static String readFileToString(String filename) throws IOException {
-        try (var stream = DatabaseToStringReader.class.getClassLoader().getResourceAsStream(filename)) {
-            if (stream == null) {
-                throw new IOException("File not found: " + filename);
+            if (inputStream == null) {
+                return "File not found: " + filePath;
             }
-            return new String(stream.readAllBytes());
+
+            return new String(inputStream.readAllBytes());
+        } catch (IOException e) {
+            return "Error reading file: " + filePath + " - " + e.getMessage();
         }
     }
-    public static String readAbsoluteFile(String absolutePath) throws IOException {
-        return Files.readString(Path.of(absolutePath));
-    }
+
 }
