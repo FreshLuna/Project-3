@@ -11,9 +11,9 @@ SERVER_CERT := localhost.crt
 SAN_FILE := san.txt
 P12_FILE := localhost.p12
 
-# Target directories
-BACKEND_DIR := ../Backendp3
-FRONTEND_DIR := ../Frontend
+# Target directories - FIXED PATHS
+BACKEND_DIR := Backendp3
+FRONTEND_DIR := Frontendp3
 JKS_FILE := $(BACKEND_DIR)/keystore.jks
 VITE_KEY := $(FRONTEND_DIR)/vite.key
 VITE_CERT := $(FRONTEND_DIR)/vite.crt
@@ -25,17 +25,9 @@ ALIAS := localhost
 
 all: install
 
-help:
-	@echo "SSL Certificate Installer (Auto-Cleanup)"
-	@echo "========================================="
-	@echo "Available targets:"
-	@echo "  all   - Install files and clean up temporary files"
-	@echo "  clean - Remove all installed files"
-	@echo "  help  - Show this help message"
-
 install: get-password $(JKS_FILE) $(VITE_KEY) $(VITE_CERT)
 	@echo "Cleaning up temporary files..."
-	@rm -f $(CA_KEY) $(CA_CERT) $(SERVER_KEY) $(SERVER_CSR) $(SERVER_CERT) $(SAN_FILE) $(P12_FILE) localCA.srl .temp_password
+	@rm -f $(CA_KEY) $(SERVER_KEY) $(SERVER_CSR) $(SERVER_CERT) $(SAN_FILE) $(P12_FILE) localCA.srl .temp_password
 	@echo "Installation complete!"
 	@echo "Backend:  $(JKS_FILE)"
 	@echo "Frontend: $(VITE_KEY), $(VITE_CERT)"
@@ -61,6 +53,8 @@ $(BACKEND_DIR) $(FRONTEND_DIR):
 # ===============================
 # CERTIFICATE GENERATION
 # ===============================
+
+# First: Generate CA
 $(CA_KEY):
 	@echo "Creating Local Certificate Authority..."
 	openssl genrsa -out "$(CA_KEY)" 2048
@@ -71,6 +65,7 @@ $(CA_CERT): $(CA_KEY)
 	  -sha256 -days 3650 -out "$(CA_CERT)" \
 	  -subj "/C=DK/ST=Local/L=Local/O=LocalDev CA/CN=LocalDev CA"
 
+# Second: Generate server certificate
 $(SERVER_KEY):
 	@echo "Creating localhost private key..."
 	openssl genrsa -out "$(SERVER_KEY)" 2048
@@ -113,15 +108,23 @@ $(JKS_FILE): $(P12_FILE) | $(BACKEND_DIR)
 $(VITE_KEY): $(SERVER_KEY) | $(FRONTEND_DIR)
 	@echo "Copying key to frontend..."
 	cp "$(SERVER_KEY)" "$(VITE_KEY)"
+	@echo "Frontend key created: $(VITE_KEY)"
 
 $(VITE_CERT): $(SERVER_CERT) | $(FRONTEND_DIR)
 	@echo "Copying certificate to frontend..."
 	cp "$(SERVER_CERT)" "$(VITE_CERT)"
+	@echo "Frontend certificate created: $(VITE_CERT)"
+
+# ===============================
+# MESSAGE
+# ===============================
+
+	@echo "if running localhost and using firefox remember to copy localCA.pem into firefox permissions"
 
 # ===============================
 # CLEANUP
 # ===============================
-clean:
+uninstall:
 	@echo "Removing installed files..."
-	rm -f $(JKS_FILE) $(VITE_KEY) $(VITE_CERT) .temp_password
+	rm -f $(JKS_FILE) $(VITE_KEY) $(CA_CERT) $(VITE_CERT) .temp_password
 	@echo "Clean complete."
