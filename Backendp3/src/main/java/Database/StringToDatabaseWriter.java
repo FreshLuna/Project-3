@@ -1,9 +1,10 @@
-package Server;
+package Database;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class Database {
+public class StringToDatabaseWriter {
   public static void main(String[] args) {
   // target file path
     // This main is left as a convenience for manual testing.

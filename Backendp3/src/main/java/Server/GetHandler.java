@@ -14,6 +14,7 @@ public class GetHandler {
             case "/server/users" -> "List of users";
             case "/server/status" -> "Server is running";
             case "/server/activities" -> "bam";
+            case "/server" -> "This shit is soooooo easy";
             default -> "Unknown GET path: " + path;
         };
     }
