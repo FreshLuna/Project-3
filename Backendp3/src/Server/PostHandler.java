@@ -9,8 +9,13 @@ public class PostHandler {
         String body = new String(exchange.getRequestBody().readAllBytes()); // retrieves the data send by the user
 
         return switch (path) {
-            case "/server/echo" -> body;
-            case "/server/shutdown" -> "bye";
+                case "/server/echo" -> body;
+                case "/server/participants" -> {
+                    // Save posted participant data to participants.txt
+                    Database.appendParticipant(body);
+                    yield "Participant saved";
+                }
+                case "/server/shutdown" -> "bye";
             default -> "Unknown POST path: " + path;
         };
     }
