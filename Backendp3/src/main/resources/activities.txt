@@ -2,7 +2,7 @@
   {
     "filename": "activity1.avif",
     "id": 1,
-    "organization": "organization1",
+    "organization": "diller",
     "date": "date1",
     "time": "time1",
     "age": "age2"

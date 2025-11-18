@@ -1,74 +1,9 @@
-[
-  {
-    "filename": "activity1.avif",
-    "id": 1,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  },
-  {
-    "filename": "activity2.avif",
-    "id": 2,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  },
-  {
-    "filename": "activity3.avif",
-    "id": 3,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  },
-  {
-    "filename": "activity4.avif",
-    "id": 4,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  },
-  {
-    "filename": "activity5.avif",
-    "id": 5,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  },
-  {
-    "filename": "activity6.avif",
-    "id": 6,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  },
-  {
-    "filename": "activity8.avif",
-    "id": 8,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  },
-  {
-    "filename": "activity9.avif",
-    "id": 9,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  },
-  {
-    "filename": "activity10.avif",
-    "id": 10,
-    "organization": "organization",
-    "date": "date",
-    "time": "time",
-    "age": "age"
-  }
-]
+activity1.avif|1|organization|date|time|age
+activity2.avif|2|organization|date|time|age
+activity3.avif|3|organization|date|time|age
+activity4.avif|4|organization|date|time|age
+activity5.avif|5|organization|date|time|age
+activity6.avif|6|organization|date|time|age
+activity8.avif|8|organization|date|time|age
+activity9.avif|9|organization|date|time|age
+activity10.avif|10|organization|date|time|age

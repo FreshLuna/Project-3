@@ -2,6 +2,7 @@ package Server;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import static Database.DatabaseToStringReader.readFileToString;
+import static Database.DatabaseToStringReader.readAbsoluteFile;;
 
 public class GetHandler {
     public String handle(HttpExchange exchange) throws IOException {
@@ -13,39 +14,11 @@ public class GetHandler {
         return switch (path) {
             case "/server/users" -> "List of users";
             case "/server/status" -> "Server is running";
-            case "/server/activities" -> readFileToString("activities.txt");
+            case "/server/activities" -> readAbsoluteFile("/home/lunaw/Documents/GitHub/Project-3/Backendp3/src/main/resources/activities.txt");
             case "/server" -> "this is what it says on the server!!!";
             default -> "Unknown GET path: " + path;
         };
 
         // shit old code uggo
-        // keeping it just for archival
-
-//        String result;
-//
-//        switch (path) {
-//            case "/server/users":
-//                result = "List of users";
-//                break;
-//
-//            case "/server/status":
-//                result = "Server is running";
-//                break;
-//
-//            case "/server/activities":
-//                System.out.println("test");
-//                result = readFileToString("activities.txt");
-//                break;
-//
-//            case "/server":
-//                result = "this is what it says on the server!!!";
-//                break;
-//
-//            default:
-//                result = "Unknown GET path: " + path;
-//                break;
-//        }
-//
-//        return result;
     }
 }

@@ -1,5 +1,4 @@
 package Database;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,5 +19,8 @@ public class DatabaseToStringReader {
             }
             return new String(stream.readAllBytes());
         }
+    }
+    public static String readAbsoluteFile(String absolutePath) throws IOException {
+        return Files.readString(Path.of(absolutePath));
     }
 }
