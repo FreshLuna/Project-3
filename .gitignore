@@ -53,3 +53,4 @@ localCA.pem
 *.crt
 *.key
 Backendp3/out/production/Backendp3/activities.json
+/Backendp3/out

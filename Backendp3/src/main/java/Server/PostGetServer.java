@@ -66,6 +66,7 @@ public class PostGetServer {
         }
         String response = methodSwitch(exchange);
 
+        assert response != null;
         byte[] bytes = response.getBytes();
             exchange.sendResponseHeaders(200, bytes.length);
             try (OutputStream os = exchange.getResponseBody()) {
