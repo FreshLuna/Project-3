@@ -1,6 +1,6 @@
 # Project-3
 
-### Installing dependencies
+### Installing dependencies and setting up system variables
 1. Install openssl and jdk 25 
 2. Configuring Environment Variables
 3. Right-click the “Start” button and select “System” from the context menu.
@@ -8,8 +8,8 @@
 5. In the System Properties window, click the “Environment Variables…” button.
 6. In the Environment Variables window, under the “System variables” section, select the “Path” variable and click on “Edit…“
 7. In the Edit Environment Variable window, click “New” and add the path to the OpenSSL bin directory. The default path is C:\Program Files\OpenSSL\bin. If you chose a different installation directory, adjust the path accordingly.
-8. Click “OK” to save the changes and close all the open windows
-
+8. Do the same for jdk21\bin
+9. Click “OK” to save the changes and close all the open windows
 
 
 
@@ -24,7 +24,7 @@
 
 ### Permissions setup guide Linux:
 1. Open the project in your IDE of choice
-2. ```make install```
+```make install```
 
 
 *obs* If using Firefox, you must trust the generated local certificate authority.
