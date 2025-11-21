@@ -10,4 +10,6 @@
 4. Make sure the backend is running while running the frontend part.
 
 
-
+# Trouble shooting:
+if the program doesnt compile most likely the directory for the keystore.jks file is wrong
+you can temporarily use the full path for the file or attempt to troubleshoot yourself.
