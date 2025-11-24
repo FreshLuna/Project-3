@@ -1,7 +1,63 @@
 <script>
-    // stupid comment
     import { page } from "$app/stores";
+
+    // Form state
+    let firstName = "";
+    let lastName = "";
+    let dateOfBirth = "";
+    let email = "";
+    let phoneNumber = "";
+    let tosAccept = false;
+    let infoSendAccept = false;
+
+    // FIX: Correctly read params from $page store
+    let activity = "";
+    // @ts-ignore
+    $: activity = $page.params.activity;
+
+    async function submitHandler() {
+        const payload = {
+            firstname: firstName,
+            lastname: lastName,
+            dateOfBirth: dateOfBirth,
+            email: email,
+            phoneNumber: phoneNumber,
+            tosAccept: tosAccept,
+            infoSendAccept: infoSendAccept,
+            activity: activity
+        };
+
+        try {
+            const res = await fetch('https://localhost:8443/server/participants', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                alert('Failed to send sign-up: ' + res.status);
+                return;
+            }
+
+            const text = await res.text();
+            alert('Sign-up sent: ' + text);
+
+            // Reset form
+            firstName = "";
+            lastName = "";
+            dateOfBirth = "";
+            email = "";
+            phoneNumber = "";
+            tosAccept = false;
+            infoSendAccept = false;
+
+        } catch (err) {
+            console.error(err);
+            alert("Network error sending sign-up. Check server and HTTPS settings.");
+        }
+    }
 </script>
+
 
 <!-- <h1>Aalborg Try Out: Activity Test!!! (vi prøver igen)</h1> -->
 <div class="container">
@@ -66,23 +122,23 @@
             <h3>Sign up for FREE to the activity</h3>
             <p>Optional custom message to display</p>
 
-            <form class="formLayout">
+            <form class="formLayout" on:submit|preventDefault={submitHandler}>
 
                 <!-- Row 1: two quarter-width + one half-width inputs -->
                 <div class="formRowNameDOB">
                     <div class="formField quarter">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName">
+                        <input type="text" id="firstName" name="firstName" bind:value={firstName}>
                     </div>
 
                     <div class="formField quarter">
                         <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName">
+                        <input type="text" id="lastName" name="lastName" bind:value={lastName}>
                     </div>
 
                     <div class="formField half">
                         <label for="dateOfBirth">Date of Birth</label>
-                        <input type="text" id="dateOfBirth" name="dateOfBirth">
+                        <input type="text" id="dateOfBirth" name="dateOfBirth" bind:value={dateOfBirth}>
                     </div>
                 </div>
 
@@ -90,27 +146,27 @@
                 <div class="formRowEmailPN">
                     <div class="formField half">
                         <label for="email">Email</label>
-                        <input type="text" id="email" name="email" required>
+                        <input type="text" id="email" name="email" required bind:value={email}>
                     </div>
 
                     <div class="formField half">
                         <label for="phoneNumber">Phone Number</label>
-                        <input type="text" id="phoneNumber" name="phoneNumber" required>
+                        <input type="text" id="phoneNumber" name="phoneNumber" required bind:value={phoneNumber}>
                     </div>
                 </div>
 
                 <!-- Checkboxes -->
                 <div class="checkboxRow">
-                    <input type="checkbox" id="tosAccept" name="tosAccept" />
+                    <input type="checkbox" id="tosAccept" name="tosAccept" bind:checked={tosAccept} />
                     <label for="tosAccept">I accept Aalborg Try Out's Terms of Service</label>
                 </div>
 
                 <div class="checkboxRow">
-                    <input type="checkbox" id="infoSendAccept" name="infoSendAccept" />
+                    <input type="checkbox" id="infoSendAccept" name="infoSendAccept" bind:checked={infoSendAccept} />
                     <label for="infoSendAccept">Allow Aalborg Try Out to send me information such as notifications</label>
                 </div>
 
-                <button type="submit" class="signUpButton">Sign up for waiting list</button>
+                <button type="submit" class="signUpButton">Sign up for activity</button>
             </form>
         </div>
 
@@ -227,13 +283,13 @@
     }
 
     .formField input,
-    /*.formField select {
+    .formField select {
         padding: 0.5rem;
         border: 1px solid black;
         border-radius: 4px;
         box-sizing: border-box;
         min-width: 0;
-    }*/
+    }
 
     /* Width classes */
     .formField.half {
@@ -282,9 +338,9 @@
             flex-direction: column;
         }
 
-        /* .formRow {
+        .formRow {
             flex-direction: column;
-        } */
+        }
 
         .formField.half,
         .formField.quarter {

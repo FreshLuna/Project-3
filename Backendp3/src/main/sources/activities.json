@@ -5,7 +5,8 @@
     "organization": "diller",
     "date": "date1",
     "time": "time1",
-    "age": "age2"
+    "age": "age2",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity2.avif",
@@ -13,7 +14,8 @@
     "organization": "organization2",
     "date": "date2",
     "time": "time2",
-    "age": "age2"
+    "age": "age2",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity3.avif",
@@ -21,7 +23,8 @@
     "organization": "organization3",
     "date": "date3",
     "time": "time3",
-    "age": "age3"
+    "age": "age3",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity4.avif",
@@ -29,7 +32,8 @@
     "organization": "organization4",
     "date": "date4",
     "time": "time4",
-    "age": "age4"
+    "age": "age4",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity5.avif",
@@ -37,7 +41,8 @@
     "organization": "organization5",
     "date": "date5",
     "time": "time5",
-    "age": "age5"
+    "age": "age5",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity6.avif",
@@ -45,7 +50,8 @@
     "organization": "organization6",
     "date": "date6",
     "time": "time6",
-    "age": "age6"
+    "age": "age6",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity7.avif",
@@ -53,7 +59,8 @@
     "organization": "organization7",
     "date": "date7",
     "time": "time7",
-    "age": "age7"
+    "age": "age7",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity8.avif",
@@ -61,7 +68,8 @@
     "organization": "organization8",
     "date": "date8",
     "time": "time8",
-    "age": "age8"
+    "age": "age8",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity9.avif",
@@ -69,7 +77,8 @@
     "organization": "organization9",
     "date": "date9",
     "time": "time9",
-    "age": "age9"
+    "age": "age9",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   },
   {
     "filename": "activity10.avif",
@@ -77,6 +86,7 @@
     "organization": "organization10",
     "date": "date10",
     "time": "time10",
-    "age": "age10"
+    "age": "age10",
+    "imgUrl": "https://i.imgur.com/1KoNJZ6.jpeg"
   }
 ]

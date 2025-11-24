@@ -72,7 +72,7 @@
 
       const mappedActivities: activity[] = data.map((item: activity) => ({
         imgFile: item.imgFile ?? "",
-        imgUrl: item.imgFile ?? null, // only displaying image link
+        imgUrl: item.imgUrl ?? null, // only displaying image link
         title: item.title ?? "",
         organization: item.organization ?? "",
         date: item.date ?? "",
@@ -194,7 +194,7 @@
     <div>
       <form action="/action_page.php">
         <input
-          type="radio"
+          type="checkbox"
           id="Solsikketilbud"
           name="Solsikketilbud"
           value="Solsikketilbud"
