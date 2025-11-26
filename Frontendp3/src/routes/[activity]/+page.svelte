@@ -6,7 +6,7 @@
     let lastName = "";
     let dateOfBirth = "";
     let email = "";
-    let phoneNumber = "";
+    // let phoneNumber = "";
     let tosAccept = false;
     let infoSendAccept = false;
 
@@ -15,56 +15,62 @@
     // @ts-ignore
     $: activity = $page.params.activity;
 
-    async function submitHandler() {
-        const payload = {
-            firstname: firstName,
-            lastname: lastName,
-            dateOfBirth: dateOfBirth,
-            email: email,
-            phoneNumber: phoneNumber,
-            tosAccept: tosAccept,
-            infoSendAccept: infoSendAccept,
-            activity: activity
-        };
+    // async function submitHandler() {
+    //     const payload = {
+    //         firstname: firstName,
+    //         lastname: lastName,
+    //         dateOfBirth: dateOfBirth,
+    //         email: email,
+    //         //phoneNumber: phoneNumber,
+    //         tosAccept: tosAccept,
+    //         infoSendAccept: infoSendAccept,
+    //         activity: activity
+    //     };
 
-        try {
-            const res = await fetch('https://localhost:8443/server/participants', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+    //     try {
+    //         const res = await fetch('https://localhost:8443/server/participants', {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(payload)
+    //         });
 
-            if (!res.ok) {
-                alert('Failed to send sign-up: ' + res.status);
-                return;
-            }
+    //         if (!res.ok) {
+    //             alert('Failed to send sign-up: ' + res.status);
+    //             return;
+    //         }
 
-            const text = await res.text();
-            alert('Sign-up sent: ' + text);
+    //         const text = await res.text();
+    //         alert('Sign-up sent: ' + text);
 
-            // Reset form
-            firstName = "";
-            lastName = "";
-            dateOfBirth = "";
-            email = "";
-            phoneNumber = "";
-            tosAccept = false;
-            infoSendAccept = false;
+    //         // Reset form
+    //         firstName = "";
+    //         lastName = "";
+    //         dateOfBirth = "";
+    //         email = "";
+    //         //phoneNumber = "";
+    //         tosAccept = false;
+    //         infoSendAccept = false;
 
-        } catch (err) {
-            console.error(err);
-            alert("Network error sending sign-up. Check server and HTTPS settings.");
-        }
-    }
+    //     } catch (err) {
+    //         console.error(err);
+    //         alert("Network error sending sign-up. Check server and HTTPS settings.");
+    //     }
+    // }
 </script>
 
 
 <!-- <h1>Aalborg Try Out: Activity Test!!! (vi prøver igen)</h1> -->
 <div class="container">
 
-    <!-- Left half: Activity info -->
+    <!-- Left half: Activity Image -->
+    <div class="halfPageBox">
+        <img class="activityImage" src="https://i.imgur.com/1KoNJZ6.jpeg" alt="activityImage"/>
+    </div>
+
+    <!-- Right half: Activity info and Description box -->
     <div class="halfPageBox">
         <div class="nameOrganizerInviteBox">
+
             <!-- Left: Name + Organizer -->
             <div class="noiRightBox">
                 <h2>Name of activity ({$page.params.activity})</h2>
@@ -113,18 +119,26 @@
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <!-- Right half: Sign-up & description -->
-    <div class="halfPageBox">
 
         <div class="innerBox">
+            <h3>Description</h3>
+            <p>Placeholder description</p>
+            <div class="btn">Read more</div>
+        </div>
+
+        <div class="signUpBtn">
+            <div class="btn">Tilmeld til aktivitet</div>
+        </div>
+
+    </div>
+</div>
+        <!-- <div class="innerBox">
             <h3>Sign up for FREE to the activity</h3>
             <p>Optional custom message to display</p>
 
             <form class="formLayout" on:submit|preventDefault={submitHandler}>
 
-                <!-- Row 1: two quarter-width + one half-width inputs -->
+                Row 1: two quarter-width + one half-width inputs
                 <div class="formRowNameDOB">
                     <div class="formField quarter">
                         <label for="firstName">First Name</label>
@@ -142,20 +156,20 @@
                     </div>
                 </div>
 
-                <!-- Row 2: two half-width inputs -->
+                Row 2: two half-width inputs
                 <div class="formRowEmailPN">
                     <div class="formField half">
                         <label for="email">Email</label>
                         <input type="text" id="email" name="email" required bind:value={email}>
                     </div>
 
-                    <div class="formField half">
+                     <div class="formField half">
                         <label for="phoneNumber">Phone Number</label>
                         <input type="text" id="phoneNumber" name="phoneNumber" required bind:value={phoneNumber}>
                     </div>
-                </div>
+                </div> 
 
-                <!-- Checkboxes -->
+                // Checkboxes
                 <div class="checkboxRow">
                     <input type="checkbox" id="tosAccept" name="tosAccept" bind:checked={tosAccept} />
                     <label for="tosAccept">I accept Aalborg Try Out's Terms of Service</label>
@@ -168,41 +182,29 @@
 
                 <button type="submit" class="signUpButton">Sign up for activity</button>
             </form>
-        </div>
-
-        <div class="innerBox">
-            <h3>Description</h3>
-            <p>Placeholder description</p>
-            <button>Read more</button>
-
-            <h4>Difficulty</h4>
-            <p>How difficult the activity is</p>
-        </div>
-
-    </div>
-</div>
-
-<br><br>
-
-<p>Her er også lidt tekst under det hele. Hvilken aktivitet er dette? Det er [{$page.params.activity}]!!!!</p>
+        </div>  -->
 
 <style>
     /* General container */
     .container {
         display: flex;
-        gap: 2%;
+        gap: 1%;
+        margin-top: 2%;
         margin-left: 10%;
         margin-right: 10%;
-        font-family: 'Trebuchet MS'
+        font-family: 'Trebuchet MS'; 
     }
-
+    
     .halfPageBox {
         flex: 1;
         padding: 1%;
         border-radius: 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        display: absolute;
+    }
+
+    .activityImage{
+        width: 100%;
+        border-radius: 10px; 
     }
 
     /* Invite & name box */
@@ -245,14 +247,39 @@
 
     /* Inner box (description & form container) */
     .innerBox {
-        border-radius: 25px;
+        border-radius: 10px;
         border: 2px solid black;
         padding: 1rem;
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
 
+    .signUpBtn{
+        padding: 15px;
+    }
+
+    .btn {
+        background-color: #6E479B;
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .btn:hover {
+        background-color: #5e3b85ff;
+    }
+
+
+/* ------------------------------------------------------------ */
+    /* is not used here - is for the sign up pop up box */
     /* Form layout */
     .formLayout {
         display: flex;
@@ -331,6 +358,8 @@
         cursor: pointer;
         align-self: flex-start;
     }
+
+/* ----------------------------------- */
 
     /* Responsive adjustments */
     @media (max-width: 800px) {

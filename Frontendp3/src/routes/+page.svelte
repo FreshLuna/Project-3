@@ -8,6 +8,7 @@
     Styles,
   } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
   import { writable } from "svelte/store";
+  import { redirect } from "@sveltejs/kit";
   // import { error } from "@sveltejs/kit";
 
   // test server request that gets a list of users
@@ -122,6 +123,11 @@
 
   // Run the loader when the component mounts in the browser
   onMount(loadActivities);
+
+
+  async function handleClick() {
+    alert("det virker!!");
+  }
 </script>
 
 <head>
@@ -219,8 +225,9 @@
             {:else}
               <div
                 class="img"
-                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"
+                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;cursor:pointer;"
               ></div>
+              {onclick={handleClick}}
             {/if}
             <h3>{a.title}</h3>
             <h5>{a.organization}</h5>
