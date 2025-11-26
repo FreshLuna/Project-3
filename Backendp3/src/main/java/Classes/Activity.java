@@ -1,7 +1,7 @@
 package Classes;
 
 public class Activity {
-    int ActivityID; // ID of the activity
+    public int ActivityID; // ID of the activity
 
     String ActivityName; // The name displayed for the activity
     String ActivityOrganizer; // The organization who is in charge of hosting the activity
@@ -9,7 +9,7 @@ public class Activity {
     String TypeOfActivity; // The type of activity in question (Rowing, Climbing, etc)
     String Instructors; // Who will be in charge of the activity during its duration
 
-    String DateAndTime; // The date and time the activity will take place
+    public int DateAndTime; // yyyy/mm/dd/hh/mm/ The date and time the activity will take place
     String Address; // The location where the activity will be held
 
     String GenderGroup; // Who is the targeted gender group for this activity?

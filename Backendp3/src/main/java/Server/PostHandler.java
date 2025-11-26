@@ -1,8 +1,8 @@
 package Server;
 
-import Database.StringToDatabaseWriter;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
+import Events.SignedUp;
 
 public class PostHandler {
     public String handle(HttpExchange exchange) throws IOException {
@@ -13,7 +13,7 @@ public class PostHandler {
             case "/server/echo" -> body;
             case "/server/participants" -> {
                 // Save posted participant data to participants.txt
-                StringToDatabaseWriter.appendParticipant(body);
+                SignedUp.appendParticipant(body);
                 yield "Participant saved";
             }
             case "/server/shutdown" -> "bye";
