@@ -9,13 +9,8 @@ public class Activity {
     public String TypeOfActivity; // The type of activity in question (Rowing, Climbing, etc)
     public String Instructors; // Who will be in charge of the activity during its duration
 
-<<<<<<< Updated upstream
-    public int DateAndTime; // yyyy/mm/dd/hh/mm/ The date and time the activity will take place
-    String Location; // The location where the activity will be held
-=======
     public long DateAndTime; // yyyy/mm/dd/hh/mm/ The date and time the activity will take place
-    public String Address; // The location where the activity will be held
->>>>>>> Stashed changes
+    public String Location; // The location where the activity will be held
 
     public String GenderGroup; // Who is the targeted gender group for this activity?
     public String AgeGroup; // Who is the targeted age group for this activity?
