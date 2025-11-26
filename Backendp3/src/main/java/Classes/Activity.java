@@ -10,7 +10,7 @@ public class Activity {
     String Instructors; // Who will be in charge of the activity during its duration
 
     public int DateAndTime; // yyyy/mm/dd/hh/mm/ The date and time the activity will take place
-    String Address; // The location where the activity will be held
+    String Location; // The location where the activity will be held
 
     String GenderGroup; // Who is the targeted gender group for this activity?
     String AgeGroup; // Who is the targeted age group for this activity?

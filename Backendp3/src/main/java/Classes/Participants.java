@@ -1,7 +1,7 @@
 package Classes;
 
 public class Participants {
-    int UserID; // ID of the participant
+    public int UserID; // ID of the participant
 
     String FirstName; // First name
     String LastName; // Last name
