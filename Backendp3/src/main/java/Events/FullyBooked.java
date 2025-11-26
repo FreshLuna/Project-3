@@ -6,12 +6,13 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class FullyBooked {
-
     //If activity is fully booked, then print "Aktiviteten * er fuldt booket"
     public void checkActivity(Activity activity) {
         if (isActivityFullyBooked(activity.ActivityName, activity.ActivityCapacity, activity.WaitingListEnabled)) {
             System.out.println("Aktiviteten " + activity.ActivityName + " er fuldt booket");
-        }
+        } else {
+                System.out.println("Aktiviteten " + activity.ActivityName + " er ikke fuldt booket");
+            }
     }
 
     // Checks if an activity is fully booked if it is return isFullyBooked
@@ -32,7 +33,7 @@ public class FullyBooked {
             boolean isFullyBooked = (participantCount >= activityCapacity) && waitingListEnabled;
 
             if (isFullyBooked) {
-                System.out.println("Aktiviteten " + activityName + " er fuldt booket med " + participantCount + " deltagere");
+                System.out.println("Aktiviteten " + activityName + " har " + participantCount + " users på listen i alt");
             }
 
             return isFullyBooked;
