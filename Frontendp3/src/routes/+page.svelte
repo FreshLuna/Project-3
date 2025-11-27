@@ -124,10 +124,6 @@
   // Run the loader when the component mounts in the browser
   onMount(loadActivities);
 
-
-  async function handleClick() {
-    alert("det virker!!");
-  }
 </script>
 
 <head>
@@ -227,7 +223,6 @@
                 class="img"
                 style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;cursor:pointer;"
               ></div>
-              {onclick={handleClick}}
             {/if}
             <h3>{a.title}</h3>
             <h5>{a.organization}</h5>
