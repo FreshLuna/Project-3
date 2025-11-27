@@ -6,8 +6,12 @@
     DropdownMenu,
     DropdownItem,
     Styles,
+    NavItem,
   } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
   import { writable } from "svelte/store";
+  import type { Writable } from 'svelte/store'; // for universal toggleItem
+  import Select from "svelte-select"; // only version 1
+  import { updated } from "$app/state";
   // import { error } from "@sveltejs/kit";
 
   // test server request that gets a list of users
@@ -86,42 +90,93 @@
     }
   }
 
-  // try {
-  //   const res = await fetch("/activities.txt");
-  //   if (!res.ok) {
-  //     console.error("Could not fetch /activities.txt", res.status);
-  //     return;
-  //   }
-
-  //   const raw = await res.text();
-
-  //   activities = raw
-  //     .split(/\r?\n/)
-  //     .map((l) => l.trim())
-  //     .filter(Boolean) // bruh
-  //     .map((line) => {
-  //       const [img, title, organization, date, time, age] = line
-  //         .split("|")
-  //         .map((s) => s?.trim());
-
-  //       return {
-  //         imgFile: img ?? "",
-  //         imgUrl: imageMap[img] ?? null,
-  //         title: title ?? "",
-  //         organization: organization ?? "",
-  //         date: date ?? "",
-  //         time: time ?? "",
-  //         age: age ?? ""
-  //                 };
-  //             });
-  //     } catch (err) {
-  //         // Any unexpected error (network, parsing, etc.) is logged for debugging
-  //         console.error("Error loading activities:", err);
-  //     }
-  // }
-
   // Run the loader when the component mounts in the browser
   onMount(loadActivities);
+
+  // old attempt at universal toggleItem (doesn't work, no checkbox retention)
+  // function toggleItem(id:any , items: any) {
+  //   items = items.map((item: any) =>
+  //     item.id === id ? { ...item, checked: !item.checked } : item // rewrite to actual if because ? : is undreadable
+  //   );
+  // }
+
+  // attempt 2
+  export function toggleItem(
+    id: number,
+    store: Writable<{ id: number; checked: boolean}[]> // what is this?
+  ) {
+    store.update(list => // what happens here?
+      list.map(item =>
+        item.id === id
+          ? {... item, checked: !item.checked }
+          : item
+      )
+    );
+  }
+
+  function handleSubmit(items: any) {
+    const selected = items.filter((i: any) => i.checked);
+    console.log(selected);
+  }
+
+  // every dropdown is a writable store (which lets us use a universal toggleItem)
+
+  // location dropdown script: Aalborg Centrum, Aalborg Øst, Hasseris, Skalborg, Gug, Aalborg Vestby
+  let locationsOpen = false;
+
+  export const locations = writable([
+    { id: 1, label: "Aalborg Centrum", checked: false },
+    { id: 2, label: "Aalborg Øst", checked: false },
+    { id: 3, label: "Hasseris", checked: false },
+    { id: 4, label: "Skalborg", checked: false },
+    { id: 5, label: "Gug", checked: false },
+    { id: 6, label: "Aalborg Vestby", checked: false },
+  ]);
+
+  // date (day) dropdown script: Mandag, Tirsdag, Onsdag, Torsdag, Fredag, Lørdag, Søndag
+  let weekdayOpen = false;
+
+  export const weekdays = writable([
+    { id: 1, label: "Mandag", checked: false },
+    { id: 2, label: "Tirsdag", checked: false },
+    { id: 3, label: "Onsdag", checked: false },
+    { id: 4, label: "Torsdag", checked: false },
+    { id: 5, label: "Fredag", checked: false },
+    { id: 6, label: "Lørdag", checked: false },
+    { id: 7, label: "Søndag", checked: false }
+  ]);
+
+  // age dropdown script: 0+, 12+, 15+, 18+, 21+, 25+, 30+ 
+  let ageOpen = false;
+
+  export const ages = writable([
+    { id: 1, label: "0+", checked: false },
+    { id: 2, label: "12+", checked: false },
+    { id: 3, label: "15+", checked: false },
+    { id: 4, label: "18+", checked: false },
+    { id: 5, label: "21+", checked: false },
+    { id: 6, label: "25+", checked: false },
+    { id: 7, label: "30+", checked: false }
+  ]);
+
+  // gender dropdown script: 
+  let genderOpen = false;
+
+  export const genders = writable([
+    { id: 1, label: "Alle", checked: false },
+    { id: 2, label: "Drenge/mænd", checked: false },
+    { id: 3, label: "Piger/kvinder", checked: false }
+  ]);
+
+  // tags dropdown script:
+  let tagOpen = false;
+
+  export const tags = writable([
+    { id: 1, label: "Kampsport", checked: false },
+    { id: 2, label: "Vand", checked: false },
+    { id: 3, label: "Ketchersport", checked: false }
+  ]);
+
 </script>
 
 <head>
@@ -134,62 +189,125 @@
   <h1>Aalborg Try Out aktiviteter</h1>
 
   <div class="searchAndFilters">
-    <input class="searchbar" type="text" placeholder="Search activities..." />
+    <!-- <input class="searchbar" type="text" placeholder="Search activities..." /> -->
     <Styles />
+    <form on:submit|preventDefault={handleSubmit}>
+      <div class="filters">
 
-    <Dropdown>
-      <DropdownToggle color="primary" caret>Menu</DropdownToggle>
-      <DropdownMenu>
-        <Dropdown direction="right">
-          <DropdownToggle caret class="dropdown-item">Submenu</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
-            <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}
-              >Charlie</DropdownItem
-            >
-          </DropdownMenu>
-        </Dropdown>
-        <DropdownItem divider />
-        <Dropdown direction="right">
-          <DropdownToggle caret class="dropdown-item">Submenu</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
-            <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}
-              >Charlie</DropdownItem
-            >
-          </DropdownMenu>
-        </Dropdown>
-      </DropdownMenu>
-    </Dropdown>
+        <!-- dropdown: location - Aalborg Centrum, Aalborg Øst, Hasseris, Skalborg, Gug, Aalborg Vestby -->
+        <div class="dropdown">
+          <button type="button" on:click={() => (locationsOpen = !locationsOpen)}>
+            Vælg lokation
+          </button>
 
-    <Dropdown>
-      <DropdownToggle color="primary" caret>Menu</DropdownToggle>
-      <DropdownMenu>
-        <Dropdown direction="right">
-          <DropdownToggle caret class="dropdown-item">Submenu</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
-            <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}
-              >Charlie</DropdownItem
-            >
-          </DropdownMenu>
-        </Dropdown>
-        <DropdownItem divider />
-        <Dropdown direction="right">
-          <DropdownToggle caret class="dropdown-item">Submenu</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
-            <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}
-              >Charlie</DropdownItem
-            >
-          </DropdownMenu>
-        </Dropdown>
-      </DropdownMenu>
-    </Dropdown>
+          {#if locationsOpen}
+            <div class="menu">
+              {#each locations as item}
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    on:change={() => toggleItem(item.id, locations)}
+                  />
+                  {item.label}
+                </label>
+              {/each}
+            </div>
+          {/if}
+        </div>
+
+        <!-- dropdown + checkbox: weekdays - Mandag, Tirsdag, Onsdag, Torsdag, Fredag, Lørdag, Søndag -->
+        <div class="dropdown">
+          <button type="button" on:click={() => (weekdayOpen = !weekdayOpen)}>
+            Vælg ugedag
+          </button>
+
+          {#if weekdayOpen}
+            <div class="menu">
+              {#each weekdays as item}
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    on:change={() => toggleItem(item.id, weekdays)}
+                  />
+                  {item.label}
+                </label>
+              {/each}
+            </div>
+          {/if}
+        </div>
+        
+        <!-- dropdown: age - 0+, 12+, 15+, 18+, 21+, 25+, 30+ -->
+        <div class="dropdown">
+          <button type="button" on:click={() => (ageOpen = !ageOpen)}>
+            Vælg alder
+          </button>
+
+          {#if ageOpen}
+            <div class="menu">
+              {#each ages as item}
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    on:change={() => toggleItem(item.id, ages)}
+                  />
+                  {item.label}
+                </label>
+              {/each}
+            </div>
+          {/if}
+        </div>
+        
+        <!-- dropdown: gender - Alle, Drenge/mænd, Piger/kvinder -->
+        <div class="dropdown">
+          <button type="button" on:click={() => (genderOpen = !genderOpen)}>
+            Vælg køn
+          </button>
+
+          {#if genderOpen}
+            <div class="menu">
+              {#each genders as item}
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    on:change={() => toggleItem(item.id, genders)}
+                  />
+                  {item.label}
+                </label>
+              {/each}
+            </div>
+          {/if}
+        </div>
+
+        <!-- dropdown: tags -  -->
+        <div class="dropdown">
+          <button type="button" on:click={() => (tagOpen = !tagOpen)}>
+            Vælg tags
+          </button>
+
+          {#if tagOpen}
+            <div class="menu">
+              {#each tags as item}
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    on:change={() => toggleItem(item.id, tags)}
+                  />
+                  {item.label}
+                </label>
+              {/each}
+            </div>
+          {/if}
+        </div>
+
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
 
     <div>
       <form action="/action_page.php">
@@ -333,5 +451,17 @@
       float: none;
       transform: none;
     }
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  .menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    z-index: 10;
   }
 </style>
