@@ -22,8 +22,6 @@ public class Activity {
 
     public boolean WaitingListEnabled; // Boolean for deciding whether or not a waiting list
 
-    public int WaitingListCapacity; // The maximum capacity for a given waiting list
-
     public Activity() {} // for jackson
 
 }
