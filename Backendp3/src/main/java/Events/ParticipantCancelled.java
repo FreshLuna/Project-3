@@ -1,5 +1,5 @@
 package Events;
-import Classes.Participants;
+import Classes.Participant;
 import Classes.Activity;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ParticipantCancelled {
-    public void checkParticipant(Activity activity, Participants participant) {
+    public void checkParticipant(Activity activity, Participant participant) {
         if (removeParticipant(activity.ActivityName, participant.UserID)) {
             System.out.println("Participant " + participant.UserID + " is removed from activity: " + activity.ActivityName);
         } else {

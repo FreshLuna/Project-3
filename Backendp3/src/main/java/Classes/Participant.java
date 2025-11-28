@@ -1,6 +1,6 @@
 package Classes;
 
-public class Participants {
+public class Participant {
     public int UserID; // ID of the participant
 
     public String FirstName; // First name
@@ -10,5 +10,5 @@ public class Participants {
 
     public Boolean AalborgTryOutIsAllowedToSendMessage; // This determines whether or not we are allowed to send them a notification message
 
-    public Participants() {}
+    public Participant() {}
 }

@@ -1,11 +1,11 @@
 package Events;
 import Classes.Activity;
-import Classes.Participants;
+import Classes.Participant;
 
 public class Verified {
 
     //PUBLIC METHODS
-    public boolean verifyParticipant(Participants p) {
+    public boolean verifyParticipant(Participant p) {
         //Clean first
         p.FirstName = cleanName(p.FirstName);
         p.LastName = cleanName(p.LastName);
