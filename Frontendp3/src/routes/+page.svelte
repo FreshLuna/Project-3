@@ -1,17 +1,21 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import {
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
+    // Dropdown,
+    // DropdownToggle,
+    // DropdownMenu,
+    // DropdownItem,
     Styles,
-    NavItem,
+    // NavItem,
   } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
   import { writable } from "svelte/store";
-  import type { Writable } from 'svelte/store'; // for universal toggleItem
-  import Select from "svelte-select"; // only version 1
-  import { updated } from "$app/state";
+  // import { get, type Writable } from 'svelte/store'; // for reusable toggleItem + reusable checkbox dropdown
+  // import Select from "svelte-select"; // only version 1
+
+  import CheckboxDropdown from "$lib/CheckboxDropdown.svelte";
+  import closeDropdownOnClickOutside from "$lib/CheckboxDropdown.svelte";
+  import { locations, weekdays, ages, genders, tags } from "./stores";
+  // import { updated } from "$app/state";
   // import { error } from "@sveltejs/kit";
 
   // test server request that gets a list of users
@@ -93,233 +97,52 @@
   // Run the loader when the component mounts in the browser
   onMount(loadActivities);
 
-  // old attempt at universal toggleItem (doesn't work, no checkbox retention)
-  // function toggleItem(id:any , items: any) {
-  //   items = items.map((item: any) =>
-  //     item.id === id ? { ...item, checked: !item.checked } : item // rewrite to actual if because ? : is undreadable
-  //   );
-  // }
+  // new handleSubmit function
+  function handleSubmit() {
+    const selectedLocations = $locations.filter((i) => i.checked);
+    console.log("Locations:", selectedLocations);
 
-  // attempt 2
-  export function toggleItem(
-    id: number,
-    store: Writable<{ id: number; checked: boolean}[]> // what is this?
-  ) {
-    store.update(list => // what happens here?
-      list.map(item =>
-        item.id === id
-          ? {... item, checked: !item.checked }
-          : item
-      )
-    );
+    const selectedWeekdays = $weekdays.filter((i) => i.checked);
+    console.log("Weekdays:", selectedWeekdays);
+
+    const selectedAges = $ages.filter((i) => i.checked);
+    console.log("Ages:", selectedAges);
+
+    const selectedGenders = $genders.filter((i) => i.checked);
+    console.log("Genders:", selectedGenders);
+
+    const selectedTags = $tags.filter((i) => i.checked);
+    console.log("Tags:", selectedTags);
   }
 
-  function handleSubmit(items: any) {
-    const selected = items.filter((i: any) => i.checked);
-    console.log(selected);
-  }
-
-  // every dropdown is a writable store (which lets us use a universal toggleItem)
-
-  // location dropdown script: Aalborg Centrum, Aalborg Øst, Hasseris, Skalborg, Gug, Aalborg Vestby
-  let locationsOpen = false;
-
-  export const locations = writable([
-    { id: 1, label: "Aalborg Centrum", checked: false },
-    { id: 2, label: "Aalborg Øst", checked: false },
-    { id: 3, label: "Hasseris", checked: false },
-    { id: 4, label: "Skalborg", checked: false },
-    { id: 5, label: "Gug", checked: false },
-    { id: 6, label: "Aalborg Vestby", checked: false },
-  ]);
-
-  // date (day) dropdown script: Mandag, Tirsdag, Onsdag, Torsdag, Fredag, Lørdag, Søndag
-  let weekdayOpen = false;
-
-  export const weekdays = writable([
-    { id: 1, label: "Mandag", checked: false },
-    { id: 2, label: "Tirsdag", checked: false },
-    { id: 3, label: "Onsdag", checked: false },
-    { id: 4, label: "Torsdag", checked: false },
-    { id: 5, label: "Fredag", checked: false },
-    { id: 6, label: "Lørdag", checked: false },
-    { id: 7, label: "Søndag", checked: false }
-  ]);
-
-  // age dropdown script: 0+, 12+, 15+, 18+, 21+, 25+, 30+ 
-  let ageOpen = false;
-
-  export const ages = writable([
-    { id: 1, label: "0+", checked: false },
-    { id: 2, label: "12+", checked: false },
-    { id: 3, label: "15+", checked: false },
-    { id: 4, label: "18+", checked: false },
-    { id: 5, label: "21+", checked: false },
-    { id: 6, label: "25+", checked: false },
-    { id: 7, label: "30+", checked: false }
-  ]);
-
-  // gender dropdown script: 
-  let genderOpen = false;
-
-  export const genders = writable([
-    { id: 1, label: "Alle", checked: false },
-    { id: 2, label: "Drenge/mænd", checked: false },
-    { id: 3, label: "Piger/kvinder", checked: false }
-  ]);
-
-  // tags dropdown script:
-  let tagOpen = false;
-
-  export const tags = writable([
-    { id: 1, label: "Kampsport", checked: false },
-    { id: 2, label: "Vand", checked: false },
-    { id: 3, label: "Ketchersport", checked: false }
-  ]);
-
+  // every dropdown is a writable store (which lets us use a reusable toggleItem)
 </script>
 
 <head>
+  <!-- where do we use bootstrap? -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
   />
 </head>
 
 <div class="ActivityList">
-  <h1>Aalborg Try Out aktiviteter</h1>
+  <h1>Alle Aktivititer</h1>
 
-  <div class="searchAndFilters">
+
+  <div class="filtersRow">
     <!-- <input class="searchbar" type="text" placeholder="Search activities..." /> -->
     <Styles />
     <form on:submit|preventDefault={handleSubmit}>
       <div class="filters">
+        <CheckboxDropdown store={locations} label="Lokation" />
+        <CheckboxDropdown store={weekdays} label="Ugedage" />
+        <CheckboxDropdown store={ages} label="Alder" />
+        <CheckboxDropdown store={genders} label="Køn" />
+        <CheckboxDropdown store={tags} label="Tags" />
 
-        <!-- dropdown: location - Aalborg Centrum, Aalborg Øst, Hasseris, Skalborg, Gug, Aalborg Vestby -->
-        <div class="dropdown">
-          <button type="button" on:click={() => (locationsOpen = !locationsOpen)}>
-            Vælg lokation
-          </button>
-
-          {#if locationsOpen}
-            <div class="menu">
-              {#each locations as item}
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={item.checked}
-                    on:change={() => toggleItem(item.id, locations)}
-                  />
-                  {item.label}
-                </label>
-              {/each}
-            </div>
-          {/if}
-        </div>
-
-        <!-- dropdown + checkbox: weekdays - Mandag, Tirsdag, Onsdag, Torsdag, Fredag, Lørdag, Søndag -->
-        <div class="dropdown">
-          <button type="button" on:click={() => (weekdayOpen = !weekdayOpen)}>
-            Vælg ugedag
-          </button>
-
-          {#if weekdayOpen}
-            <div class="menu">
-              {#each weekdays as item}
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={item.checked}
-                    on:change={() => toggleItem(item.id, weekdays)}
-                  />
-                  {item.label}
-                </label>
-              {/each}
-            </div>
-          {/if}
-        </div>
-        
-        <!-- dropdown: age - 0+, 12+, 15+, 18+, 21+, 25+, 30+ -->
-        <div class="dropdown">
-          <button type="button" on:click={() => (ageOpen = !ageOpen)}>
-            Vælg alder
-          </button>
-
-          {#if ageOpen}
-            <div class="menu">
-              {#each ages as item}
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={item.checked}
-                    on:change={() => toggleItem(item.id, ages)}
-                  />
-                  {item.label}
-                </label>
-              {/each}
-            </div>
-          {/if}
-        </div>
-        
-        <!-- dropdown: gender - Alle, Drenge/mænd, Piger/kvinder -->
-        <div class="dropdown">
-          <button type="button" on:click={() => (genderOpen = !genderOpen)}>
-            Vælg køn
-          </button>
-
-          {#if genderOpen}
-            <div class="menu">
-              {#each genders as item}
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={item.checked}
-                    on:change={() => toggleItem(item.id, genders)}
-                  />
-                  {item.label}
-                </label>
-              {/each}
-            </div>
-          {/if}
-        </div>
-
-        <!-- dropdown: tags -  -->
-        <div class="dropdown">
-          <button type="button" on:click={() => (tagOpen = !tagOpen)}>
-            Vælg tags
-          </button>
-
-          {#if tagOpen}
-            <div class="menu">
-              {#each tags as item}
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={item.checked}
-                    on:change={() => toggleItem(item.id, tags)}
-                  />
-                  {item.label}
-                </label>
-              {/each}
-            </div>
-          {/if}
-        </div>
-
+        <button type="submit" class="submit-btn">Vis filtrerede</button>
       </div>
-
-      <button type="submit">Submit</button>
     </form>
-
-    <div>
-      <form action="/action_page.php">
-        <input
-          type="checkbox"
-          id="Solsikketilbud"
-          name="Solsikketilbud"
-          value="Solsikketilbud"
-        />
-        <label for="javascript">Solsikketilbud</label>
-      </form>
-    </div>
   </div>
 </div>
 
@@ -353,22 +176,31 @@
 
 <!-- CSS STYLE -->
 <style>
-  .searchAndFilters {
+  .filtersRow {
     padding-top: 30px;
     padding-bottom: 30px;
     display: flex;
   }
 
-  .searchbar {
-    flex: 1;
-    padding: 10px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 20px;
-    margin-left: 20px;
-    max-width: 300px;
+  .filters {
+    display: flex;
+    gap: 1rem; /* optional spacing */
+    align-items: center;
+    flex-wrap: wrap; /* optional, allows wrapping on small screens */
   }
+
+  .submit-btn {
+    /* padding: 0.5rem 1rem; */
+    margin-left: auto;
+    background: #6e479b;
+    color: white;
+    border: 0.2rem solid #6e479b;
+  }
+  .submit-btn:hover {
+      background: white;
+      border: 0.2rem solid #6e479b;
+      color: #6e479b;
+    }
 
   /* font stack applied globally */
   :global(body) {
@@ -451,17 +283,5 @@
       float: none;
       transform: none;
     }
-  }
-
-  .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  .menu {
-    position: absolute;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 0.5rem;
-    z-index: 10;
   }
 </style>
