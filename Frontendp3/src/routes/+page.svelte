@@ -14,7 +14,7 @@
 
   import CheckboxDropdown from "$lib/CheckboxDropdown.svelte";
   import closeDropdownOnClickOutside from "$lib/CheckboxDropdown.svelte";
-  import { locations, weekdays, ages, genders, tags } from "./stores";
+  import { locations, weekdays, ages, genders, tags } from "./filterStores";
   // import { updated } from "$app/state";
   // import { error } from "@sveltejs/kit";
 

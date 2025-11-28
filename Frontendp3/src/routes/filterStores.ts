@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 
-// location dropdown script: Aalborg Centrum, Aalborg Øst, Hasseris, Skalborg, Gug, Aalborg Vestby ---- let locationsOpen = false;
+// location dropdown script
 export const locations = writable([
     { id: 1, label: "Aalborg Centrum", checked: false },
     { id: 2, label: "Aalborg Øst", checked: false },
@@ -10,7 +10,7 @@ export const locations = writable([
     { id: 6, label: "Aalborg Vestby", checked: false },
 ]);
 
-// date (day) dropdown script: Mandag, Tirsdag, Onsdag, Torsdag, Fredag, Lørdag, Søndag ---- let weekdayOpen = false;
+// date (day) dropdown script
 export const weekdays = writable([
     { id: 1, label: "Mandag", checked: false },
     { id: 2, label: "Tirsdag", checked: false },
@@ -21,7 +21,7 @@ export const weekdays = writable([
     { id: 7, label: "Søndag", checked: false }
 ]);
 
-// age dropdown script: 0+, 12+, 15+, 18+, 21+, 25+, 30+ ---- let ageOpen = false;
+// age dropdown script
 export const ages = writable([
     { id: 1, label: "Alle aldre", checked: false },
     { id: 2, label: "12+", checked: false },
@@ -32,14 +32,14 @@ export const ages = writable([
     { id: 7, label: "30+", checked: false }
 ]);
 
-// gender dropdown script: let genderOpen = false;
+// gender dropdown script
 export const genders = writable([
     { id: 1, label: "Alle", checked: false },
     { id: 2, label: "Drenge/mænd", checked: false },
     { id: 3, label: "Piger/kvinder", checked: false }
 ]);
 
-// tags dropdown script: let tagOpen = false;
+// tags dropdown script
 export const tags = writable([
     { id: 1, label: "Kampsport", checked: false },
     { id: 2, label: "Vand", checked: false },
