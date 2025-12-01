@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 public class ParticipantCancelled {
     public void checkParticipant(Activity activity, Participant participant) {
-        if (removeParticipant(activity.ActivityName, participant.UserID)) {
-            System.out.println("Participant " + participant.UserID + " is removed from activity: " + activity.ActivityName);
+        if (removeParticipant(activity.getActivityName(), participant.getUserID())) {
+            System.out.println("Participant " + participant.getUserID() + " is removed from activity: " + activity.getActivityName());
         } else {
-            System.out.println("Participant " + participant.UserID + " was NOT found in: " + activity.ActivityName);
+            System.out.println("Participant " + participant.getUserID() + " was NOT found in: " + activity.getActivityName());
         }
     }
 

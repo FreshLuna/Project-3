@@ -21,7 +21,7 @@ public class Removed {
 
         // Remove the one with the given id
         List<Activity> updated = activities.stream()
-                .filter(a -> a.ActivityID != id)
+                .filter(a -> a.getActivityID() != id)
                 .collect(Collectors.toList());
 
         // Save updated list

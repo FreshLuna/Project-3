@@ -8,10 +8,10 @@ import java.util.List;
 public class FullyBooked {
     //If activity is fully booked, then print "Aktiviteten * er fuldt booket"
     public void checkActivity(Activity activity) {
-        if (isActivityFullyBooked(activity.ActivityName, activity.ActivityCapacity, activity.WaitingListEnabled)) {
-            System.out.println("Aktiviteten " + activity.ActivityName + " er fuldt booket");
+        if (isActivityFullyBooked(activity.getActivityName(), activity.getActivityCapacity(), activity.isWaitingListEnabled())) {
+            System.out.println("Aktiviteten " + activity.getActivityName() + " er fuldt booket");
         } else {
-                System.out.println("Aktiviteten " + activity.ActivityName + " er ikke fuldt booket");
+                System.out.println("Aktiviteten " + activity.getActivityName() + " er ikke fuldt booket");
             }
     }
 

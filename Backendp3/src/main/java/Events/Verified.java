@@ -7,33 +7,33 @@ public class Verified {
     //PUBLIC METHODS
     public boolean verifyParticipant(Participant p) {
         //Clean first
-        p.FirstName = cleanName(p.FirstName);
-        p.LastName = cleanName(p.LastName);
-        p.Email = cleanEmail(p.Email);
-        p.DateOfBirth = p.DateOfBirth != null ? p.DateOfBirth.trim() : null;
+        p.setFirstName(cleanName(p.getFirstName()));
+        p.setLastName(cleanName(p.getLastName()));
+        p.setEmail(cleanEmail(p.getEmail()));
+        p.setDateOfBirth(p.getDateOfBirth() != null ? p.getDateOfBirth().trim() : null);
 
         //Validate cleaned fields
         boolean valid = true;
-        if (isMissing(p.FirstName) || !isAlpha(p.FirstName)) valid = false;
-        if (isMissing(p.LastName) || !isAlpha(p.LastName)) valid = false;
-        if (!isValidEmail(p.Email)) valid = false;
-        if (!isValidDateOfBirth(p.DateOfBirth)) valid = false;
+        if (isMissing(p.getFirstName()) || !isAlpha(p.getFirstName())) valid = false;
+        if (isMissing(p.getLastName()) || !isAlpha(p.getLastName())) valid = false;
+        if (!isValidEmail(p.getEmail())) valid = false;
+        if (!isValidDateOfBirth(p.getDateOfBirth())) valid = false;
 
         return valid;
     }
 
     public boolean verifyActivity(Activity a) {
         //Clean first
-        a.ActivityName = cleanActivityName(a.ActivityName);
-        a.Location = removeExtraSpaces(a.Location);
-        a.AgeGroup = cleanAgeGroup(a.AgeGroup);
+        a.setActivityName(cleanActivityName(a.getActivityName()));
+        a.setLocation(removeExtraSpaces(a.getLocation()));
+        a.setAgeGroup(cleanAgeGroup(a.getAgeGroup()));
 
         //Validate cleaned fields
         boolean valid = true;
-        if (isMissing(a.ActivityName)) valid = false;
-        if (a.ActivityCapacity <= 0) valid = false;
-        if (isMissing(a.Location)) valid = false;
-        if (!isValidAgeGroup(a.AgeGroup)) valid = false;
+        if (isMissing(a.getActivityName())) valid = false;
+        if (a.getActivityCapacity() <= 0) valid = false;
+        if (isMissing(a.getLocation())) valid = false;
+        if (!isValidAgeGroup(a.getAgeGroup())) valid = false;
 
         return valid;
     }

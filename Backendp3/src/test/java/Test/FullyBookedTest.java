@@ -10,7 +10,7 @@ class FullyBookedTest {
     FullyBooked fb = new FullyBooked();
     String name = "ForTest";
     int capacity = 5;
-    boolean waitlist = true;
+    boolean waitlistEnabled = true;
     @BeforeEach
     void setUp() {
 
@@ -27,18 +27,18 @@ class FullyBookedTest {
     @Test
     void isActivityFullyBookedPath() {
 
-        boolean truePath = fb.isActivityFullyBooked(name,capacity,waitlist);
+        boolean truePath = fb.isActivityFullyBooked(name,capacity,waitlistEnabled);
 
         assertTrue(truePath);
 
         String falseName= "ForTestFalse";
 
-        boolean falsePath = fb.isActivityFullyBooked(falseName,capacity,waitlist);
+        boolean falsePath = fb.isActivityFullyBooked(falseName,capacity,waitlistEnabled);
         assertFalse(falsePath);
     }
     @Test
     void isActivityFullyBookedCapacity(){
 
-        
+
     }
 }

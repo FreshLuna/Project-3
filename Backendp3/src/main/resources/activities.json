@@ -118,6 +118,49 @@
   "ActivityDifficulty" : "Beginner",
   "WaitingListEnabled" : true,
   "WaitingListCapacity" : 3
-}
-
-]
+}, {
+  "ActivityID" : 1337,
+  "ActivityName" : "Monner",
+  "ActivityOrganizer" : "Mae",
+  "TypeOfActivity" : "hygge",
+  "Instructors" : "Andreaz",
+  "DateAndTime" : 20251127,
+  "Location" : "Cass",
+  "GenderGroup" : "girlies",
+  "AgeGroup" : "16+",
+  "ActivityCapacity" : 4,
+  "ActivityDescription" : "Monner med Andreaz",
+  "ActivityDifficulty" : "Hard",
+  "WaitingListEnabled" : true,
+  "WaitingListCapacity" : 0
+}, {
+  "ActivityID" : 1337,
+  "ActivityName" : "Monner",
+  "ActivityOrganizer" : "Mae",
+  "TypeOfActivity" : "hygge",
+  "Instructors" : "Andreaz",
+  "DateAndTime" : 20251127,
+  "Location" : "Cass",
+  "GenderGroup" : "girlies",
+  "AgeGroup" : "16+",
+  "ActivityCapacity" : 4,
+  "ActivityDescription" : "Monner med Andreaz",
+  "ActivityDifficulty" : "Hard",
+  "WaitingListEnabled" : true,
+  "WaitingListCapacity" : 0
+}, {
+  "ActivityID" : 0,
+  "ActivityName" : null,
+  "ActivityOrganizer" : null,
+  "TypeOfActivity" : null,
+  "Instructors" : null,
+  "DateAndTime" : 0,
+  "Location" : null,
+  "GenderGroup" : null,
+  "AgeGroup" : null,
+  "ActivityCapacity" : 0,
+  "ActivityDescription" : null,
+  "ActivityDifficulty" : null,
+  "WaitingListEnabled" : false,
+  "WaitingListCapacity" : 0
+} ]
