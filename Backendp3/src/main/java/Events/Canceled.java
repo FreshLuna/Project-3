@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ParticipantCancelled {
+public class Canceled {
     public void checkParticipant(Activity activity, Participant participant) {
         if (removeParticipant(activity.getActivityName(), participant.getUserID())) {
             System.out.println("Participant " + participant.getUserID() + " is removed from activity: " + activity.getActivityName());

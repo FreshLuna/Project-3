@@ -25,15 +25,15 @@ class FullyBookedTest {
     }
 
     @Test
-    void isActivityFullyBookedPath() {
+    void isActivityOpenPath() {
 
-        boolean truePath = fb.isActivityFullyBooked(name,capacity,waitlistEnabled);
+        boolean truePath = fb.isActivityOpen(name,capacity,waitlistEnabled);
 
         assertTrue(truePath);
 
         String falseName= "ForTestFalse";
 
-        boolean falsePath = fb.isActivityFullyBooked(falseName,capacity,waitlistEnabled);
+        boolean falsePath = fb.isActivityOpen(falseName,capacity,waitlistEnabled);
         assertFalse(falsePath);
     }
     @Test
