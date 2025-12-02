@@ -1,10 +1,13 @@
 package Server;
 
 import Classes.Activity;
+import Database.FilterRequest;
 import Events.Published;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
+import java.util.List;
+
 import Events.SignedUp;
 
 public class PostHandler {
@@ -31,6 +34,16 @@ public class PostHandler {
                 Published.publish(activity);
 
                 yield "Activity published";
+            }
+
+            case "/server/activities/filter" -> {
+                FilterRequest request = mapper.readValue(body, FilterRequest.class);
+
+                // get filtered requests
+                List<Activity> result = PostGetServer.getActivityService().filterByTags(request.getSelectedTags());
+
+                // return JSON
+                yield mapper.writeValueAsString(result);
             }
 
             case "/server/shutdown" -> "bye";

@@ -7,7 +7,9 @@
     DropdownItem,
     Styles,
   } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
-  import { writable } from "svelte/store";
+  import { writable, get } from "svelte/store"; 
+  import { selectedTags } from "$lib/selectedTags";
+
   // import { error } from "@sveltejs/kit";
 
   // test server request that gets a list of users
@@ -122,6 +124,19 @@
 
   // Run the loader when the component mounts in the browser
   onMount(loadActivities);
+
+  async function showFiltered() {
+    const tags = get(selectedTags);
+
+    const res = await fetch("https://localhost:8443/server/activities/filter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ selectedTags: tags })
+    });
+
+    const data = await res.json();
+    activities.set(data);
+  }
 </script>
 
 <head>
