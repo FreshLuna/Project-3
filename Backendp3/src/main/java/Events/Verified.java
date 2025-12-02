@@ -1,6 +1,11 @@
 package Events;
 import Classes.Activity;
 import Classes.Participant;
+import java.io.BufferedReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 public class Verified {
 
@@ -20,6 +25,58 @@ public class Verified {
         if (!isValidDateOfBirth(p.getDateOfBirth())) valid = false;
 
         return valid;
+    }
+
+    public String verifyNotAlreadySignedUp(Activity activity, Participant participant) {
+
+        // Clean participant fields first
+        String cleanedFirst = cleanName(participant.getFirstName());
+        String cleanedEmail = cleanEmail(participant.getEmail());
+
+        if (cleanedFirst == null || cleanedEmail == null) {
+            return "Invalid participant data.";
+        }
+
+        // Correct file path
+        String activityName = activity.getActivityName();
+        Path filePath = Paths.get("src/main/sources/events/" + activityName + "_users.txt");
+
+        if (!Files.exists(filePath)) {
+            return "Could not read user file: " + filePath;
+        }
+
+        try (BufferedReader br = Files.newBufferedReader(filePath)) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+
+                line = line.trim();
+                if (line.isEmpty()) continue;
+
+                // Extract fields manually from JSON-like string
+                String existingFirst = extractJsonValue(line, "firstname");
+                String existingEmail = extractJsonValue(line, "email");
+
+                // Clean loaded values
+                existingFirst = cleanName(existingFirst);
+                existingEmail = cleanEmail(existingEmail);
+
+                if (existingFirst == null || existingEmail == null)
+                    continue;
+
+                boolean firstMatch = cleanedFirst.equalsIgnoreCase(existingFirst);
+                boolean emailMatch = cleanedEmail.equalsIgnoreCase(existingEmail);
+
+                if (firstMatch && emailMatch) {
+                    return "User is already signed up to the activity.";
+                }
+            }
+
+        } catch (IOException e) {
+            return "Could not read user file: " + filePath;
+        }
+
+        return "OK"; // user not found → safe to sign up
     }
 
     public boolean verifyActivity(Activity a) {
@@ -102,60 +159,48 @@ public class Verified {
         if (age == null) return null;
         return age.replaceAll("[^0-9+]", "");
     }
-/*
-    // MAIN METHOD FOR TESTING
-    public static void main(String[] args) {
-        //sample Activity
-        Activity activity = new Activity();
-        activity.ActivityName = "  Yoga / Beginner ";
-        activity.ActivityCapacity = 10;
-        activity.Location = "   Main Hall  ";
-        activity.ActivityOrganizer = "Alice";
-        activity.TypeOfActivity = "Fitness";
-        activity.Instructors = "Bob";
-        activity.DateAndTime = 202511271200L; // note L suffix
-        activity.GenderGroup = "All";
-        activity.AgeGroup = "25+ years";
-        activity.ActivityDescription = "Relaxing yoga session";
-        activity.ActivityDifficulty = "Beginner";
-        activity.WaitingListEnabled = true;
 
-        //sample Participant
-        Participants participant = new Participants();
-        participant.FirstName = "  john123  ";
-        participant.LastName = "DOE!!";
-        participant.Email = " John.Doe@Example.Com ";
-        participant.DateOfBirth = "01/01/2000";
-        participant.UserID = 1;
-        participant.AalborgTryOutIsAllowedToSendMessage = true;
+    //Simple JSON extraction
+    private String extractJsonValue(String json, String key) {
+        // Example pattern: "firstname":"pizza"
+        String search = "\"" + key + "\":\"";
+        int start = json.indexOf(search);
+        if (start == -1) return null;
+
+        start += search.length();
+        int end = json.indexOf("\"", start);
+
+        if (end == -1) return null;
+
+        return json.substring(start, end);
+    }
+
+    //TEST METHOD FOR VERIFYING WHETHER PARTICIPANT IS ALREADY SIGNED UP
+   /* public static void main(String[] args) {
 
         Verified verifier = new Verified();
 
-        //Before cleaning
-        System.out.println("Before cleaning:");
-        System.out.println("Activity Name: " + activity.ActivityName);
-        System.out.println("Activity Location: " + activity.Location);
-        System.out.println("Activity Age Group: " + activity.AgeGroup);
-        System.out.println("Participant FirstName: " + participant.FirstName);
-        System.out.println("Participant LastName: " + participant.LastName);
-        System.out.println("Participant Email: " + participant.Email);
-        System.out.println("Participant Date of Birth: " + participant.DateOfBirth);
+        // --- Create a test activity ---
+        Activity activity = new Activity();
+        activity.setActivityName("diller");   // MUST match your filename: diller_users.txt
 
-        //Run verification
-        boolean activityValid = verifier.verifyActivity(activity);
-        boolean participantValid = verifier.verifyParticipant(participant);
+        // --- Create a test participant ---
+        Participant p = new Participant();
+        p.setFirstName("Pizz");
+        p.setLastName("Man");
+        p.setEmail("pizza@man.dk");
+        p.setDateOfBirth("01/01/2000");
 
-        //After cleaning
-        System.out.println("\nAfter cleaning:");
-        System.out.println("Activity valid: " + activityValid);
-        System.out.println("Activity Name: " + activity.ActivityName);
-        System.out.println("Activity Location: " + activity.Location);
-        System.out.println("Activity Age Group: " + activity.AgeGroup);
-        System.out.println("Participant valid: " + participantValid);
-        System.out.println("Participant FirstName: " + participant.FirstName);
-        System.out.println("Participant LastName: " + participant.LastName);
-        System.out.println("Participant Email: " + participant.Email);
-        System.out.println("Participant Date of Birth: " + participant.DateOfBirth);
+        // --- Run duplicate check ---
+        String check = verifier.verifyNotAlreadySignedUp(activity, p);
+
+        System.out.println("----- TEST RESULT -----");
+        System.out.println("Activity name: " + activity.getActivityName());
+        System.out.println("Participant: " + p.getFirstName() + " " + p.getLastName());
+        System.out.println("Email: " + p.getEmail());
+        System.out.println("------------------------");
+        System.out.println("Verification result: " + check);
+        System.out.println("------------------------");
     }
- */
+    */
 }
