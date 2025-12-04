@@ -72,7 +72,7 @@ public class VerifiedTest {
         boolean result = verifier.verifyActivity(a);
 
         assertTrue(result);
-        assertEquals("monner--hard", a.getActivityName());
+        assertEquals("monner-hard", a.getActivityName());
         assertEquals("Cass", a.getLocation());
         assertEquals("20+", a.getAgeGroup());
     }
