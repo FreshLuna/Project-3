@@ -51,7 +51,7 @@ public class PostGetServer {
         server.createContext("/server", PostGetServer::handleRequest);
 
         // activity service initialized on start before server
-        activityService = new ActivityService("activities.json");
+        activityService = new ActivityService();
 
         server.start();
         System.out.println("HTTPS server running on https://localhost:8443/server");
