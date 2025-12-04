@@ -41,14 +41,18 @@ ul .nav-links a:hover {
 
 <nav>
   <ul>
+    <li class="nav-links">
+      <a href="/">Forside</a>
+      <a href="/">Se alle aktiviteter</a>
+    </li>
     <li class="logo">
       <a href="/"><img alt="The project logo" src={logo} /></a>
     </li>
 
-	<li class="nav-links">
-    	<a href="/login" class="nav-link">Login</a>
-    	<a href="/opret" class="nav-link">Opret Organisation</a>
-	</li>
+	  <li class="nav-links">
+    	<a href="/login">Login</a>
+    	<a href="/opret">Opret Organisation</a>
+	  </li>
 
   </ul>
 </nav>
