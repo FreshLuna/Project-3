@@ -1,44 +1,56 @@
 package Test;
 
+import Events.FullyBooked;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import Events.FullyBooked;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 class FullyBookedTest {
-    FullyBooked fb = new FullyBooked();
-    String name = "ForTest";
-    int capacity = 5;
-    boolean waitlistEnabled = true;
+
+    private static final Path TEST_DIR = Path.of("src/main/sources/events/test_temp");
+
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        Files.createDirectories(TEST_DIR);
+
 
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown()throws Exception {
+
+        if (Files.exists(TEST_DIR)){
+            Files.walk(TEST_DIR)
+                    .map(path->path.toFile())
+                    .forEach(file -> file.delete());
+            TEST_DIR.toFile().delete();
+        }
     }
 
     @Test
-    void checkActivity() {
+    void activityOpen() throws Exception{
+        String activityName = "Coffee_full";
+        Path file = TEST_DIR.resolve(activityName +"_users.txt");
+        Files.writeString(file, "Mia\nLuna\nDennisMay\n");
+
+        assertTrue(FullyBooked.isActivityOpen("test_temp/" + activityName, 3, false));
     }
 
     @Test
-    void isActivityOpenPath() {
+    void ActivityNotOpen()throws Exception {
 
-        boolean truePath = fb.isActivityOpen(name,capacity,waitlistEnabled);
+        String activityName = "Coffee_Not_full";
+        Path file = TEST_DIR.resolve(activityName +"_users.txt");
+        Files.writeString(file,"Mae\nLena\n");
+        assertFalse(FullyBooked.isActivityOpen("test_temp/" + activityName,3,false));
 
-        assertTrue(truePath);
-
-        String falseName= "ForTestFalse";
-
-        boolean falsePath = fb.isActivityOpen(falseName,capacity,waitlistEnabled);
-        assertFalse(falsePath);
     }
-    @Test
-    void isActivityFullyBookedCapacity(){
+
 
 
     }
-}

@@ -1,50 +1,55 @@
 package Test;
 
+import Classes.Activity;
+import Events.Published;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-
-import static org.junit.jupiter.api.Assertions.*;
-import Events.Published;
-import Classes.Activity;
 import org.junit.jupiter.api.Test;
 
-class PublishedTest {
-Activity testActivity = new Activity();
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 
-Published published = new Published();
+import static org.junit.jupiter.api.Assertions.*;
+
+class PublishedTest {
+
+    private static final File TEST_FILE = new File("src/test/resources/activities_test.json");
 
     @BeforeEach
     void setUp() {
 
+        if (TEST_FILE.exists()) {
+            TEST_FILE.delete();
+        }
     }
-
 
     @AfterEach
     void tearDown() {
+
+        if (TEST_FILE.exists()) {
+            TEST_FILE.delete();
+        }
     }
 
-    @Test //test that activity is added to list of activities
-    void publish() {
-    testActivity.ActivityID = 1337;
-    testActivity.ActivityName = "Monner";
-    testActivity.ActivityCapacity = 4;
-    testActivity.TypeOfActivity = "hygge";
-    testActivity.ActivityOrganizer = "Mae";
-    testActivity.ActivityDescription = "Monner med Andreaz";
-    testActivity.DateAndTime = 20251127;
-    testActivity.GenderGroup = "girlies";
-    testActivity.Instructors = "Andreaz";
-    testActivity.WaitingListEnabled = true;
-    testActivity.Location = "Cass";
-    testActivity.ActivityDifficulty = "Hard";
-    testActivity.AgeGroup = "16+";
+    @Test
+    void publish() throws IOException {
+        // Arrange: create an activity
+        Activity activity = new Activity();
+        activity.setActivityName("Test Activity");
+        activity.setActivityCapacity(5);
+        activity.
+        // Act: publish it
+        Published.publish(activity);
 
-    published.publish(testActivity);
+        // Assert: the file exists
+        assertTrue(TEST_FILE.exists(), "activities.json file should exist");
+
+        // Assert: the file contains the activity name
+        List<String> lines = Files.readAllLines(TEST_FILE.toPath());
+        boolean containsActivityName = lines.stream().anyMatch(line -> line.contains("Test Activity"));
+        assertTrue(containsActivityName, "activities.json should contain the published activity");
+
     }
-   @Test
-   void publishNull(){
-
-        published.publish(testActivity);
-   }
-
 }

@@ -14,6 +14,9 @@ public class Published {
 
     public static void publish(Activity inputActivity) {
 
+
+
+
         try {
             List<Activity> activities;
 

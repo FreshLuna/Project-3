@@ -30,7 +30,7 @@ public class Canceled {
 
             // String to search for inside JSON
             String idKey = "\"userID\":" + userID;
-
+            System.out.println(userID);
             // Filter out JSON line containing the ID
             List<String> updatedUsers = users.stream()
                     .filter(line -> !line.contains(idKey))
