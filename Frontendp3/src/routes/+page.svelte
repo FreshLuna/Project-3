@@ -81,15 +81,31 @@
 
       const data = await res.json();
 
-      const mappedActivities: activity[] = data.map((item: activity) => ({
-        imgFile: item.imgFile ?? "",
-        imgUrl: item.imgUrl ?? null, // only displaying image link
-        title: item.title ?? "",
-        organization: item.organization ?? "",
-        date: item.date ?? "",
-        time: item.time ?? "",
-        age: item.age ?? "",
-      }));
+      const mappedActivities: activity[] = data.map((item: any) => {
+        // Parse DateAndTime (format: yyyyMMddHHmm, e.g., 202503150900)
+        const dateTimeStr = String(item.DateAndTime || "");
+        const year = dateTimeStr.slice(0, 4);
+        const month = dateTimeStr.slice(4, 6);
+        const day = dateTimeStr.slice(6, 8);
+        const hour = dateTimeStr.slice(8, 10);
+        const minute = dateTimeStr.slice(10, 12);
+
+        const date = `${day}/${month}/${year}`;
+        const time = `${hour}:${minute}`;
+
+        // Map activity number to image file (e.g., 1 -> activity1.avif)
+        const imgFile = `activity${item.ActivityID}.avif`;
+
+        return {
+          imgFile: imgFile,
+          imgUrl: null, // URLs will be handled separately if needed
+          title: item.ActivityName ?? "",
+          organization: item.ActivityOrganizer ?? "",
+          date: date,
+          time: time,
+          age: item.AgeGroup ?? "",
+        };
+      });
 
       activities.set(mappedActivities);
     } catch (err) {

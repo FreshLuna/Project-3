@@ -25,9 +25,8 @@ public class Activity {
     private String GenderGroup; // Who is the targeted gender group for this activity?
     private String AgeGroup; // Who is the targeted age group for this activity?
 
-    public int ActivityCapacity; // The maximum capacity of participants for this activity
-    private int WaitingListCapacity; // The maximum capacity of the waiting list (if enabled)
     private int ActivityCapacity; // The maximum capacity of participants for this activity
+    private int WaitingListCapacity; // The maximum capacity of the waiting list (if enabled)
 
     private String ActivityDescription; // A description that goes over what the activity is about
     private String ActivityDifficulty; // The difficulty level of the activity (Beginner, Intermediate,

@@ -22,7 +22,18 @@
 		try {
 			const res = await fetch('https://localhost:8443/server/activities');
 			if (!res.ok) throw new Error('Failed');
-			activities = await res.json();
+			const data = await res.json();
+			
+			// Map backend Activity fields to component structure
+			activities = data.map((item: any) => ({
+				id: item.ActivityID,
+				title: item.ActivityName,
+				organization: item.ActivityOrganizer,
+				date: item.DateAndTime,
+				age: item.AgeGroup,
+				imgUrl: null
+			}));
+			
 			pickRandomRows(activities);
 		} finally {
 			loading = false;
