@@ -11,6 +11,6 @@ public class Expired { //returns true if event is expired
         LocalDate currentDate = LocalDate.now(); // Create a date object
         DateTimeFormatter FormattedDate = DateTimeFormatter.ofPattern("yyyyMMddHHmm");
         long currentDateInt = parseLong(currentDate.format(FormattedDate));
-        return inputActivity.DateAndTime > currentDateInt;
+        return inputActivity.getDateAndTime() > currentDateInt;
     }
 }

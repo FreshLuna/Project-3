@@ -13,23 +13,24 @@ public class Activity {
 
     public int ActivityID; // ID of the activity
 
-    public String ActivityName; // The name displayed for the activity
-    public String ActivityOrganizer; // The organization who is in charge of hosting the activity
+    private String ActivityName; // The name displayed for the activity
+    private String ActivityOrganizer; // The organization who is in charge of hosting the activity
 
-    public String TypeOfActivity; // The type of activity in question (Rowing, Climbing, etc)
-    public String Instructors; // Who will be in charge of the activity during its duration
+    private String TypeOfActivity; // The type of activity in question (Rowing, Climbing, etc)
+    private String Instructors; // Who will be in charge of the activity during its duration
 
-    public long DateAndTime; // yyyy/mm/dd/hh/mm/ The date and time the activity will take place
-    public String Location; // The location where the activity will be held
+    private long DateAndTime; // yyyy/mm/dd/hh/mm/ The date and time the activity will take place
+    private String Location; // The location where the activity will be held
 
-    public String GenderGroup; // Who is the targeted gender group for this activity?
-    public String AgeGroup; // Who is the targeted age group for this activity?
+    private String GenderGroup; // Who is the targeted gender group for this activity?
+    private String AgeGroup; // Who is the targeted age group for this activity?
 
     public int ActivityCapacity; // The maximum capacity of participants for this activity
     private int WaitingListCapacity; // The maximum capacity of the waiting list (if enabled)
+    private int ActivityCapacity; // The maximum capacity of participants for this activity
 
-    public String ActivityDescription; // A description that goes over what the activity is about
-    public String ActivityDifficulty; // The difficulty level of the activity (Beginner, Intermediate,
+    private String ActivityDescription; // A description that goes over what the activity is about
+    private String ActivityDifficulty; // The difficulty level of the activity (Beginner, Intermediate,
 
     public boolean WaitingListEnabled; // Boolean for deciding whether to have a waiting list
     public List<String> Tags;

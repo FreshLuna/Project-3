@@ -16,7 +16,7 @@ public class Modified {
         boolean found = false;
 
         for (Activity a : activities) {
-            if (a.ActivityID == id) {
+            if (a.getActivityID() == id) {
                 found = true;
 
                 Field[] fields = Activity.class.getDeclaredFields();

@@ -8,15 +8,15 @@ import java.util.List;
 public class FullyBooked {
     //If activity is fully booked, then print "Aktiviteten * er fuldt booket"
     public void checkActivity(Activity activity) {
-        if (isActivityFullyBooked(activity.ActivityName, activity.ActivityCapacity, activity.WaitingListEnabled)) {
-            System.out.println("Aktiviteten " + activity.ActivityName + " er fuldt booket");
+        if (isActivityOpen(activity.getActivityName(), activity.getActivityCapacity(), activity.isWaitingListEnabled())) {
+            System.out.println("Aktiviteten " + activity.getActivityName() + " er fuldt booket");
         } else {
-                System.out.println("Aktiviteten " + activity.ActivityName + " er ikke fuldt booket");
+                System.out.println("Aktiviteten " + activity.getActivityName() + " er ikke fuldt booket");
             }
     }
 
     // Checks if an activity is fully booked if it is return isFullyBooked
-    public static boolean isActivityFullyBooked(String activityName, int activityCapacity, boolean waitingListEnabled) {
+    public static boolean isActivityOpen(String activityName, int activityCapacity, boolean waitingListEnabled) {
         try {
             Path filePath = Paths.get("src/main/sources/events/" + activityName + "_users.txt");
 
@@ -30,9 +30,9 @@ public class FullyBooked {
             int participantCount = users.size();
 
             // Activity is fully booked when participant count >= capacity
-            boolean isFullyBooked = participantCount >= activityCapacity;
+            boolean isActivityOpen = participantCount >= activityCapacity;
 
-            if (isFullyBooked) {
+            if (isActivityOpen) {
                 System.out.println("Aktiviteten " + activityName + " har " + participantCount + " brugere på listen i alt");
 
                 if (waitingListEnabled) {
@@ -42,7 +42,7 @@ public class FullyBooked {
                 }
             }
 
-            return isFullyBooked;
+            return isActivityOpen;
 
         } catch (Exception e) {
             System.err.println("Fejl ved læsning af deltager fil for " + activityName + ": " + e.getMessage());
