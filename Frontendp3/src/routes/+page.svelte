@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte"; // onDestroy
   import {
     // Dropdown,
     // DropdownToggle,
@@ -8,15 +8,17 @@
     Styles,
     // NavItem,
   } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
-  import { writable } from "svelte/store";
-  import { redirect } from "@sveltejs/kit";
+  // import { redirect } from "@sveltejs/kit";
   // import { get, type Writable } from 'svelte/store'; // for reusable toggleItem + reusable checkbox dropdown
   // import Select from "svelte-select"; // only version 1
 
   import CheckboxDropdown from "$lib/CheckboxDropdown.svelte";
-  import closeDropdownOnClickOutside from "$lib/CheckboxDropdown.svelte";
+  // import closeDropdownOnClickOutside from "$lib/CheckboxDropdown.svelte";
   import { locations, weekdays, ages, genders, tags } from "./filterStores";
   // import { updated } from "$app/state";
+  import { writable, get } from "svelte/store"; 
+  import { selectedTags } from "$lib/selectedTags";
+
   // import { error } from "@sveltejs/kit";
 
   // test server request that gets a list of users
@@ -117,6 +119,18 @@
   }
 
   // every dropdown is a writable store (which lets us use a reusable toggleItem)
+  async function showFiltered() {
+    const tags = get(selectedTags);
+
+    const res = await fetch("https://localhost:8443/server/activities/filter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ selectedTags: tags })
+    });
+
+    const data = await res.json();
+    activities.set(data);
+  }
 </script>
 
 <head>
