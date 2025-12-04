@@ -6,9 +6,12 @@
     let lastName = "";
     let dateOfBirth = "";
     let email = "";
-    let phoneNumber = "";
+    // let phoneNumber = "";
     let tosAccept = false;
     let infoSendAccept = false;
+
+    // PopUp state
+    let isPopUpOpen = false;
 
     // FIX: Correctly read params from $page store
     let activity = "";
@@ -21,7 +24,7 @@
             lastname: lastName,
             dateOfBirth: dateOfBirth,
             email: email,
-            phoneNumber: phoneNumber,
+            //phoneNumber: phoneNumber,
             tosAccept: tosAccept,
             infoSendAccept: infoSendAccept,
             activity: activity
@@ -47,7 +50,7 @@
             lastName = "";
             dateOfBirth = "";
             email = "";
-            phoneNumber = "";
+            //phoneNumber = "";
             tosAccept = false;
             infoSendAccept = false;
 
@@ -56,24 +59,42 @@
             alert("Network error sending sign-up. Check server and HTTPS settings.");
         }
     }
+
+    // Sveltes own functions to open and close pop up
+    // Instead of using document.getElementById etc, we use thise. 
+    // These functions are called at line 145-154. When the buttons are clicked, the popup will be set to either true or false, meaning it will open or close. 
+    function handleOpenPopUp() {
+        isPopUpOpen = true;
+    }
+
+    function handleClosePopUp() {
+        isPopUpOpen = false;
+    }
+
 </script>
 
 
 <!-- <h1>Aalborg Try Out: Activity Test!!! (vi prøver igen)</h1> -->
 <div class="container">
 
-    <!-- Left half: Activity info -->
+    <!-- Left half: Activity Image -->
+    <div class="halfPageBox">
+        <img class="activityImage" src="https://i.imgur.com/1KoNJZ6.jpeg" alt="activityImage"/>
+    </div>
+
+    <!-- Right half: Activity info and Description box -->
     <div class="halfPageBox">
         <div class="nameOrganizerInviteBox">
+
             <!-- Left: Name + Organizer -->
             <div class="noiRightBox">
-                <h2>Name of activity ({$page.params.activity})</h2>
-                <p>Organizer</p>
+                <h2>{$page.params.activity} (navn på aktivitet) </h2>
+                <p>(Organisator)</p>
             </div>
 
             <!-- Right: Invite button -->
             <div class="noiLeftBox">
-                <button>Invite a friend</button>
+                <button>Invitér en ven</button>
             </div>
         </div>
 
@@ -82,127 +103,140 @@
                 <tbody>
                     <tr>
                         <td>
-                            <b>Activity</b><br>
-                            Example Activity
+                            <b>Aktivitet</b><br>
+                            Eksempel Aktivitet
                         </td>
                         <td>
-                            <b>Instructor</b><br>
+                            <b>Instruktør</b><br>
                             Lars Larsen
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <b>Time and Date</b><br>
-                            17:00 10th November 2025
+                            <b>Tidspunkt</b><br>
+                            D. 10. november 2025 kl. 17.00
                         </td>
                         <td>
-                            <b>Place</b><br>
+                            <b>Adresse og mødested</b><br>
                             Selma Lagerlöfsvej 300, 9220 Aalborg
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <b>Gender</b><br>
-                            Any
+                            <b>Køn</b><br>
+                            Alle køn
                         </td>
                         <td>
-                            <b>Age Group</b><br>
+                            <b>Aldersgruppe</b><br>
                             15-25
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <!-- Right half: Sign-up & description -->
-    <div class="halfPageBox">
-
+        <!-- DESCRIPTION BOX (outside) -->
         <div class="innerBox">
-            <h3>Sign up for FREE to the activity</h3>
-            <p>Optional custom message to display</p>
+            <h3>Beskrivelse</h3>
+            <p>Placeholder beskrivelse</p>
+            <div class="btn">Læs mere</div>
+        </div>
 
-            <form class="formLayout" on:submit|preventDefault={submitHandler}>
+        <!-- SIGN UP BUTTON (outside) -->
+        
+            <button class="signUpBtn" on:click={handleOpenPopUp}>Tilmeld til aktivitet</button> <!-- When the button is clicked, the pop up will open -->
+        
+
+        <!-- POP UP BOX (inside) -->
+        <div class="popUpBox" class:open={isPopUpOpen}> <!-- to connect to the css -->
+            <div class="popUpSignUp">
+
+            <div class="innerBox">
+                
+                    <button class="closeBtn" on:click={handleClosePopUp}>Luk</button> <!-- When the button within the popup is clicked, the pop up will close -->
+
+                    <div class="popUpTitle">
+                        <h2>Tilmeld dig gratis til <b>({activity})</b>!</h2>
+                    </div>
+                
+                <form class="formLayout" on:submit|preventDefault={submitHandler}>
+
+                    <div class="formRowNameDOB">
+                        <div class="formField">
+                            <label for="activityName">Vælg tidspunkt</label>
+                            <input type="date" id="activityName" name="activityName" bind:value={activity}>
+                        </div>
+                    </div>
 
                 <!-- Row 1: two quarter-width + one half-width inputs -->
-                <div class="formRowNameDOB">
-                    <div class="formField quarter">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" bind:value={firstName}>
-                    </div>
+                    <div class="formRowNameDOB">
+                        <div class="formField half">
+                            <label for="firstName">Fornavn</label>
+                            <input type="text" id="firstName" name="firstName" required bind:value={firstName}>
+                        </div>
 
-                    <div class="formField quarter">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" bind:value={lastName}>
+                        <div class="formField half">
+                            <label for="lastName">Efternavn</label>
+                            <input type="text" id="lastName" name="lastName" required bind:value={lastName}>
+                        </div>
                     </div>
-
-                    <div class="formField half">
-                        <label for="dateOfBirth">Date of Birth</label>
-                        <input type="text" id="dateOfBirth" name="dateOfBirth" bind:value={dateOfBirth}>
-                    </div>
-                </div>
 
                 <!-- Row 2: two half-width inputs -->
-                <div class="formRowEmailPN">
-                    <div class="formField half">
-                        <label for="email">Email</label>
-                        <input type="text" id="email" name="email" required bind:value={email}>
+                    <div class="formRowNameDOB">
+                        <div class="formField half">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email" required bind:value={email}>
+                        </div>
+
+                        <div class="formField half">
+                            <label for="dateOfBirth">Fødselsdato</label>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth" bind:value={dateOfBirth}>
+                        </div>
+                    </div> 
+
+                 <!-- Checkboxes -->
+                    <div class="checkboxRow">
+                        <input type="checkbox" id="tosAccept" name="tosAccept" required bind:checked={tosAccept} />
+                        <label for="tosAccept">Jeg accepterer Aalborg Try Out's Terms of Service</label>
                     </div>
 
-                    <div class="formField half">
-                        <label for="phoneNumber">Phone Number</label>
-                        <input type="text" id="phoneNumber" name="phoneNumber" required bind:value={phoneNumber}>
+                    <div class="checkboxRow">
+                        <input type="checkbox" id="infoSendAccept" name="infoSendAccept" bind:checked={infoSendAccept} />
+                        <label for="infoSendAccept">Tillad Aalborg Try Out at sende mig notifikationer med information om aktiviteten</label>
                     </div>
-                </div>
 
-                <!-- Checkboxes -->
-                <div class="checkboxRow">
-                    <input type="checkbox" id="tosAccept" name="tosAccept" bind:checked={tosAccept} />
-                    <label for="tosAccept">I accept Aalborg Try Out's Terms of Service</label>
-                </div>
-
-                <div class="checkboxRow">
-                    <input type="checkbox" id="infoSendAccept" name="infoSendAccept" bind:checked={infoSendAccept} />
-                    <label for="infoSendAccept">Allow Aalborg Try Out to send me information such as notifications</label>
-                </div>
-
-                <button type="submit" class="signUpButton">Sign up for activity</button>
-            </form>
+                    <button type="submit" class="btn">Tilmeld til aktivitet</button> <!--class="signUpButton"-->
+                </form>
+    
+            </div>
+            </div> 
         </div>
 
-        <div class="innerBox">
-            <h3>Description</h3>
-            <p>Placeholder description</p>
-            <button>Read more</button>
-
-            <h4>Difficulty</h4>
-            <p>How difficult the activity is</p>
-        </div>
 
     </div>
 </div>
-
-<br><br>
-
-<p>Her er også lidt tekst under det hele. Hvilken aktivitet er dette? Det er [{$page.params.activity}]!!!!</p>
 
 <style>
     /* General container */
     .container {
         display: flex;
-        gap: 2%;
+        gap: 1%;
+        margin-top: 2%;
         margin-left: 10%;
         margin-right: 10%;
-        font-family: 'Trebuchet MS'
+        font-family: 'Trebuchet MS'; 
     }
-
+    
     .halfPageBox {
         flex: 1;
         padding: 1%;
         border-radius: 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        display: absolute;
+    }
+
+    .activityImage{
+        width: 100%;
+        border-radius: 10px; 
     }
 
     /* Invite & name box */
@@ -245,15 +279,114 @@
 
     /* Inner box (description & form container) */
     .innerBox {
-        border-radius: 25px;
+        border-radius: 10px;
         border: 2px solid black;
         padding: 1rem;
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        /* margin-top: 1rem;
+        margin-bottom: 1rem; */
     }
 
-    /* Form layout */
+    .btn {
+        background-color: #6E479B;
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        
+    }
+
+    .btn:hover {
+        background-color: #5e3b85ff;
+    }
+
+    .closeBtn{
+        background-color: #6E479B;
+        border: none;
+        color: white;
+        padding: 10px 15px;
+        text-align: right; 
+        width: 8%; 
+        position: relative; 
+        left: 610px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+       
+    }
+
+    .closeBtn:hover {
+        background-color: #5e3b85ff;
+    }
+
+    .signUpBtn{
+        background-color: #6E479B;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        margin-top: 20px;
+        margin-left: 33px; 
+        width: 500px; 
+        position: relative; 
+
+    }
+
+    .signUpBtn:hover {
+        background-color: #5e3b85ff;
+    }
+
+
+/* **** POP UP WINDOW CSS STYLE **** */
+    .popUpTitle{
+        margin-top: -66px;
+        margin-bottom: 20px;
+    }
+
+    .popUpBox{
+        background-color: rgba(0, 0, 0, 3); 
+        opacity: 0; 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0; 
+        transition: all 0.3s ease-in-out; 
+        z-index: -1;
+
+        /* to keep the inner box in the center */
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+    }
+
+    /* the pop up */
+    .popUpBox.open{
+        opacity: 1; 
+        z-index: 999; 
+    }
+
+    .popUpSignUp{
+        background-color: aliceblue;
+        border-radius: 10px; 
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 3); 
+        padding: 5px 5px; 
+        text-align: center; 
+        width: 700px; 
+        height: auto; 
+    }
+/* ************************** */
+
+
+/* Form layout */
     .formLayout {
         display: flex;
         flex-direction: column;
@@ -269,12 +402,12 @@
         justify-content: space-between;
     }
 
-    .formRowEmailPN {
-        display: flex;
+    /* .formRowEmailPN {
+        display: center;
         flex-wrap: wrap;
         /* gap: 1rem; */
-        justify-content: space-between;
-    }
+        /* justify-content: space-between;
+    } */
 
     .formField {
         display: flex;
@@ -322,15 +455,10 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        margin: 0.5rem; 
     }
 
-    /* Sign-up button */
-    .signUpButton {
-        padding: 0.75rem 1.5rem;
-        border-radius: 6px;
-        cursor: pointer;
-        align-self: flex-start;
-    }
+/* ----------------------------------- */
 
     /* Responsive adjustments */
     @media (max-width: 800px) {
@@ -354,4 +482,8 @@
 
     /* REPLACE ALMOST ALL FLEX WITH GRID BECAUSE FLEX BAD */
     /* remember media queries */
+
+
+
+
 </style>

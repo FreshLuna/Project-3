@@ -9,6 +9,7 @@
     // NavItem,
   } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
   import { writable } from "svelte/store";
+  import { redirect } from "@sveltejs/kit";
   // import { get, type Writable } from 'svelte/store'; // for reusable toggleItem + reusable checkbox dropdown
   // import Select from "svelte-select"; // only version 1
 
@@ -160,7 +161,7 @@
             {:else}
               <div
                 class="img"
-                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"
+                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;cursor:pointer;"
               ></div>
             {/if}
             <h3>{a.title}</h3>
