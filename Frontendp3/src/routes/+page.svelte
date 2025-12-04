@@ -1,14 +1,22 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import {
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
+    // Dropdown,
+    // DropdownToggle,
+    // DropdownMenu,
+    // DropdownItem,
     Styles,
+    // NavItem,
   } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
   import { writable } from "svelte/store";
   import { redirect } from "@sveltejs/kit";
+  // import { get, type Writable } from 'svelte/store'; // for reusable toggleItem + reusable checkbox dropdown
+  // import Select from "svelte-select"; // only version 1
+
+  import CheckboxDropdown from "$lib/CheckboxDropdown.svelte";
+  import closeDropdownOnClickOutside from "$lib/CheckboxDropdown.svelte";
+  import { locations, weekdays, ages, genders, tags } from "./filterStores";
+  // import { updated } from "$app/state";
   // import { error } from "@sveltejs/kit";
 
   // test server request that gets a list of users
@@ -87,123 +95,55 @@
     }
   }
 
-  // try {
-  //   const res = await fetch("/activities.txt");
-  //   if (!res.ok) {
-  //     console.error("Could not fetch /activities.txt", res.status);
-  //     return;
-  //   }
-
-  //   const raw = await res.text();
-
-  //   activities = raw
-  //     .split(/\r?\n/)
-  //     .map((l) => l.trim())
-  //     .filter(Boolean) // bruh
-  //     .map((line) => {
-  //       const [img, title, organization, date, time, age] = line
-  //         .split("|")
-  //         .map((s) => s?.trim());
-
-  //       return {
-  //         imgFile: img ?? "",
-  //         imgUrl: imageMap[img] ?? null,
-  //         title: title ?? "",
-  //         organization: organization ?? "",
-  //         date: date ?? "",
-  //         time: time ?? "",
-  //         age: age ?? ""
-  //                 };
-  //             });
-  //     } catch (err) {
-  //         // Any unexpected error (network, parsing, etc.) is logged for debugging
-  //         console.error("Error loading activities:", err);
-  //     }
-  // }
-
   // Run the loader when the component mounts in the browser
   onMount(loadActivities);
 
+  // new handleSubmit function
+  function handleSubmit() {
+    const selectedLocations = $locations.filter((i) => i.checked);
+    console.log("Locations:", selectedLocations);
+
+    const selectedWeekdays = $weekdays.filter((i) => i.checked);
+    console.log("Weekdays:", selectedWeekdays);
+
+    const selectedAges = $ages.filter((i) => i.checked);
+    console.log("Ages:", selectedAges);
+
+    const selectedGenders = $genders.filter((i) => i.checked);
+    console.log("Genders:", selectedGenders);
+
+    const selectedTags = $tags.filter((i) => i.checked);
+    console.log("Tags:", selectedTags);
+  }
+
+  // every dropdown is a writable store (which lets us use a reusable toggleItem)
 </script>
 
 <head>
+  <!-- where do we use bootstrap? -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
   />
 </head>
 
 <div class="ActivityList">
-  <h1>Aalborg Try Out aktiviteter</h1>
+  <h1>Alle Aktivititer</h1>
 
-  <div class="searchAndFilters">
-    <input class="searchbar" type="text" placeholder="Search activities..." />
+
+  <div class="filtersRow">
+    <!-- <input class="searchbar" type="text" placeholder="Search activities..." /> -->
     <Styles />
+    <form on:submit|preventDefault={handleSubmit}>
+      <div class="filters">
+        <CheckboxDropdown store={locations} label="Lokation" />
+        <CheckboxDropdown store={weekdays} label="Ugedage" />
+        <CheckboxDropdown store={ages} label="Alder" />
+        <CheckboxDropdown store={genders} label="Køn" />
+        <CheckboxDropdown store={tags} label="Tags" />
 
-    <Dropdown>
-      <DropdownToggle color="primary" caret>Menu</DropdownToggle>
-      <DropdownMenu>
-        <Dropdown direction="right">
-          <DropdownToggle caret class="dropdown-item">Submenu</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
-            <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}
-              >Charlie</DropdownItem
-            >
-          </DropdownMenu>
-        </Dropdown>
-        <DropdownItem divider />
-        <Dropdown direction="right">
-          <DropdownToggle caret class="dropdown-item">Submenu</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
-            <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}
-              >Charlie</DropdownItem
-            >
-          </DropdownMenu>
-        </Dropdown>
-      </DropdownMenu>
-    </Dropdown>
-
-    <Dropdown>
-      <DropdownToggle color="primary" caret>Menu</DropdownToggle>
-      <DropdownMenu>
-        <Dropdown direction="right">
-          <DropdownToggle caret class="dropdown-item">Submenu</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
-            <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}
-              >Charlie</DropdownItem
-            >
-          </DropdownMenu>
-        </Dropdown>
-        <DropdownItem divider />
-        <Dropdown direction="right">
-          <DropdownToggle caret class="dropdown-item">Submenu</DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem on:click={() => alert("Alpha!")}>Alpha</DropdownItem>
-            <DropdownItem on:click={() => alert("Bravo!")}>Bravo</DropdownItem>
-            <DropdownItem on:click={() => alert("Charlie!")}
-              >Charlie</DropdownItem
-            >
-          </DropdownMenu>
-        </Dropdown>
-      </DropdownMenu>
-    </Dropdown>
-
-    <div>
-      <form action="/action_page.php">
-        <input
-          type="checkbox"
-          id="Solsikketilbud"
-          name="Solsikketilbud"
-          value="Solsikketilbud"
-        />
-        <label for="javascript">Solsikketilbud</label>
-      </form>
-    </div>
+        <button type="submit" class="submit-btn">Vis filtrerede</button>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -237,22 +177,31 @@
 
 <!-- CSS STYLE -->
 <style>
-  .searchAndFilters {
+  .filtersRow {
     padding-top: 30px;
     padding-bottom: 30px;
     display: flex;
   }
 
-  .searchbar {
-    flex: 1;
-    padding: 10px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 20px;
-    margin-left: 20px;
-    max-width: 300px;
+  .filters {
+    display: flex;
+    gap: 1rem; /* optional spacing */
+    align-items: center;
+    flex-wrap: wrap; /* optional, allows wrapping on small screens */
   }
+
+  .submit-btn {
+    /* padding: 0.5rem 1rem; */
+    margin-left: auto;
+    background: #6e479b;
+    color: white;
+    border: 0.2rem solid #6e479b;
+  }
+  .submit-btn:hover {
+      background: white;
+      border: 0.2rem solid #6e479b;
+      color: #6e479b;
+    }
 
   /* font stack applied globally */
   :global(body) {
