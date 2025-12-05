@@ -1,34 +1,156 @@
-<script>
+<script lang="ts">
     import { page } from "$app/stores";
+    import { onMount } from 'svelte';
+
+    // Activity type based on activities.json
+    interface Activity {
+        ActivityID: number;
+        ActivityName: string;
+        ActivityOrganizer?: string;
+        TypeOfActivity?: string;
+        Instructors?: string;
+        DateAndTime?: number;
+        Location?: string;
+        GenderGroup?: string;
+        AgeGroup?: string;
+        ActivityCapacity?: number;
+        ActivityDescription?: string;
+        ActivityDifficulty?: string;
+        WaitingListEnabled?: boolean;
+        WaitingListCapacity?: number;
+        tags?: string[];
+        imgUrl?: string | null;
+        [key: string]: any;
+    }
 
     // Form state
-    let firstName = "";
-    let lastName = "";
-    let dateOfBirth = "";
-    let email = "";
-    // let phoneNumber = "";
-    let tosAccept = false;
-    let infoSendAccept = false;
+    let firstName: string = "";
+    let lastName: string = "";
+    let dateOfBirth: string = "";
+    let email: string = "";
+    let tosAccept: boolean = false;
+    let infoSendAccept: boolean = false;
 
     // PopUp state
-    let isPopUpOpen = false;
+    let isPopUpOpen: boolean = false;
 
     // FIX: Correctly read params from $page store
-    let activity = "";
-    // @ts-ignore
-    $: activity = $page.params.activity;
+    let activity: string = "";
+    $: activity = String($page.params?.activity ?? "");
 
-    async function submitHandler() {
+    // Loaded activity object from backend (matching by ID or name)
+    let activityData: Activity | null = null;
+
+    function formatDateTimeFromNumber(n: number | string | null | undefined): string {
+        if (n == null) return '';
+        const s = String(n);
+        // Expect YYYYMMDDhhmm or similar
+        if (s.length < 8) return s;
+        const year = s.slice(0,4);
+        const month = s.slice(4,6);
+        const day = s.slice(6,8);
+        const hour = s.length >= 10 ? s.slice(8,10) : '00';
+        const minute = s.length >= 12 ? s.slice(10,12) : '00';
+        return `${day}/${month}/${year} kl. ${hour}:${minute}`;
+    }
+
+    // --- Client-side validation & cleaning (match backend Verified.java) ---
+    function isMissing(s: string | null | undefined): boolean {
+        return s == null || String(s).trim() === "";
+    }
+
+    function cleanName(input: string | null | undefined): string | null {
+        if (input == null) return null;
+        const cleaned = String(input).trim().replace(/[^a-zA-Z]/g, "");
+        if (cleaned === "") return null;
+        return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
+    }
+
+    function isAlpha(input: string | null | undefined): boolean {
+        return input != null && String(input).trim().match(/^[a-zA-Z]+$/) !== null;
+    }
+
+    function cleanEmail(email: string | null | undefined): string | null {
+        if (email == null) return null;
+        return String(email).trim().toLowerCase();
+    }
+
+    function isValidEmail(email: string | null | undefined): boolean {
+        if (email == null) return false;
+        return String(email).trim().match(/^[\w.-]+@[\w.-]+\.[A-Za-z]{2,6}$/) !== null;
+    }
+
+    function isValidDateOfBirth(dob: string | null | undefined): boolean {
+        if (dob == null) return false;
+        return String(dob).match(/^\d{2}\/\d{2}\/\d{4}$/) !== null;
+    }
+
+    // Accepts dd/MM/yyyy, returns dd/MM/yyyy or null
+    function formatDateToDDMMYYYY(d: string | null | undefined): string | null {
+        if (!d) return null;
+        const s = String(d).trim();
+        if (s.match(/^\d{2}\/\d{2}\/\d{4}$/)) return s;
+        const m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (m) {
+            return `${m[3]}/${m[2]}/${m[1]}`;
+        }
+        return null;
+    }
+
+    //Fetch activities from backend
+    onMount(async () => {
+        try {
+            const res = await fetch('https://localhost:8443/server/activities');
+            if (!res.ok) return console.error('Failed to load activities');
+            const list = (await res.json()) as Activity[];
+
+            // try matching by numeric ID first
+            const param = String($page.params?.activity ?? '');
+            let found: Activity | undefined = undefined;
+            const asNumber = Number(param);
+            if (!isNaN(asNumber)) {
+                found = list.find((it) => Number(it.ActivityID) === asNumber);
+            }
+            if (!found) {
+                // try matching by name (decoded)
+                const decoded = decodeURIComponent(param || '');
+                found = list.find((it) => String(it.ActivityName) === decoded || String(it.ActivityName).toLowerCase() === decoded.toLowerCase());
+            }
+
+            activityData = found ?? null;
+        } catch (err) {
+            console.error('Error loading activity details', err);
+        }
+    });
+
+    async function submitHandler(): Promise<void> {
+        // Clean & validate inputs to match backend Verified
+        const cleanedFirst = cleanName(firstName);
+        const cleanedLast = cleanName(lastName);
+        const cleanedEmail = cleanEmail(email);
+        const dobFormatted = formatDateToDDMMYYYY(dateOfBirth);
+
+        const errors: string[] = [];
+        if (isMissing(cleanedFirst) || !isAlpha(cleanedFirst)) errors.push('Ugyldigt fornavn');
+        if (isMissing(cleanedLast) || !isAlpha(cleanedLast)) errors.push('Ugyldigt efternavn');
+        if (!isValidEmail(cleanedEmail)) errors.push('Ugyldig email');
+        if (!isValidDateOfBirth(dobFormatted)) errors.push('Ugyldig fødselsdato (DD/MM/YYYY)');
+        if (!tosAccept) errors.push('Du skal acceptere vilkårene');
+
+        if (errors.length > 0) {
+            alert('Valideringsfejl:\n' + errors.join('\n'));
+            return;
+        }
+
         const payload = {
-            firstname: firstName,
-            lastname: lastName,
-            dateOfBirth: dateOfBirth,
-            email: email,
-            //phoneNumber: phoneNumber,
+            firstname: cleanedFirst,
+            lastname: cleanedLast,
+            dateOfBirth: dobFormatted,
+            email: cleanedEmail,
             tosAccept: tosAccept,
             infoSendAccept: infoSendAccept,
             activity: activity
-        };
+        } as Record<string, unknown>;
 
         try {
             const res = await fetch('https://localhost:8443/server/participants', {
@@ -37,26 +159,26 @@
                 body: JSON.stringify(payload)
             });
 
+            const text = await res.text();
+
             if (!res.ok) {
-                alert('Failed to send sign-up: ' + res.status);
+                alert('Tilmelding mislykkedes: ' + (text || res.status));
                 return;
             }
 
-            const text = await res.text();
-            alert('Sign-up sent: ' + text);
+            alert('Tilmelding sendt: ' + text);
 
             // Reset form
             firstName = "";
             lastName = "";
             dateOfBirth = "";
             email = "";
-            //phoneNumber = "";
             tosAccept = false;
             infoSendAccept = false;
 
         } catch (err) {
             console.error(err);
-            alert("Network error sending sign-up. Check server and HTTPS settings.");
+            alert("Netværksfejl ved afsendelse. Tjek server og HTTPS-indstillinger.");
         }
     }
 
@@ -79,7 +201,12 @@
 
     <!-- Left half: Activity Image -->
     <div class="halfPageBox">
-        <img class="activityImage" src="https://i.imgur.com/1KoNJZ6.jpeg" alt="activityImage"/>
+        {#if activityData}
+            <!-- If you later add local assets, replace src with resolved local URL -->
+            <img class="activityImage" src={activityData.imgUrl ?? "https://via.placeholder.com/800x400?text=Activity+image"} alt="{activityData.ActivityName}"/>
+        {:else}
+            <div class="activityImage" style="background:#ddd;border-radius:10px;height:100%;min-height:220px;"></div>
+        {/if}
     </div>
 
     <!-- Right half: Activity info and Description box -->
@@ -88,8 +215,8 @@
 
             <!-- Left: Name + Organizer -->
             <div class="noiRightBox">
-                <h2>{$page.params.activity} (navn på aktivitet) </h2>
-                <p>(Organisator)</p>
+                <h2>{activityData ? activityData.ActivityName : $page.params.activity}</h2>
+                <p>{activityData ? activityData.ActivityOrganizer : '(Organisator)'}</p>
             </div>
 
             <!-- Right: Invite button -->
@@ -102,33 +229,33 @@
             <table>
                 <tbody>
                     <tr>
-                        <td>
-                            <b>Aktivitet</b><br>
-                            Eksempel Aktivitet
-                        </td>
-                        <td>
-                            <b>Instruktør</b><br>
-                            Lars Larsen
-                        </td>
+                                <td>
+                                    <b>Aktivitet</b><br>
+                                    {activityData ? activityData.ActivityName : '—'}
+                                </td>
+                                <td>
+                                    <b>Instruktør</b><br>
+                                    {activityData ? activityData.Instructors : '—'}
+                                </td>
                     </tr>
                     <tr>
                         <td>
                             <b>Tidspunkt</b><br>
-                            D. 10. november 2025 kl. 17.00
+                            {activityData ? formatDateTimeFromNumber(activityData.DateAndTime) : '—'}
                         </td>
                         <td>
                             <b>Adresse og mødested</b><br>
-                            Selma Lagerlöfsvej 300, 9220 Aalborg
+                            {activityData ? activityData.Location : '—'}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <b>Køn</b><br>
-                            Alle køn
+                            {activityData ? activityData.GenderGroup : '—'}
                         </td>
                         <td>
                             <b>Aldersgruppe</b><br>
-                            15-25
+                            {activityData ? activityData.AgeGroup : '—'}
                         </td>
                     </tr>
                 </tbody>
@@ -137,8 +264,8 @@
 
         <!-- DESCRIPTION BOX (outside) -->
         <div class="innerBox">
-            <h3>Beskrivelse</h3>
-            <p>Placeholder beskrivelse</p>
+                        <h3>Beskrivelse</h3>
+                        <p>{activityData ? activityData.ActivityDescription : 'Beskrivelse ikke tilgængelig.'}</p>
             <div class="btn">Læs mere</div>
         </div>
 
@@ -156,7 +283,7 @@
                     <button class="closeBtn" on:click={handleClosePopUp}>Luk</button> <!-- When the button within the popup is clicked, the pop up will close -->
 
                     <div class="popUpTitle">
-                        <h2>Tilmeld dig gratis til <b>({activity})</b>!</h2>
+                        <h2>Tilmeld dig gratis til <b>{activityData ? activityData.ActivityName : decodeURIComponent(activity)}</b>!</h2>
                     </div>
                 
                 <form class="formLayout" on:submit|preventDefault={submitHandler}>
@@ -164,7 +291,8 @@
                     <div class="formRowNameDOB">
                         <div class="formField">
                             <label for="activityName">Vælg tidspunkt</label>
-                            <input type="date" id="activityName" name="activityName" bind:value={activity}>
+                            <!-- Show the scheduled activity date/time (read-only) so the activity id isn't overwritten -->
+                            <input type="text" id="activityName" name="activityName" readonly value={activityData ? formatDateTimeFromNumber(activityData.DateAndTime) : ''} />
                         </div>
                     </div>
 
@@ -482,8 +610,4 @@
 
     /* REPLACE ALMOST ALL FLEX WITH GRID BECAUSE FLEX BAD */
     /* remember media queries */
-
-
-
-
 </style>

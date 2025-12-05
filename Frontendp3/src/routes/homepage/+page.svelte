@@ -189,20 +189,20 @@
     {:else}
       <div class="ActivityList">
         {#each $activities as a}
-          <div class="b">
+          <a class="b" href={`/${a.id ?? a.filename ?? ''}`} aria-label={`Open ${a.title ?? 'activity'}`}>
             {#if a.imgUrl}
               <img class="img" src={a.imgUrl} alt={a.title} />
             {:else}
               <div
                 class="img"
-                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;cursor:pointer;"
+                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"
               ></div>
             {/if}
             <h3>{a.title}</h3>
             <h5>{a.organization}</h5>
             <p>🗓️{a.date} {a.time}</p>
             <p>🎂{a.age}</p>
-          </div>
+          </a>
         {/each}
       </div>
     {/if}
