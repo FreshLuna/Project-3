@@ -43,7 +43,7 @@ ul .nav-links a:hover {
   <ul>
     <li class="nav-links">
       <a href="/">Forside</a>
-      <a href="/">Se alle aktiviteter</a>
+      <a href="/homepage">Se alle aktiviteter</a>
     </li>
     <li class="logo">
       <a href="/"><img alt="The project logo" src={logo} /></a>
