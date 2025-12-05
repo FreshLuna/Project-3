@@ -149,7 +149,8 @@
             email: cleanedEmail,
             tosAccept: tosAccept,
             infoSendAccept: infoSendAccept,
-            activity: activity
+            // ensure we send the activity name (not the numeric id)
+            activity: activityData ? activityData.ActivityName : decodeURIComponent(activity)
         } as Record<string, unknown>;
 
         try {
