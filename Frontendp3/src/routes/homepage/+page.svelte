@@ -121,7 +121,9 @@
   onMount(loadActivities);
 
   // new handleSubmit function
-  function handleSubmit() {
+  function handleSubmit(event: any) {
+    event.preventDefault;
+
     const selectedLocations = $locations.filter((i) => i.checked);
     console.log("Locations:", selectedLocations);
 
@@ -167,7 +169,7 @@
   <div class="filtersRow">
     <!-- <input class="searchbar" type="text" placeholder="Search activities..." /> -->
     <Styles />
-    <form on:submit|preventDefault={handleSubmit}>
+    <form onsubmit={handleSubmit}>
       <div class="filters">
         <CheckboxDropdown store={locations} label="Lokation" />
         <CheckboxDropdown store={weekdays} label="Ugedage" />
@@ -175,7 +177,7 @@
         <CheckboxDropdown store={genders} label="Køn" />
         <CheckboxDropdown store={tags} label="Tags" />
 
-        <button type="submit" class="submit-btn">Vis filtrerede</button>
+        <button type="submit" class="submit-btn" onclick={showFiltered}>Vis filtrerede</button>
       </div>
     </form>
   </div>
