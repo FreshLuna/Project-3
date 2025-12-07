@@ -273,6 +273,11 @@
         <!-- SIGN UP BUTTON (outside) -->
         
             <button class="signUpBtn" on:click={handleOpenPopUp}>Tilmeld til aktivitet</button> <!-- When the button is clicked, the pop up will open -->
+
+            <!-- Link to cancel page -->
+            <div style="margin-top:10px; margin-left:33px;">
+                <a class="cancelLink" href={'/cancel?activity=' + encodeURIComponent(activityData ? activityData.ActivityName : decodeURIComponent(activity))}>Skiftet mening? Afmeld fra aktivitet her</a>
+            </div>
         
 
         <!-- POP UP BOX (inside) -->
@@ -353,7 +358,6 @@
         margin-top: 2%;
         margin-left: 10%;
         margin-right: 10%;
-        font-family: 'Trebuchet MS'; 
     }
     
     .halfPageBox {
@@ -606,7 +610,7 @@
     }
 
     button {
-        font-family: 'Trebuchet MS'
+        /* buttons inherit global font */
     }
 
     /* REPLACE ALMOST ALL FLEX WITH GRID BECAUSE FLEX BAD */

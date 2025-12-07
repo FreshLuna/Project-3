@@ -237,21 +237,7 @@
       color: #6e479b;
     }
 
-  /* font stack applied globally */
-  :global(body) {
-    font-family:
-      Inter,
-      ui-sans-serif,
-      system-ui,
-      -apple-system,
-      "Segoe UI",
-      Roboto,
-      "Helvetica Neue",
-      Arial,
-      sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+  /* global font is handled by src/app.css */
 
   .b {
     border-radius: 16px;

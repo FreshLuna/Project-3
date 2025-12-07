@@ -55,6 +55,6 @@
 </main>
 
 <style>
-	.page { padding: 1.5rem; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; }
+	.page { padding: 1.5rem; }
 	h1 { margin: 0 0 1rem 0; }
 </style>
