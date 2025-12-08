@@ -20,17 +20,25 @@ public class CancelController {
             CancelRequest cancelRequest = mapper.readValue(JsonInput,CancelRequest.class);
             Participant participant = toParticipant(cancelRequest);
             Activity activity = toActivity(cancelRequest);
-            canceled.checkParticipant(activity,participant);
+            boolean success = canceled.removeParticipantByDetails(
+                    activity.getActivityName(), 
+                    participant.getFirstName(), 
+                    participant.getLastName(), 
+                    participant.getEmail()
+            );
+            
+            if (success) {
+                return new CancelResult(true, "Deltager fjernet", participant);
+            } else {
+                return new CancelResult(false, "Deltager kunne ikke findes", null);
+            }
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-        return null;
     }
 
-    private Participant toParticipant(CancelRequest r){ //used in check participant
+    private Participant toParticipant(CancelRequest r){
         Participant p = new Participant();
-        p.setUserID(r.getUserID());
         p.setFirstName(r.getFirstName());
         p.setLastName(r.getLastName());
         p.setEmail(r.getEmail());
