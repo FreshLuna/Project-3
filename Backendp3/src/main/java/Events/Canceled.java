@@ -8,15 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Canceled {
-    public void checkParticipant(Activity activity, Participant participant) {
-        if (removeParticipant(activity.getActivityName(), participant.getUserID())) {
-            System.out.println("Participant " + participant.getUserID() + " is removed from activity: " + activity.getActivityName());
-        } else {
-            System.out.println("Participant " + participant.getUserID() + " was NOT found in: " + activity.getActivityName());
-        }
-    }
-
-    public boolean removeParticipant(String activityName, int userID) {
+    public boolean removeParticipantByDetails(String activityName, String firstName, String lastName, String email) {
         Path filePath = Paths.get("src/main/sources/events/" + activityName + "_users.txt");
 
         try {
@@ -28,21 +20,22 @@ public class Canceled {
             // Read users
             List<String> users = Files.readAllLines(filePath);
 
-            // String to search for inside JSON
-            String idKey = "\"userID\":" + userID;
-            System.out.println(userID);
-            // Filter out JSON line containing the ID
+            // Filter out JSON line containing matching participant details
             List<String> updatedUsers = users.stream()
-                    .filter(line -> !line.contains(idKey))
+                    .filter(line -> !(line.contains("\"firstname\":\"" + firstName + "\"") &&
+                                      line.contains("\"lastname\":\"" + lastName + "\"") &&
+                                      line.contains("\"email\":\"" + email + "\"")))
                     .collect(Collectors.toList());
 
             // If nothing was removed
             if (updatedUsers.size() == users.size()) {
+                System.out.println("Participant not found: " + firstName + " " + lastName + " (" + email + ")");
                 return false;
             }
 
             // Write updated file
             Files.write(filePath, updatedUsers);
+            System.out.println("Participant removed: " + firstName + " " + lastName + " from activity: " + activityName);
             return true;
 
         } catch (Exception e) {

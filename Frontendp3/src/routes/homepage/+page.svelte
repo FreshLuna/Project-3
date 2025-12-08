@@ -210,20 +210,20 @@ async function loadActivities() {
     {:else}
       <div class="ActivityList">
         {#each $activities as a}
-          <div class="b">
+          <a class="b" href={`/${a.id ?? a.filename ?? ''}`} aria-label={`Open ${a.title ?? 'activity'}`}>
             {#if a.imgUrl}
               <img class="img" src={a.imgUrl} alt={a.title} />
             {:else}
               <div
                 class="img"
-                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;cursor:pointer;"
+                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"
               ></div>
             {/if}
             <h3>{a.title}</h3>
             <h5>{a.organization}</h5>
             <p>🗓️{a.date} {a.time}</p>
             <p>🎂{a.age}</p>
-          </div>
+          </a>
         {/each}
       </div>
     {/if}
@@ -258,21 +258,7 @@ async function loadActivities() {
       color: #6e479b;
     }
 
-  /* font stack applied globally */
-  :global(body) {
-    font-family:
-      Inter,
-      ui-sans-serif,
-      system-ui,
-      -apple-system,
-      "Segoe UI",
-      Roboto,
-      "Helvetica Neue",
-      Arial,
-      sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+  /* global font is handled by src/app.css */
 
   .b {
     border-radius: 16px;

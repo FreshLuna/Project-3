@@ -107,7 +107,7 @@ Canceled c = new Canceled();
          assertTrue(removed);
 
         // Now it should NOT be full anymore
-        assertFalse(FullyBooked.isActivityOpen("test_temp_integration/" + activityName, 3, true));
+        assertFalse(fb.isActivityOpen("test_temp_integration/" + activityName, 3, true));
     }
 
 }
