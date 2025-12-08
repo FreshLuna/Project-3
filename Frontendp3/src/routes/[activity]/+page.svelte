@@ -143,8 +143,8 @@
         }
 
         const payload = {
-            firstname: cleanedFirst,
-            lastname: cleanedLast,
+            firstName: cleanedFirst,
+            lastName: cleanedLast,
             dateOfBirth: dobFormatted,
             email: cleanedEmail,
             tosAccept: tosAccept,
