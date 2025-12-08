@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.List;
 
 import Events.SignedUp;
+import controller.CancelController;
+import controller.CancelResult;
 import controller.SignUpResult;
 import controller.SignupController;
 
@@ -19,6 +21,7 @@ public class PostHandler {
 
     private static final ObjectMapper mapper = new ObjectMapper();
     private final SignupController signupController = new SignupController();
+    private final CancelController cancelController= new CancelController();
 
     public String handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath(); // retrieves path
@@ -35,9 +38,17 @@ public class PostHandler {
 
                     yield  result.getMessage();
                 }
-                // Save posted participant data to participants.txt
-                SignedUp.appendParticipant(body);
+
                 yield "Deltager er blevet tilmeldt";
+            }
+            case "/server/cancel" -> {
+                CancelResult cancelResult = cancelController.processCancel(body);
+
+                        if(!cancelResult.isSuccess()){
+
+                            yield "afmelding mislykkedes";
+                        }
+                        yield "Deltager fjernet";
             }
 
             case "/server/publish" -> {

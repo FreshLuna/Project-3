@@ -55,6 +55,7 @@ public class SignupController {
                     String line = participantToString(participant);
                     System.out.println("debug" + line );
                     signedUp.appendParticipant(line);
+
                     return SignUpResult.successWaitingList(participant);
                 }else {
                     return SignUpResult.fail("Activity is Full");
@@ -62,6 +63,7 @@ public class SignupController {
                 }
             }
             String line = participantToString(participant);
+
             signedUp.appendParticipant(line);
             return SignUpResult.success(participant);
 

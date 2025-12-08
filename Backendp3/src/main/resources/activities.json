@@ -43,10 +43,10 @@
     "Location": "Pinewood Mountain Trail #2",
     "GenderGroup": "All",
     "AgeGroup": "16+",
-    "ActivityCapacity": 20,
+    "ActivityCapacity": 4,
     "ActivityDescription": "A challenging hike through steep forest terrain for experienced hikers.",
     "ActivityDifficulty": "Advanced",
-    "WaitingListEnabled": false,
+    "WaitingListEnabled": true,
     "WaitingListCapacity": 0, 
     "tags": ["Outdoors", "Nature", "Group", "Active"]
   },
