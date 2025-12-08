@@ -34,6 +34,8 @@ public class Activity {
     public boolean WaitingListEnabled; // Boolean for deciding whether to have a waiting list
     public List<String> Tags;
 
+    private String ImgUrl;
+
     public Activity() {} // for jackson
 
     public int getActivityID() {
@@ -133,6 +135,11 @@ public class Activity {
     public void setWaitingListEnabled(boolean WaitingListEnabled) {
         this.WaitingListEnabled = WaitingListEnabled;
     }
+
+    public String getImgUrl() {
+        return ImgUrl;
+    }
+    public void setImgUrl(String ImgUrl) { this.ImgUrl = ImgUrl; }
 
     public List<String> getTags() {
         return Tags;

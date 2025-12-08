@@ -74,48 +74,67 @@
    * from the file matches a key in imageMap, we attach the resolved URL to imgUrl;
    * otherwise imgUrl is null and the UI will show a placeholder.
    */
-  async function loadActivities() {
-    try {
-      const res = await fetch("https://localhost:8443/server/activities");
-      console.log("JSON:", res);
+async function loadActivities() {
+  try {
+    const res = await fetch("https://localhost:8443/server/activities");
+    console.log("JSON:", res);
 
-      if (!res.ok) throw new Error("Could not fetch /activities.txt");
+    if (!res.ok) throw new Error("Could not fetch /activities");
 
-      const data = await res.json();
+    const data = await res.json();
 
-      const mappedActivities: activity[] = data.map((item: any) => {
-        // Parse DateAndTime (format: yyyyMMddHHmm, e.g., 202503150900)
-        const dateTimeStr = String(item.DateAndTime || "");
-        const year = dateTimeStr.slice(0, 4);
-        const month = dateTimeStr.slice(4, 6);
-        const day = dateTimeStr.slice(6, 8);
-        const hour = dateTimeStr.slice(8, 10);
-        const minute = dateTimeStr.slice(10, 12);
+    const mappedActivities: activity[] = data.map((item: any) => {
+      const raw = String(item.DateAndTime ?? "");
 
-        const date = `${day}/${month}/${year}`;
-        const time = `${hour}:${minute}`;
+      let year = "";
+      let month = "";
+      let day = "";
+      let hour = "";
+      let minute = "";
 
-        // Map activity number to image file (e.g., 1 -> activity1.avif)
-        const imgFile = `activity${item.ActivityID}.avif`;
+      if (raw.length === 12) {
+        // yyyyMMddHHmm
+        year = raw.slice(0, 4);
+        month = raw.slice(4, 6);
+        day = raw.slice(6, 8);
+        hour = raw.slice(8, 10);
+        minute = raw.slice(10, 12);
+      } else if (raw.length === 8) {
+        // yyyyMMdd
+        year = raw.slice(0, 4);
+        month = raw.slice(4, 6);
+        day = raw.slice(6, 8);
+        hour = "00";
+        minute = "00";
+      } else {
+        console.warn("Unexpected DateAndTime:", raw);
+        return null; // Remove invalid entries
+      }
 
-        return {
-          id: item.ActivityID,
-          filename: imgFile,
-          imgFile: imgFile,
-          imgUrl: null, // URLs will be handled separately if needed
-          title: item.ActivityName ?? "",
-          organization: item.ActivityOrganizer ?? "",
-          date: date,
-          time: time,
-          age: item.AgeGroup ?? "",
-        };
-      });
+      const date = `${day}/${month}/${year}`;
+      const time = `${hour}:${minute}`;
 
-      activities.set(mappedActivities);
-    } catch (err) {
-      console.error("Error loading activities:", err);
-    }
+      // Prefer backend ImgUrl, fallback to placeholder system
+      const imgFile = `activity${item.ActivityID}.avif`;
+
+      return {
+        id: item.ActivityID,
+        filename: imgFile,
+        imgFile: imgFile,
+        imgUrl: item.ImgUrl ? item.ImgUrl : null,
+        title: item.ActivityName ?? "",
+        organization: item.ActivityOrganizer ?? "",
+        date: date,
+        time: time,
+        age: item.AgeGroup ?? ""
+      };
+    }).filter(Boolean); // remove nulls from invalid data
+
+    activities.set(mappedActivities);
+  } catch (err) {
+    console.error("Error loading activities:", err);
   }
+}
 
   // Run the loader when the component mounts in the browser
   onMount(loadActivities);

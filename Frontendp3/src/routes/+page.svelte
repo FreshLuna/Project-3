@@ -1,60 +1,166 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import Row from '$lib/components/Row.svelte';
+    import { onMount } from 'svelte';
+    import { loadActivities } from '$lib/utils/LoadActivities';
+    import type { Activity } from '$lib/types/Activities';
 
-	let activities: any[] = [];
-	let loading = true;
-	let row1: any[] = [];
-	let row2: any[] = [];
+    let activities: Activity[] = [];
+    let loading = true;
+    let error: string | null = null;
 
-	function pickRandomRows(items: any[]) {
-		const copy = items.slice();
-		for (let i = copy.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[copy[i], copy[j]] = [copy[j], copy[i]];
-		}
+    // Carousel refs
+    let car1: HTMLDivElement;
+    let car2: HTMLDivElement;
+    let car3: HTMLDivElement;
 
-		row1 = copy.slice(0, 5);
-		row2 = copy.slice(5, 10);
-	}
+    function scrollLeft(carousel: HTMLDivElement) {
+        carousel.scrollBy({ left: -window.innerWidth / 3, behavior: 'smooth' });
+    }
 
-	async function loadActivities() {
-		try {
-			const res = await fetch('https://localhost:8443/server/activities');
-			if (!res.ok) throw new Error('Failed');
-			const data = await res.json();
-			
-			// Map backend Activity fields to component structure
-			activities = data.map((item: any) => ({
-				id: item.ActivityID,
-				title: item.ActivityName,
-				organization: item.ActivityOrganizer,
-				date: item.DateAndTime,
-				age: item.AgeGroup,
-				imgUrl: null
-			}));
-			
-			pickRandomRows(activities);
-		} finally {
-			loading = false;
-		}
-	}
+    function scrollRight(carousel: HTMLDivElement) {
+        carousel.scrollBy({ left: window.innerWidth / 3, behavior: 'smooth' });
+    }
 
-	onMount(loadActivities);
+    onMount(async () => {
+        try {
+            activities = await loadActivities();
+        } catch (err) {
+            error = 'Failed to load activities.';
+            console.error(err);
+        } finally {
+            loading = false;
+        }
+    });
 </script>
 
-<main class="page">
-	<h1>Aalborg Try Out — Activities</h1>
+{#if loading}
+    <p>Loading activities…</p>
+{:else if error}
+    <p>{error}</p>
+{:else}
 
-	{#if loading}
-		<p>Loading activities…</p>
-	{:else}
-		<Row title="Recommended for you" items={row1} layout="grid-scroll" />
-		<Row title="New & Popular" items={row2} layout="grid-scroll" />
-	{/if}
-</main>
+    <!-- 🎯 CAROUSEL #1 -->
+    <h2>Featured Activities</h2>
+    <div class="carousel-wrapper">
+        <button class="nav left" on:click={() => scrollLeft(car1)}>‹</button>
+        <div class="carousel" bind:this={car1}>
+            {#each activities as activity (activity.id)}
+                <a class="slide" href={`/${activity.id}`}>
+                    {#if activity.imgUrl}
+                        <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
+                    {:else}
+                        <div class="placeholder"></div>
+                    {/if}
+                    <h4>{activity.title}</h4>
+                    <p>{activity.organization}</p>
+                </a>
+            {/each}
+        </div>
+        <button class="nav right" on:click={() => scrollRight(car1)}>›</button>
+    </div>
+
+    <!-- 🎯 CAROUSEL #2 -->
+    <h2>New Activities</h2>
+    <div class="carousel-wrapper">
+        <button class="nav left" on:click={() => scrollLeft(car2)}>‹</button>
+        <div class="carousel" bind:this={car2}>
+            {#each activities as activity (activity.id + '-2')}
+                <a class="slide" href={`/${activity.id}`}>
+                    {#if activity.imgUrl}
+                        <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
+                    {:else}
+                        <div class="placeholder"></div>
+                    {/if}
+                    <h4>{activity.title}</h4>
+                    <p>{activity.organization}</p>
+                </a>
+            {/each}
+        </div>
+        <button class="nav right" on:click={() => scrollRight(car2)}>›</button>
+    </div>
+
+    <!-- 🎯 CAROUSEL #3 -->
+    <h2>Popular Activities</h2>
+    <div class="carousel-wrapper">
+        <button class="nav left" on:click={() => scrollLeft(car3)}>‹</button>
+        <div class="carousel" bind:this={car3}>
+            {#each activities as activity (activity.id + '-3')}
+                <a class="slide" href={`/${activity.id}`}>
+                    {#if activity.imgUrl}
+                        <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
+                    {:else}
+                        <div class="placeholder"></div>
+                    {/if}
+                    <h4>{activity.title}</h4>
+                    <p>{activity.organization}</p>
+                </a>
+            {/each}
+        </div>
+        <button class="nav right" on:click={() => scrollRight(car3)}>›</button>
+    </div>
+
+{/if}
 
 <style>
-	.page { padding: 1.5rem; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; }
-	h1 { margin: 0 0 1rem 0; }
+h2 {
+    margin: 1.5rem 0 0.5rem;
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Each item = 1/3 of the screen */
+.slide {
+    width: 33.33vw;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: inherit;
+}
+
+.slide img, .placeholder {
+    width: 100%;
+    height: 150px;
+    border-radius: 10px;
+    object-fit: cover;
+    background: #eee;
+}
+
+h4 {
+    margin: 0.4rem 0 0;
+    font-size: 1rem;
+}
+
+p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.nav {
+    background: white;
+    border: none;
+    font-size: 2rem;
+    padding: 0 0.5rem;
+    cursor: pointer;
+    z-index: 50;
+}
+
+.left { margin-right: 0.5rem; }
+.right { margin-left: 0.5rem; }
 </style>

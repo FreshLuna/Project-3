@@ -1,29 +1,49 @@
 <script lang="ts">
-  export let activity: {
-    id?: number | string;
-    filename?: string;
-    title?: string;
-    organization?: string;
-    date?: string;
-    time?: string;
-    age?: string;
-    imgUrl?: string | null;
-  } = {};
+    import { onMount } from 'svelte';
+    import { loadActivities } from '$lib/utils/LoadActivities';
+    import type { Activity } from '$lib/types/Activities';
+
+    let activities: Activity[] = [];
+    let loading = true;
+    let error: string | null = null;
+    export let activity: Activity | undefined;
+
+    
+
+    onMount(async () => {
+        try {
+            activities = await loadActivities();
+        } catch (err) {
+            error = 'Failed to load activities.';
+            console.error(err);
+        } finally {
+            loading = false;
+        }
+    });
 </script>
 
-<a class="card" href={`/${activity.id ?? activity.filename ?? ''}`} aria-label={`Open ${activity.title ?? 'activity'}`}>
-  <div class="poster">
-    {#if activity.imgUrl}
-      <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
-    {:else}
-      <div class="placeholder"></div>
-    {/if}
-  </div>
-  <div class="meta">
-    <h4>{activity.title ?? `Activity ${activity.id ?? ''}`}</h4>
-    <p class="org">{activity.organization}</p>
-  </div>
-</a>
+{#if loading}
+    <p>Loading activities…</p>
+{:else if error}
+    <p>{error}</p>
+{:else}
+    {#each activities as activity (activity.id)}
+        <a class="card" href={`/${activity.id}`} aria-label={`Open ${activity.title}`}>
+            <div class="poster">
+                {#if activity.imgUrl}
+                    <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
+                {:else}
+                    <div class="placeholder"></div>
+                {/if}
+            </div>
+
+            <div class="meta">
+                <h4>{activity.title}</h4>
+                <p class="org">{activity.organization}</p>
+            </div>
+        </a>
+    {/each}
+{/if}
 
 <style>
 .card { display:block; width:200px; color:inherit; text-decoration:none; }
