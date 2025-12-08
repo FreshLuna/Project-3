@@ -2,6 +2,7 @@ package Classes;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 // we tell jackson to ignore unknown fields
 // otherwise it starts bean deserializing or something
@@ -12,7 +13,7 @@ public class Activity {
     // consider using camelCase
 
     public int ActivityID; // ID of the activity
-
+    @JsonProperty("ActivityName")
     private String ActivityName; // The name displayed for the activity
     private String ActivityOrganizer; // The organization who is in charge of hosting the activity
 
@@ -24,7 +25,7 @@ public class Activity {
 
     private String GenderGroup; // Who is the targeted gender group for this activity?
     private String AgeGroup; // Who is the targeted age group for this activity?
-
+    @JsonProperty("ActivityCapacity")
     private int ActivityCapacity; // The maximum capacity of participants for this activity
     private int WaitingListCapacity; // The maximum capacity of the waiting list (if enabled)
 
