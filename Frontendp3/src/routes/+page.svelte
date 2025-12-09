@@ -38,7 +38,6 @@
     <p>{error}</p>
 {:else}
 
-    <!-- 🎯 CAROUSEL #1 -->
     <h2>Featured Activities</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car1)}>‹</button>
@@ -58,7 +57,6 @@
         <button class="nav right" on:click={() => scrollRight(car1)}>›</button>
     </div>
 
-    <!-- 🎯 CAROUSEL #2 -->
     <h2>New Activities</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car2)}>‹</button>
@@ -78,7 +76,6 @@
         <button class="nav right" on:click={() => scrollRight(car2)}>›</button>
     </div>
 
-    <!-- 🎯 CAROUSEL #3 -->
     <h2>Popular Activities</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car3)}>‹</button>
@@ -135,7 +132,7 @@ h2 {
 
 .slide img, .placeholder {
     width: 100%;
-    height: 150px;
+    height: 300px;
     border-radius: 10px;
     object-fit: cover;
     background: #eee;
@@ -163,6 +160,4 @@ p {
 
 .left { margin-right: 0.5rem; }
 .right { margin-left: 0.5rem; }
-/* .page { padding: 1.5rem; }
-h1 { margin: 0 0 1rem 0; } */
 </style>

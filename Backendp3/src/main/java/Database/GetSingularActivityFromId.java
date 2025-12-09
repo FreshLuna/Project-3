@@ -8,13 +8,6 @@ import java.util.Optional;
 
 public class GetSingularActivityFromId {
 
-    /**
-     * Returns the Activity object as JSON string for the given activityId.
-     * Reuses DataLoader to ensure proper deserialization.
-     *
-     * @param activityId the ID of the activity to find
-     * @return JSON string of the activity, or an error JSON if not found
-     */
     public static String findActivityById(int activityId) {
         ObjectMapper mapper = new ObjectMapper();
 

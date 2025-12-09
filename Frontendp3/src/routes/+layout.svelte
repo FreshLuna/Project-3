@@ -6,6 +6,7 @@
 </script>
 
 <style>
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -18,7 +19,7 @@ ul {
 
 ul .logo img {
   max-width: 100px;
-  padding: 0px 15px;
+  padding: 0px 0px;
 }
 
 ul .nav-links {

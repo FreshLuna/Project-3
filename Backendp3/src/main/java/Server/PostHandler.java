@@ -17,6 +17,8 @@ import controller.CancelResult;
 import controller.SignUpResult;
 import controller.SignupController;
 
+import static Database.DataLoader.loadActivities;
+
 public class PostHandler {
 
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -26,7 +28,7 @@ public class PostHandler {
     public String handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath(); // retrieves path
         String body = new String(exchange.getRequestBody().readAllBytes()); // retrieves the data send by the user
-        System.out.println("RAW JSON RECEIVED:\n" + body);
+        //System.out.println("RAW JSON RECEIVED:\n" + body);
 
         return switch (path) {
             case "/server/echo" -> body;
@@ -61,13 +63,29 @@ public class PostHandler {
             }
 
             case "/server/activities/filter" -> {
-                FilterRequest request = mapper.readValue(body, FilterRequest.class);
+                try {
+                    // 'body' contains the JSON request
 
-                // get filtered requests
-                List<Activity> result = PostGetServer.getActivityService().filterByTags(request.getSelectedTags());
+                    // Get all activities from your service
+                    List<Activity> allActivities = loadActivities();
 
-                // return JSON
-                yield mapper.writeValueAsString(result);
+                    // Use FilterRequest to filter activities from JSON
+                    List<Activity> filteredActivities = FilterRequest.filterFromJson(allActivities, body);
+                    ObjectMapper mapper = new ObjectMapper();
+
+                    String jsonResult = mapper.writeValueAsString(filteredActivities);
+
+                    // Print JSON to console
+                    //System.out.println("Filtered JSON: " + jsonResult);
+
+                    // Return the filtered activities as JSON
+                    yield new ObjectMapper().writeValueAsString(filteredActivities);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // In case of error, return empty list as JSON
+                    yield "[]";
+                }
             }
 
             case "/server/shutdown" -> "bye";

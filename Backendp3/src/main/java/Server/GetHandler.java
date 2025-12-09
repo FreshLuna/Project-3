@@ -1,11 +1,16 @@
 package Server;
 // import Database.ActivityService;
+import Classes.Activity;
+import Database.GetTagsForFilter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import static Database.DatabaseToStringReader.fileReader;
 import static Database.GetSingularActivityFromId.findActivityById;
+import static Database.GetTagsForFilter.getUniqueValues;
 
 public class GetHandler {
-    public String handle(HttpExchange exchange) {
+    public String handle(HttpExchange exchange) throws JsonProcessingException {
         // we retrieve the full path the user attempts to access
         String path = exchange.getRequestURI().getPath();
         if(path.startsWith("/server/activities/")){
@@ -14,6 +19,7 @@ public class GetHandler {
             return(findActivityById(id));
 
         }
+        ObjectMapper mapper = new ObjectMapper();
 
         // switch handles the different possible paths, write full path for now
         // since im to lazy to cut off the server part mwuhahahhaha!!! >:3
@@ -23,6 +29,12 @@ public class GetHandler {
             case "/server/activities" -> fileReader("activities.json");
             // case "/server/activities/filter" -> ActivityService activityService = new ActivityService("data/activities.json");
             case "/server" -> "this is what it says on the server!!!";
+            case "/server/filter/locations" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getLocation));
+            case "/server/filter/weekdays" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getWeekday));
+            case "/server/filter/ages" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getAgeGroup));
+            case "/server/filter/genders" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getGenderGroup));
+            case "/server/filter/tags" -> mapper.writeValueAsString(GetTagsForFilter.getTags());
+
             default -> "Unknown GET path: " + path;
         };
 

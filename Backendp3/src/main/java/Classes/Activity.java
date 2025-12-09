@@ -1,6 +1,8 @@
 package Classes;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -59,6 +61,13 @@ public class Activity {
 
     public Activity() {}
 
+    @Override
+    public String toString() {
+        return activityName + " | Location: " + location + " | Date: " + dateAndTime +
+                " | AgeGroup: " + ageGroup + " | GenderGroup: " + genderGroup +
+                " | Tags: " + tags;
+    }
+
     // Getters and setters
     public int getActivityID() { return activityID; }
     public void setActivityID(int activityID) { this.activityID = activityID; }
@@ -107,4 +116,12 @@ public class Activity {
 
     public String getImgUrl() { return imgUrl; }
     public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
+
+    @JsonIgnore
+    public String getWeekday() {
+        long date = (getDateAndTime()/100)-3;
+        date = date%7;
+        String[] weekdays = {"Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"};
+        return weekdays[(int) date];
+    }
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
     //import { clear } from "console";
+
     import { onDestroy, onMount } from "svelte";
     import type { Writable } from "svelte/store";
 
@@ -44,11 +45,11 @@
         }
     });
 
-    // onMount();
 
-    // onDestroy(() => {
-    //     document.removeEventListener("click", closeDropdownOnClickOutside)
-    // });
+
+
+
+
 </script>
 
 <div class="dropdown" bind:this={dropdownRef}>
@@ -64,7 +65,8 @@
 
 
             {#each $store as item}
-                <label style="display: block;">
+
+                <label class="checkbox-label">
                     <input
                         type="checkbox"
                         checked={item.checked}
@@ -82,6 +84,12 @@
         background: #6e479b;
         border: 0.2rem solid #6e479b;
         color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 200ms ease;
     }
     .dropdownButton:hover {
         background: white;
@@ -91,30 +99,56 @@
     .dropdown {
         position: relative;
         display: inline-block;
-        /* height: 40px; */
-        display: flex;
-        /* align-items: center; */
+
+
+
     }
     .menu {
         position: absolute;
         background: white;
         border: 0.2rem solid #6e479b;
+        border-radius: 4px;
         padding: 0.5rem;
-        z-index: 10;
+
+        z-index: 100;
         min-width: 200px;
-        top: 92%;
+
+        top: calc(100% + 4px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkbox-label {
+        display: block;
+        padding: 0.4rem 0.5rem;
+        cursor: pointer;
+        transition: background-color 150ms ease;
+        border-radius: 2px;
+    }
+
+    .checkbox-label:hover {
+        background-color: #f5f5f5;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        margin-right: 0.5rem;
+        cursor: pointer;
     }
     .clear-btn {
+        width: 100%;
         display: block;
         margin-bottom: 0.5rem;
-        font-size: 0.85rem;
+
+        font-size: 0.9rem;
         cursor: pointer;
         border: 0.2rem solid #6e479b;
-        background: none;
-        padding: 0;
+
+
         background: #6e479b;
         color: white;
-        padding: 0.2rem;
+
+        padding: 0.4rem;
+        border-radius: 4px;
+        transition: all 200ms ease;
     }
     .clear-btn:hover {
         background: white;

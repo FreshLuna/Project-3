@@ -1,69 +1,88 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Styles } from "@sveltestrap/sveltestrap";
-
   import CheckboxDropdown from "$lib/CheckboxDropdown.svelte";
-  import { locations, weekdays, ages, genders, tags } from "../filterStores";
-
-  import { writable, get } from "svelte/store";
-  import { selectedTags } from "$lib/selectedTags";
+  import { locations, weekdays, ages, genders, tags, loadStores } from "$lib/types/filterStores";
+  import { writable, get, type Writable } from "svelte/store";
   import { loadActivities } from "$lib/utils/LoadActivities";
   import type { Activity } from "$lib/types/Activities";
+  import type { CheckboxItem, Filters } from "$lib/types/filterStores";
+  import { dateFormatter } from '$lib/utils/DateFormatter'; 
 
   // activities store
-  export const activities = writable<Activity[]>([]);
+  const activities = writable<Activity[]>([]);
 
   // Load activities from backend
   onMount(async () => {
     try {
-      const loaded = await loadActivities(); // returns Activity[]
+      await loadStores();
+      const loaded = await loadActivities();
       activities.set(loaded);
     } catch (e) {
       console.error("Failed to load activities", e);
     }
   });
 
-  // FILTER SUBMIT
-  function handleSubmit(event: any) {
-    event.preventDefault();
-
-    const selectedLocations = $locations.filter((i) => i.checked);
-    const selectedWeekdays = $weekdays.filter((i) => i.checked);
-    const selectedAges = $ages.filter((i) => i.checked);
-    const selectedGenders = $genders.filter((i) => i.checked);
-    const selectedTags = $tags.filter((i) => i.checked);
-
-    console.log("Locations:", selectedLocations);
-    console.log("Weekdays:", selectedWeekdays);
-    console.log("Ages:", selectedAges);
-    console.log("Genders:", selectedGenders);
-    console.log("Tags:", selectedTags);
+  // Extract labels from checked items
+  function getChecked(store: Writable<CheckboxItem[]>): string[] {
+    return get(store)
+      .filter((item: CheckboxItem) => item.checked)
+      .map((item: CheckboxItem) => item.label);
   }
 
-  // Server-side filtering
-  async function showFiltered() {
-    const tags = get(selectedTags);
+  // Form submit
+  function handleSubmit(event: SubmitEvent) {
+    event.preventDefault();
 
+    const filters: Filters = {
+        locations: getChecked(locations),
+        weekdays: getChecked(weekdays),
+        ages: getChecked(ages),
+        genders: getChecked(genders),
+        tags: getChecked(tags)
+    };
+
+    console.log("Sending filters:", filters);
+    showFiltered(filters); // updates the activities store directly
+}
+
+  // Server-side filtering
+ async function showFiltered(filters: Filters) {
     const res = await fetch("https://localhost:8443/server/activities/filter", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ selectedTags: tags })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(filters)
     });
 
     const data = await res.json();
-    activities.set(data);
-  }
+
+    const mappedActivities = data.map((item: any) => ({
+        id: item.ActivityID,
+        title: item.ActivityName,
+        organization: item.ActivityOrganizer,
+        type: item.TypeOfActivity,
+        instructors: item.Instructors,
+        date: item.DateAndTime,
+        location: item.Location,
+        genderGroup: item.GenderGroup,
+        age: item.AgeGroup,
+        capacity: item.ActivityCapacity,
+        waitingListCapacity: item.WaitingListCapacity,
+        waitingListEnabled: item.WaitingListEnabled,
+        description: item.ActivityDescription,
+        difficulty: item.ActivityDifficulty,
+        tags: item.Tags ?? [],
+        imgUrl: item.ImgUrl,
+        formattedDate: dateFormatter(item.DateAndTime)
+    }));
+
+    activities.set(mappedActivities);
+}
 </script>
 
-<head>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-</head>
-
 <div class="ActivityList">
-  <h1>Alle Aktivititer</h1>
+  <h1 class="centered">Alle Aktiviteter</h1>
 
   <div class="filtersRow">
-    <Styles />
     <form onsubmit={handleSubmit}>
       <div class="filters">
         <CheckboxDropdown store={locations} label="Lokation" />
@@ -72,9 +91,7 @@
         <CheckboxDropdown store={genders} label="Køn" />
         <CheckboxDropdown store={tags} label="Tags" />
 
-        <button type="submit" class="submit-btn" onclick={showFiltered}>
-          Vis filtrerede
-        </button>
+        <button type="submit" class="submit-btn">Vis filtrerede</button>
       </div>
     </form>
   </div>
@@ -93,7 +110,7 @@
               {#if a.imgUrl}
                 <img class="img" src={a.imgUrl} alt={a.title} />
               {:else}
-               <div class="img" style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"></div>
+               <div class="img placeholder"></div>
               {/if}
 
               <h3>{a.title}</h3>
@@ -109,10 +126,11 @@
 </div>
 
 <style>
+  /* Filters */
   .filtersRow {
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding: 30px 0;
     display: flex;
+    justify-content: center;
   }
 
   .filters {
@@ -126,29 +144,32 @@
     margin-left: auto;
     background: #6e479b;
     color: white;
-    border: 0.2rem solid #6e479b;
+    border: 2px solid #6e479b;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
   }
+
   .submit-btn:hover {
-      background: white;
-      border: 0.2rem solid #6e479b;
-      color: #6e479b;
-    }
+    background: white;
+    border: 2px solid #6e479b;
+    color: #6e479b;
+  }
 
-  /* global font is handled by src/app.css */
-
+  /* Activity cards */
   .b {
     border-radius: 16px;
-    position: relative;
     margin: 1%;
     float: left;
     width: 18%;
     min-height: 420px;
     background-color: #6e479b;
-    color: #ffffff; /* make text inside the card white */
+    color: #ffffff;
     padding: 1rem;
     box-sizing: border-box;
-    transition: background-color 180ms ease, transform 140ms ease,
-      box-shadow 180ms ease;
+    transition: background-color 180ms ease, transform 140ms ease, box-shadow 180ms ease;
+    text-decoration: none;
   }
 
   .b .img {
@@ -157,7 +178,11 @@
     height: 220px;
     display: block;
     margin-bottom: 0.75rem;
-    object-fit: cover; /* crop/scale image to fill the box */
+    object-fit: cover;
+  }
+
+  .placeholder {
+    background: #ddd;
   }
 
   .b h3,
@@ -168,39 +193,23 @@
     font-weight: 500;
   }
 
-  .b h3 {
-    font-size: 1.05rem;
-  }
-  .b h5 {
-    font-size: 0.9rem;
-    opacity: 0.95;
-  }
+  .b h3 { font-size: 1.05rem; }
+  .b h5 { font-size: 0.9rem; opacity: 0.95; }
 
-  /* hover highlight; add a small lift and shadow for emphasis */
-  .b {
-    transition:
-      background-color 180ms ease,
-      transform 140ms ease,
-      box-shadow 180ms ease;
-  }
   .b:hover,
   .b:focus-within {
     background-color: #5e3b85ff;
     transform: translateY(-6px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
-    cursor: pointer;
   }
 
-  @media (max-width: 800px) {
-    .b {
-      width: 48%;
-    }
+  a.activity-link {
+    text-decoration: none;
   }
-  @media (max-width: 480px) {
-    .b {
-      width: 100%;
-      float: none;
-      transform: none;
-    }
+  .centered {
+    text-align: center;     
+    font-size: 3rem;          
+    font-weight: 900;         
   }
+
 </style>
