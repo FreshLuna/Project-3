@@ -1,8 +1,10 @@
+import { dateFormatter } from '$lib/utils/DateFormatter'; 
 export async function loadActivity(thing: number) {
     const res = await fetch(`https://localhost:8443/server/activities/${thing}`);
     if (!res.ok) throw new Error('Failed to load activities');
 
     const data = await res.json();
+    
 return {
     id: data.ActivityID,
     title: data.ActivityName,
@@ -19,6 +21,7 @@ return {
     description: data.ActivityDescription,
     difficulty: data.ActivityDifficulty,
     tags: data.Tags ?? [],
-    imgUrl: data.ImgUrl
+    imgUrl: data.ImgUrl,
+    formattedDate: dateFormatter(data.DateAndTime)
 };
 }

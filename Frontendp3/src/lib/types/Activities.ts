@@ -23,4 +23,6 @@ export interface Activity {
     tags: string[];
 
     imgUrl?: string | null;
+
+    formattedDate: string;
 }

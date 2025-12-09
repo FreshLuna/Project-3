@@ -1,165 +1,46 @@
 <script lang="ts">
-  import { onMount } from "svelte"; // onDestroy
-  import {
-    // Dropdown,
-    // DropdownToggle,
-    // DropdownMenu,
-    // DropdownItem,
-    Styles,
-    // NavItem,
-  } from "@sveltestrap/sveltestrap"; // need to install @sveltestrap/sveltestrap via "npm install @sveltestrap/sveltestrap"
-  // import { redirect } from "@sveltejs/kit";
-  // import { get, type Writable } from 'svelte/store'; // for reusable toggleItem + reusable checkbox dropdown
-  // import Select from "svelte-select"; // only version 1
+  import { onMount } from "svelte";
+  import { Styles } from "@sveltestrap/sveltestrap";
 
   import CheckboxDropdown from "$lib/CheckboxDropdown.svelte";
-  // import closeDropdownOnClickOutside from "$lib/CheckboxDropdown.svelte";
   import { locations, weekdays, ages, genders, tags } from "../filterStores";
-  // import { updated } from "$app/state";
-  import { writable, get } from "svelte/store"; 
+
+  import { writable, get } from "svelte/store";
   import { selectedTags } from "$lib/selectedTags";
+  import { loadActivities } from "$lib/utils/LoadActivities";
+  import type { Activity } from "$lib/types/Activities";
 
-  // import { error } from "@sveltejs/kit";
+  // activities store
+  export const activities = writable<Activity[]>([]);
 
-  // test server request that gets a list of users
-  //onMount(async () => {
-  //const res = await fetch("https://localhost:8443/server");
-  //const text = await res.text();
-  //console.log("RAW:", text);
-  //console.log("hej")
-  //fetch("https://localhost:8443/server/users")
-  //.then(response => response.json())
-  //.then(data => console.log(data));
-  //})
+  // Load activities from backend
+  onMount(async () => {
+    try {
+      const loaded = await loadActivities(); // returns Activity[]
+      activities.set(loaded);
+    } catch (e) {
+      console.error("Failed to load activities", e);
+    }
+  });
 
-  // maybe not needed? we don"t use it anyway
-  // -------- Dynamic activities (runtime fetch from static/activities.txt) --------
-  interface activity {
-    id?: number | string;
-    filename?: string;
-    imgFile: string;
-    imgUrl: string | null;
-    title: string;
-    organization: string;
-    date: string;
-    time: string;
-    age: string;
-  }
-  //let activities: activity[] = [];
-  export const activities = writable<activity[]>([]);
-  /* Build a lookup table of image imgFile -> resolved URL.
-    We use Vite"s import.meta.glob with { eager: true } so the modules
-    are imported at build/SSR time and `mod.default` contains the final URL.
-    Example: "../lib/assets/activity1.avif" -> { default: "/_app/immutable/..../activity1.abcd.avif" }*/
-  // const imagesGlob = import.meta.glob("../lib/assets/*.avif", { eager: true });
-
-  // Convert the glob result into a simple map: { "activity1.avif": "/url/to/activity1.avif", ... }
-  // const imageMap = Object.fromEntries(
-  //   // @ts-ignore
-  //   Object.entries(imagesGlob).map(([path, mod]) => [
-  //     path.split("/").pop(),
-  //     mod.default, // what is mod???
-  //   ])
-  // );
-
-  /*
-   * Load activities from the static text file at /activities.txt
-   * Expected file format (one activity per line):
-   *   imageimgFile|Activityname|Organization|Date|Age
-   * Example:
-   *   activity1.avif|Summer Camp|John Doe|tirsdag, 11. nov.|18+
-   *
-   * This function fetches the file, splits it into lines, trims empty lines,
-   * and converts each line into an object used by the UI. If an image imgFile
-   * from the file matches a key in imageMap, we attach the resolved URL to imgUrl;
-   * otherwise imgUrl is null and the UI will show a placeholder.
-   */
-async function loadActivities() {
-  try {
-    const res = await fetch("https://localhost:8443/server/activities");
-    console.log("JSON:", res);
-
-    if (!res.ok) throw new Error("Could not fetch /activities");
-
-    const data = await res.json();
-
-    const mappedActivities: activity[] = data.map((item: any) => {
-      const raw = String(item.DateAndTime ?? "");
-
-      let year = "";
-      let month = "";
-      let day = "";
-      let hour = "";
-      let minute = "";
-
-      if (raw.length === 12) {
-        // yyyyMMddHHmm
-        year = raw.slice(0, 4);
-        month = raw.slice(4, 6);
-        day = raw.slice(6, 8);
-        hour = raw.slice(8, 10);
-        minute = raw.slice(10, 12);
-      } else if (raw.length === 8) {
-        // yyyyMMdd
-        year = raw.slice(0, 4);
-        month = raw.slice(4, 6);
-        day = raw.slice(6, 8);
-        hour = "00";
-        minute = "00";
-      } else {
-        console.warn("Unexpected DateAndTime:", raw);
-        return null; // Remove invalid entries
-      }
-
-      const date = `${day}/${month}/${year}`;
-      const time = `${hour}:${minute}`;
-
-      // Prefer backend ImgUrl, fallback to placeholder system
-      const imgFile = `activity${item.ActivityID}.avif`;
-
-      return {
-        id: item.ActivityID,
-        filename: imgFile,
-        imgFile: imgFile,
-        imgUrl: item.ImgUrl ? item.ImgUrl : null,
-        title: item.ActivityName ?? "",
-        organization: item.ActivityOrganizer ?? "",
-        date: date,
-        time: time,
-        age: item.AgeGroup ?? ""
-      };
-    }).filter(Boolean); // remove nulls from invalid data
-
-    activities.set(mappedActivities);
-  } catch (err) {
-    console.error("Error loading activities:", err);
-  }
-}
-
-  // Run the loader when the component mounts in the browser
-  onMount(loadActivities);
-
-  // new handleSubmit function
+  // FILTER SUBMIT
   function handleSubmit(event: any) {
-    event.preventDefault;
+    event.preventDefault();
 
     const selectedLocations = $locations.filter((i) => i.checked);
-    console.log("Locations:", selectedLocations);
-
     const selectedWeekdays = $weekdays.filter((i) => i.checked);
-    console.log("Weekdays:", selectedWeekdays);
-
     const selectedAges = $ages.filter((i) => i.checked);
-    console.log("Ages:", selectedAges);
-
     const selectedGenders = $genders.filter((i) => i.checked);
-    console.log("Genders:", selectedGenders);
-
     const selectedTags = $tags.filter((i) => i.checked);
+
+    console.log("Locations:", selectedLocations);
+    console.log("Weekdays:", selectedWeekdays);
+    console.log("Ages:", selectedAges);
+    console.log("Genders:", selectedGenders);
     console.log("Tags:", selectedTags);
   }
 
-  // every dropdown is a writable store (which lets us use a reusable toggleItem)
+  // Server-side filtering
   async function showFiltered() {
     const tags = get(selectedTags);
 
@@ -175,18 +56,13 @@ async function loadActivities() {
 </script>
 
 <head>
-  <!-- where do we use bootstrap? -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
 </head>
 
 <div class="ActivityList">
   <h1>Alle Aktivititer</h1>
 
-
   <div class="filtersRow">
-    <!-- <input class="searchbar" type="text" placeholder="Search activities..." /> -->
     <Styles />
     <form onsubmit={handleSubmit}>
       <div class="filters">
@@ -196,33 +72,35 @@ async function loadActivities() {
         <CheckboxDropdown store={genders} label="Køn" />
         <CheckboxDropdown store={tags} label="Tags" />
 
-        <button type="submit" class="submit-btn" onclick={showFiltered}>Vis filtrerede</button>
+        <button type="submit" class="submit-btn" onclick={showFiltered}>
+          Vis filtrerede
+        </button>
       </div>
     </form>
   </div>
 </div>
 
+<!-- ACTIVITIES -->
 <div>
-  <!-- DYNAMIC ACTIVITIES -->
   <section class="dynamicActivities">
     {#if $activities.length === 0}
       <p>Loading dynamic activities...</p>
     {:else}
       <div class="ActivityList">
         {#each $activities as a}
-          <a class="b" href={`/${a.id ?? a.filename ?? ''}`} aria-label={`Open ${a.title ?? 'activity'}`}>
-            {#if a.imgUrl}
-              <img class="img" src={a.imgUrl} alt={a.title} />
-            {:else}
-              <div
-                class="img"
-                style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"
-              ></div>
-            {/if}
-            <h3>{a.title}</h3>
-            <h5>{a.organization}</h5>
-            <p>🗓️{a.date} {a.time}</p>
-            <p>🎂{a.age}</p>
+          <a href={`/${a.id}`} class="activity-link">
+           <div class="b">
+              {#if a.imgUrl}
+                <img class="img" src={a.imgUrl} alt={a.title} />
+              {:else}
+               <div class="img" style="background:#ddd;border-radius:12px;height:220px;margin-bottom:.75rem;"></div>
+              {/if}
+
+              <h3>{a.title}</h3>
+              <h5>{a.organization}</h5>
+              <p>🗓️{a.formattedDate}</p>
+              <p>🎂{a.age}</p>
+            </div>
           </a>
         {/each}
       </div>
@@ -230,7 +108,6 @@ async function loadActivities() {
   </section>
 </div>
 
-<!-- CSS STYLE -->
 <style>
   .filtersRow {
     padding-top: 30px;
@@ -240,13 +117,12 @@ async function loadActivities() {
 
   .filters {
     display: flex;
-    gap: 1rem; /* optional spacing */
+    gap: 1rem;
     align-items: center;
-    flex-wrap: wrap; /* optional, allows wrapping on small screens */
+    flex-wrap: wrap;
   }
 
   .submit-btn {
-    /* padding: 0.5rem 1rem; */
     margin-left: auto;
     background: #6e479b;
     color: white;
@@ -271,12 +147,13 @@ async function loadActivities() {
     color: #ffffff; /* make text inside the card white */
     padding: 1rem;
     box-sizing: border-box;
+    transition: background-color 180ms ease, transform 140ms ease,
+      box-shadow 180ms ease;
   }
 
   .b .img {
     border-radius: 12px;
     width: 100%;
-    /* enforce a consistent image height so all cards look the same */
     height: 220px;
     display: block;
     margin-bottom: 0.75rem;

@@ -1,8 +1,9 @@
 <script lang="ts">
 import { page } from '$app/stores';
-import { onMount } from 'svelte';
+import { onMount, tick } from 'svelte';
 import { loadActivity } from '$lib/utils/SingleActivity';
 import type { Activity } from '$lib/types/Activities';
+
 
 let firstName = '';
 let lastName = '';
@@ -15,6 +16,7 @@ let isPopUpOpen = false;
 let activity: Activity | null = null;
 let loading = true;
 let error: string | null = null;
+let formattedDate = "loading"
 
 // Reactive slug from route param
 let slug = Number($page.params.activity); // convert to number
@@ -24,6 +26,13 @@ onMount(async () => {
     try {
         if (!isNaN(slug)) {
             activity = await loadActivity(slug);
+            const date = activity.date.toString();
+            const year = date.slice(0, 4);    // 2025
+            const month = date.slice(4, 6);   // 03
+            const day = date.slice(6, 8);     // 10
+            const hour = date.slice(8, 10);   // 10
+            const minute = date.slice(10, 12);// 30
+            formattedDate = `${year}Y ${month}M ${day}D ${hour}:${minute}`;
         } else {
             throw new Error('Invalid activity ID');
         }
@@ -34,6 +43,7 @@ onMount(async () => {
         loading = false;
     }
 });
+
 
 async function submitHandler() {
     if (!activity) return;
@@ -69,6 +79,22 @@ async function submitHandler() {
     }
 }
 
+    let copied = false;
+
+    async function copyLink() {
+        try {
+            const currentUrl = window.location.href; // Get current page URL
+            await navigator.clipboard.writeText(currentUrl);
+            copied = true;
+            await tick(); // Wait for DOM update
+            setTimeout(() => {
+                copied = false;
+            }, 2000); // Hide message after 2 seconds
+        } catch (err) {
+            console.error("Failed to copy: ", err);
+        }
+    }
+
 function handleOpenPopUp() {
     isPopUpOpen = true;
 }
@@ -102,8 +128,8 @@ function handleClosePopUp() {
 
             <!-- Right: Invite button -->
             <div class="noiLeftBox">
-                <button>Invitér en ven</button>
-            </div>
+                <button on:click={copyLink}>{copied ? 'Link kopieret!' : 'Invitér en ven'}</button>
+</div>
         </div>
 
         <div class="activityInfoTable">
@@ -122,7 +148,7 @@ function handleClosePopUp() {
                     <tr>
                         <td>
                             <b>Tidspunkt</b><br>
-                            {activity ? activity.date : 'Indlæser...'}
+                            {activity ? activity.formattedDate : 'Indlæser...'}
                         </td>
                         <td>
                             <b>Adresse og mødested</b><br>
@@ -147,7 +173,6 @@ function handleClosePopUp() {
         <div class="innerBox">
             <h3>Beskrivelse</h3>
             <p>{activity ? activity.description : 'Indlæser...'}</p>
-            <div class="btn">Læs mere</div>
         </div>
 
         <!-- SIGN UP BUTTON (outside) -->
@@ -172,7 +197,7 @@ function handleClosePopUp() {
                     <div class="formRowNameDOB">
                         <div class="formField">
                             <label for="activityName">Tidspunkt</label>
-                            <b>{activity ? activity.date : 'Indlæser...'}</b>
+                            <b>{activity ? activity.formattedDate : 'Indlæser...'}</b>
                         </div>
                     </div>
 
