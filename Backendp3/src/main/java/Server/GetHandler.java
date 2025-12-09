@@ -2,11 +2,18 @@ package Server;
 // import Database.ActivityService;
 import com.sun.net.httpserver.HttpExchange;
 import static Database.DatabaseToStringReader.fileReader;
+import static Database.GetSingularActivityFromId.findActivityById;
 
 public class GetHandler {
     public String handle(HttpExchange exchange) {
         // we retrieve the full path the user attempts to access
         String path = exchange.getRequestURI().getPath();
+        if(path.startsWith("/server/activities/")){
+            String idStr = path.substring("/server/activities/".length());
+            int id = Integer.parseInt(idStr);
+            return(findActivityById(id));
+
+        }
 
         // switch handles the different possible paths, write full path for now
         // since im to lazy to cut off the server part mwuhahahhaha!!! >:3

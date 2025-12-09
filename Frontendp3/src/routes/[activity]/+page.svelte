@@ -1,85 +1,93 @@
-<script>
-    import { page } from "$app/stores";
+<script lang="ts">
+import { page } from '$app/stores';
+import { onMount } from 'svelte';
+import { loadActivity } from '$lib/utils/SingleActivity';
+import type { Activity } from '$lib/types/Activities';
 
-    // Form state
-    let firstName = "";
-    let lastName = "";
-    let dateOfBirth = "";
-    let email = "";
-    // let phoneNumber = "";
-    let tosAccept = false;
-    let infoSendAccept = false;
+let firstName = '';
+let lastName = '';
+let dateOfBirth = '';
+let email = '';
+let tosAccept = false;
+let infoSendAccept = false;
 
-    // PopUp state
-    let isPopUpOpen = false;
+let isPopUpOpen = false;
+let activity: Activity | null = null;
+let loading = true;
+let error: string | null = null;
 
-    // FIX: Correctly read params from $page store
-    let activity = "";
-    // @ts-ignore
-    $: activity = $page.params.activity;
+// Reactive slug from route param
+let slug = Number($page.params.activity); // convert to number
+console.log('$page.params.activity:', $page.params.activity, 'slug:', slug);
 
-    async function submitHandler() {
-        const payload = {
-            firstname: firstName,
-            lastname: lastName,
-            dateOfBirth: dateOfBirth,
-            email: email,
-            //phoneNumber: phoneNumber,
-            tosAccept: tosAccept,
-            infoSendAccept: infoSendAccept,
-            activity: activity
-        };
-
-        try {
-            const res = await fetch('https://localhost:8443/server/participants', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!res.ok) {
-                alert('Failed to send sign-up: ' + res.status);
-                return;
-            }
-
-            const text = await res.text();
-            alert('Sign-up sent: ' + text);
-
-            // Reset form
-            firstName = "";
-            lastName = "";
-            dateOfBirth = "";
-            email = "";
-            //phoneNumber = "";
-            tosAccept = false;
-            infoSendAccept = false;
-
-        } catch (err) {
-            console.error(err);
-            alert("Network error sending sign-up. Check server and HTTPS settings.");
+onMount(async () => {
+    try {
+        if (!isNaN(slug)) {
+            activity = await loadActivity(slug);
+        } else {
+            throw new Error('Invalid activity ID');
         }
+    } catch (err) {
+        console.error(err);
+        error = 'Failed to load activity.';
+    } finally {
+        loading = false;
     }
+});
 
-    // Sveltes own functions to open and close pop up
-    // Instead of using document.getElementById etc, we use thise. 
-    // These functions are called at line 145-154. When the buttons are clicked, the popup will be set to either true or false, meaning it will open or close. 
-    function handleOpenPopUp() {
-        isPopUpOpen = true;
+async function submitHandler() {
+    if (!activity) return;
+
+    const payload = {
+        firstname: firstName,
+        lastname: lastName,
+        dateOfBirth,
+        email,
+        tosAccept,
+        infoSendAccept,
+        activity: activity.id
+    };
+
+    try {
+        const res = await fetch('https://localhost:8443/server/participants', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+            alert('Failed to send sign-up: ' + res.status);
+            return;
+        }
+
+        alert('Sign-up sent successfully!');
+        firstName = lastName = dateOfBirth = email = '';
+        tosAccept = infoSendAccept = false;
+    } catch (err) {
+        console.error(err);
+        alert('Network error sending sign-up.');
     }
+}
 
-    function handleClosePopUp() {
-        isPopUpOpen = false;
-    }
+function handleOpenPopUp() {
+    isPopUpOpen = true;
+}
 
+function handleClosePopUp() {
+    isPopUpOpen = false;
+}
 </script>
+
 
 
 <!-- <h1>Aalborg Try Out: Activity Test!!! (vi prøver igen)</h1> -->
 <div class="container">
+    
+    
 
     <!-- Left half: Activity Image -->
     <div class="halfPageBox">
-        <img class="activityImage" src="https://i.imgur.com/1KoNJZ6.jpeg" alt="activityImage"/>
+        <img class="activityImage" src="{activity ? activity.imgUrl : 'Indlæser...'}" alt="activityImage"/>
     </div>
 
     <!-- Right half: Activity info and Description box -->
@@ -88,8 +96,8 @@
 
             <!-- Left: Name + Organizer -->
             <div class="noiRightBox">
-                <h2>{$page.params.activity} (navn på aktivitet) </h2>
-                <p>(Organisator)</p>
+                <h2>{activity ? activity.title : 'Indlæser...'} </h2>
+                <p>{activity ? activity.organization : 'Indlæser...'}</p>
             </div>
 
             <!-- Right: Invite button -->
@@ -104,31 +112,31 @@
                     <tr>
                         <td>
                             <b>Aktivitet</b><br>
-                            Eksempel Aktivitet
+                            {activity ? activity.title : 'Indlæser...'}
                         </td>
                         <td>
                             <b>Instruktør</b><br>
-                            Lars Larsen
+                            {activity ? activity.instructors : 'Indlæser...'}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <b>Tidspunkt</b><br>
-                            D. 10. november 2025 kl. 17.00
+                            {activity ? activity.date : 'Indlæser...'}
                         </td>
                         <td>
                             <b>Adresse og mødested</b><br>
-                            Selma Lagerlöfsvej 300, 9220 Aalborg
+                            {activity ? activity.location : 'Indlæser...'}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <b>Køn</b><br>
-                            Alle køn
+                            {activity ? activity.genderGroup : 'Indlæser...'}
                         </td>
                         <td>
                             <b>Aldersgruppe</b><br>
-                            15-25
+                            {activity ? activity.age : 'Indlæser...'}
                         </td>
                     </tr>
                 </tbody>
@@ -138,7 +146,7 @@
         <!-- DESCRIPTION BOX (outside) -->
         <div class="innerBox">
             <h3>Beskrivelse</h3>
-            <p>Placeholder beskrivelse</p>
+            <p>{activity ? activity.description : 'Indlæser...'}</p>
             <div class="btn">Læs mere</div>
         </div>
 
@@ -156,7 +164,7 @@
                     <button class="closeBtn" on:click={handleClosePopUp}>Luk</button> <!-- When the button within the popup is clicked, the pop up will close -->
 
                     <div class="popUpTitle">
-                        <h2>Tilmeld dig gratis til <b>({activity})</b>!</h2>
+                        <h2>Tilmeld dig gratis til <b>{activity ? activity.title : 'Indlæser...'}</b>!</h2>
                     </div>
                 
                 <form class="formLayout" on:submit|preventDefault={submitHandler}>

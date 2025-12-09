@@ -2,149 +2,107 @@ package Classes;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-// we tell jackson to ignore unknown fields
-// otherwise it starts bean deserializing or something
-// actually: com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized field "WaitingListCapacity" (class Classes.Activity), not marked as ignorable
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Activity {
-    // consider removing "Activity" prefix
-    // consider using camelCase
 
-    public int ActivityID; // ID of the activity
+    @JsonProperty("ActivityID")
+    private int activityID;
 
-    private String ActivityName; // The name displayed for the activity
-    private String ActivityOrganizer; // The organization who is in charge of hosting the activity
+    @JsonProperty("ActivityName")
+    private String activityName;
 
-    private String TypeOfActivity; // The type of activity in question (Rowing, Climbing, etc)
-    private String Instructors; // Who will be in charge of the activity during its duration
+    @JsonProperty("ActivityOrganizer")
+    private String activityOrganizer;
 
-    private long DateAndTime; // yyyy/mm/dd/hh/mm/ The date and time the activity will take place
-    private String Location; // The location where the activity will be held
+    @JsonProperty("TypeOfActivity")
+    private String typeOfActivity;
 
-    private String GenderGroup; // Who is the targeted gender group for this activity?
-    private String AgeGroup; // Who is the targeted age group for this activity?
+    @JsonProperty("Instructors")
+    private String instructors;
 
-    private int ActivityCapacity; // The maximum capacity of participants for this activity
-    private int WaitingListCapacity; // The maximum capacity of the waiting list (if enabled)
+    @JsonProperty("DateAndTime")
+    private long dateAndTime;
 
-    private String ActivityDescription; // A description that goes over what the activity is about
-    private String ActivityDifficulty; // The difficulty level of the activity (Beginner, Intermediate,
+    @JsonProperty("Location")
+    private String location;
 
-    public boolean WaitingListEnabled; // Boolean for deciding whether to have a waiting list
-    public List<String> Tags;
+    @JsonProperty("GenderGroup")
+    private String genderGroup;
 
-    private String ImgUrl;
+    @JsonProperty("AgeGroup")
+    private String ageGroup;
 
-    public Activity() {} // for jackson
+    @JsonProperty("ActivityCapacity")
+    private int activityCapacity;
 
-    public int getActivityID() {
-        return ActivityID;
-    }
-    public void setActivityID(int ActivityID) {
-        this.ActivityID = ActivityID;
-    }
+    @JsonProperty("WaitingListCapacity")
+    private int waitingListCapacity;
 
-    public String getActivityName() {
-        return ActivityName;
-    }
-    public void setActivityName(String ActivityName) {
-        this.ActivityName = ActivityName;
-    }
+    @JsonProperty("ActivityDescription")
+    private String activityDescription;
 
-    public String getActivityOrganizer() {
-        return ActivityOrganizer;
-    }
-    public void setActivityOrganizer(String ActivityOrganizer) {
-        this.ActivityOrganizer = ActivityOrganizer;
-    }
+    @JsonProperty("ActivityDifficulty")
+    private String activityDifficulty;
 
-    public String getTypeOfActivity() {
-        return TypeOfActivity;
-    }
-    public void setTypeOfActivity(String TypeOfActivity) {
-        this.TypeOfActivity = TypeOfActivity;
-    }
+    @JsonProperty("WaitingListEnabled")
+    private boolean waitingListEnabled;
 
-    public String getInstructors() {
-        return Instructors;
-    }
-    public void setInstructors(String Instructors) {
-        this.Instructors = Instructors;
-    }
+    @JsonProperty("Tags")
+    private List<String> tags;
 
-    public long getDateAndTime() {
-        return DateAndTime;
-    }
-    public void setDateAndTime(long DateAndTime) {
-        this.DateAndTime = DateAndTime;
-    }
+    @JsonProperty("ImgUrl")
+    private String imgUrl;
 
-    public String getLocation() {
-        return Location;
-    }
-    public void setLocation(String Location) {
-        this.Location = Location;
-    }
+    public Activity() {}
 
-    public String getGenderGroup() {
-        return GenderGroup;
-    }
-    public void setGenderGroup(String GenderGroup) {
-        this.GenderGroup = GenderGroup;
-    }
+    // Getters and setters
+    public int getActivityID() { return activityID; }
+    public void setActivityID(int activityID) { this.activityID = activityID; }
 
-    public String getAgeGroup() {
-        return AgeGroup;
-    }
-    public void setAgeGroup(String AgeGroup) {
-        this.AgeGroup = AgeGroup;
-    }
+    public String getActivityName() { return activityName; }
+    public void setActivityName(String activityName) { this.activityName = activityName; }
 
-    public int getActivityCapacity() {
-        return ActivityCapacity;
-    }
-    public void setActivityCapacity(int ActivityCapacity) {
-        this.ActivityCapacity = ActivityCapacity;
-    }
+    public String getActivityOrganizer() { return activityOrganizer; }
+    public void setActivityOrganizer(String activityOrganizer) { this.activityOrganizer = activityOrganizer; }
 
-    public int getWaitingListCapacity() {
-        return WaitingListCapacity;
-    }
-    public void setWaitingListCapacity(int WaitingListCapacity) {
-        this.WaitingListCapacity = WaitingListCapacity;
-    }
+    public String getTypeOfActivity() { return typeOfActivity; }
+    public void setTypeOfActivity(String typeOfActivity) { this.typeOfActivity = typeOfActivity; }
 
-    public String getActivityDescription() {
-        return ActivityDescription;
-    }
-    public void setActivityDescription(String ActivityDescription) {
-        this.ActivityDescription = ActivityDescription;
-    }
+    public String getInstructors() { return instructors; }
+    public void setInstructors(String instructors) { this.instructors = instructors; }
 
-    public String getActivityDifficulty() {
-        return ActivityDifficulty;
-    }
-    public void setActivityDifficulty(String ActivityDifficulty) {
-        this.ActivityDifficulty = ActivityDifficulty;
-    }
+    public long getDateAndTime() { return dateAndTime; }
+    public void setDateAndTime(long dateAndTime) { this.dateAndTime = dateAndTime; }
 
-    public boolean getWaitingListEnabled() {
-        return WaitingListEnabled;
-    }
-    public void setWaitingListEnabled(boolean WaitingListEnabled) {
-        this.WaitingListEnabled = WaitingListEnabled;
-    }
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
 
-    public String getImgUrl() {
-        return ImgUrl;
-    }
-    public void setImgUrl(String ImgUrl) { this.ImgUrl = ImgUrl; }
+    public String getGenderGroup() { return genderGroup; }
+    public void setGenderGroup(String genderGroup) { this.genderGroup = genderGroup; }
 
-    public List<String> getTags() {
-        return Tags;
-    }
-    public void setTags(List<String> Tags) {
-        this.Tags = Tags;
-    }
+    public String getAgeGroup() { return ageGroup; }
+    public void setAgeGroup(String ageGroup) { this.ageGroup = ageGroup; }
+
+    public int getActivityCapacity() { return activityCapacity; }
+    public void setActivityCapacity(int activityCapacity) { this.activityCapacity = activityCapacity; }
+
+    public int getWaitingListCapacity() { return waitingListCapacity; }
+    public void setWaitingListCapacity(int waitingListCapacity) { this.waitingListCapacity = waitingListCapacity; }
+
+    public String getActivityDescription() { return activityDescription; }
+    public void setActivityDescription(String activityDescription) { this.activityDescription = activityDescription; }
+
+    public String getActivityDifficulty() { return activityDifficulty; }
+    public void setActivityDifficulty(String activityDifficulty) { this.activityDifficulty = activityDifficulty; }
+
+    public boolean getWaitingListEnabled() { return waitingListEnabled; }
+    public void setWaitingListEnabled(boolean waitingListEnabled) { this.waitingListEnabled = waitingListEnabled; }
+
+    public List<String> getTags() { return tags; }
+    public void setTags(List<String> tags) { this.tags = tags; }
+
+    public String getImgUrl() { return imgUrl; }
+    public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
 }
