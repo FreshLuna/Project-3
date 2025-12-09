@@ -49,7 +49,7 @@ class CanceledTest {
 
     @Test
     void removeParticipantSuccessfully() throws IOException {
-        String activityName = "Yoga";
+        String activityName = "Yoga test trial";
         String testJson = "{\"userID\":1337, \"name\": \"Dennis\"}";
 
         // Create a mock participant and activity

@@ -3,57 +3,37 @@ package Classes;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Activity {
+    // consider removing "Activity" prefix
+    // consider using camelCase
 
-    @JsonProperty("ActivityID")
-    private int activityID;
-
+    public int ActivityID; // ID of the activity
     @JsonProperty("ActivityName")
-    private String activityName;
+    private String ActivityName; // The name displayed for the activity
+    private String ActivityOrganizer; // The organization who is in charge of hosting the activity
 
-    @JsonProperty("ActivityOrganizer")
-    private String activityOrganizer;
+    private String TypeOfActivity; // The type of activity in question (Rowing, Climbing, etc)
+    private String Instructors; // Who will be in charge of the activity during its duration
 
-    @JsonProperty("TypeOfActivity")
-    private String typeOfActivity;
+    private long DateAndTime; // yyyy/mm/dd/hh/mm/ The date and time the activity will take place
+    private String Location; // The location where the activity will be held
 
-    @JsonProperty("Instructors")
-    private String instructors;
-
-    @JsonProperty("DateAndTime")
-    private long dateAndTime;
-
-    @JsonProperty("Location")
-    private String location;
-
-    @JsonProperty("GenderGroup")
-    private String genderGroup;
-
-    @JsonProperty("AgeGroup")
-    private String ageGroup;
-
+    private String GenderGroup; // Who is the targeted gender group for this activity?
+    private String AgeGroup; // Who is the targeted age group for this activity?
     @JsonProperty("ActivityCapacity")
-    private int activityCapacity;
+    private int ActivityCapacity; // The maximum capacity of participants for this activity
+    private int WaitingListCapacity; // The maximum capacity of the waiting list (if enabled)
 
-    @JsonProperty("WaitingListCapacity")
-    private int waitingListCapacity;
+    private String ActivityDescription; // A description that goes over what the activity is about
+    private String ActivityDifficulty; // The difficulty level of the activity (Beginner, Intermediate,
 
-    @JsonProperty("ActivityDescription")
-    private String activityDescription;
+    public boolean WaitingListEnabled; // Boolean for deciding whether to have a waiting list
+    public List<String> Tags;
 
-    @JsonProperty("ActivityDifficulty")
-    private String activityDifficulty;
-
-    @JsonProperty("WaitingListEnabled")
-    private boolean waitingListEnabled;
-
-    @JsonProperty("Tags")
-    private List<String> tags;
-
-    @JsonProperty("ImgUrl")
-    private String imgUrl;
+    private String ImgUrl;
 
     public Activity() {}
 

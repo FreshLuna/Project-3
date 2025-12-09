@@ -1,6 +1,7 @@
 <script lang="ts">
     let { children } = $props();
 	import logo from '$lib/assets/logo.png';
+  import '../app.css';
 
 </script>
 

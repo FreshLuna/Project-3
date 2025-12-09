@@ -37,8 +37,8 @@ class FullyBookedTest {
         String activityName = "Coffee_full";
         Path file = TEST_DIR.resolve(activityName +"_users.txt");
         Files.writeString(file, "Mia\nLuna\nDennisMay\n");
-
-        assertTrue(FullyBooked.isActivityOpen("test_temp/" + activityName, 3, false));
+        FullyBooked fullyBooked = new FullyBooked();
+        assertTrue(fullyBooked.isActivityOpen("test_temp/" + activityName, 3, false));
     }
 
     @Test
@@ -47,7 +47,9 @@ class FullyBookedTest {
         String activityName = "Coffee_Not_full";
         Path file = TEST_DIR.resolve(activityName +"_users.txt");
         Files.writeString(file,"Mae\nLena\n");
-        assertFalse(FullyBooked.isActivityOpen("test_temp/" + activityName,3,false));
+        FullyBooked fullyBooked = new FullyBooked();
+
+        assertFalse(fullyBooked.isActivityOpen("test_temp/" + activityName,3,false));
 
     }
 

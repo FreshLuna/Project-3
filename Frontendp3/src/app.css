@@ -1,0 +1,17 @@
+/* Global app font and base resets */
+:root {
+  --app-font: 'Trebuchet MS', 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+html, body, #svelte, #svelte > * {
+  font-family: var(--app-font);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Ensure form controls and buttons inherit the same font */
+input, textarea, select, button { font-family: inherit; }
+
+/* Base text sizing for consistent appearance */
+body { font-size: 16px; color: #222; }

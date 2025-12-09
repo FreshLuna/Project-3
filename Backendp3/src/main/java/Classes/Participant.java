@@ -1,15 +1,27 @@
 package Classes;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Participant {
     private int UserID; // ID of the participant
-
+    @JsonProperty("firstname")
     private String FirstName; // First name
+
     private String LastName; // Last name
     private String DateOfBirth; // Date of birth
     private String Email; // Email address of the participant
 
     private Boolean AalborgTryOutIsAllowedToSendMessage; // This determines whether or not we are allowed to send them a notification message
 
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
+    }
+
+    private String activity;
     public Participant() {}
 
     public int getUserID() {
