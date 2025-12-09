@@ -171,8 +171,8 @@ function handleClosePopUp() {
 
                     <div class="formRowNameDOB">
                         <div class="formField">
-                            <label for="activityName">Vælg tidspunkt</label>
-                            <input type="date" id="activityName" name="activityName" bind:value={activity}>
+                            <label for="activityName">Tidspunkt</label>
+                            <b>{activity ? activity.date : 'Indlæser...'}</b>
                         </div>
                     </div>
 

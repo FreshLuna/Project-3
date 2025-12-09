@@ -38,51 +38,51 @@ public class Activity {
     public Activity() {}
 
     // Getters and setters
-    public int getActivityID() { return activityID; }
-    public void setActivityID(int activityID) { this.activityID = activityID; }
+    public int getActivityID() { return ActivityID; }
+    public void setActivityID(int activityID) { this.ActivityID = activityID; }
 
-    public String getActivityName() { return activityName; }
-    public void setActivityName(String activityName) { this.activityName = activityName; }
+    public String getActivityName() { return ActivityName; }
+    public void setActivityName(String activityName) { this.ActivityName = activityName; }
 
-    public String getActivityOrganizer() { return activityOrganizer; }
-    public void setActivityOrganizer(String activityOrganizer) { this.activityOrganizer = activityOrganizer; }
+    public String getActivityOrganizer() { return ActivityOrganizer; }
+    public void setActivityOrganizer(String activityOrganizer) { this.ActivityOrganizer = activityOrganizer; }
 
-    public String getTypeOfActivity() { return typeOfActivity; }
-    public void setTypeOfActivity(String typeOfActivity) { this.typeOfActivity = typeOfActivity; }
+    public String getTypeOfActivity() { return TypeOfActivity; }
+    public void setTypeOfActivity(String typeOfActivity) { this.TypeOfActivity = typeOfActivity; }
 
-    public String getInstructors() { return instructors; }
-    public void setInstructors(String instructors) { this.instructors = instructors; }
+    public String getInstructors() { return Instructors; }
+    public void setInstructors(String instructors) { this.Instructors = instructors; }
 
-    public long getDateAndTime() { return dateAndTime; }
-    public void setDateAndTime(long dateAndTime) { this.dateAndTime = dateAndTime; }
+    public long getDateAndTime() { return DateAndTime; }
+    public void setDateAndTime(long dateAndTime) { this.DateAndTime = dateAndTime; }
 
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
+    public String getLocation() { return Location; }
+    public void setLocation(String location) { this.Location = location; }
 
-    public String getGenderGroup() { return genderGroup; }
-    public void setGenderGroup(String genderGroup) { this.genderGroup = genderGroup; }
+    public String getGenderGroup() { return GenderGroup; }
+    public void setGenderGroup(String genderGroup) { this.GenderGroup = genderGroup; }
 
-    public String getAgeGroup() { return ageGroup; }
-    public void setAgeGroup(String ageGroup) { this.ageGroup = ageGroup; }
+    public String getAgeGroup() { return AgeGroup; }
+    public void setAgeGroup(String ageGroup) { this.AgeGroup = ageGroup; }
 
-    public int getActivityCapacity() { return activityCapacity; }
-    public void setActivityCapacity(int activityCapacity) { this.activityCapacity = activityCapacity; }
+    public int getActivityCapacity() { return ActivityCapacity; }
+    public void setActivityCapacity(int activityCapacity) { this.ActivityCapacity = activityCapacity; }
 
-    public int getWaitingListCapacity() { return waitingListCapacity; }
-    public void setWaitingListCapacity(int waitingListCapacity) { this.waitingListCapacity = waitingListCapacity; }
+    public int getWaitingListCapacity() { return WaitingListCapacity; }
+    public void setWaitingListCapacity(int waitingListCapacity) { this.WaitingListCapacity = waitingListCapacity; }
 
-    public String getActivityDescription() { return activityDescription; }
-    public void setActivityDescription(String activityDescription) { this.activityDescription = activityDescription; }
+    public String getActivityDescription() { return ActivityDescription; }
+    public void setActivityDescription(String activityDescription) { this.ActivityDescription = activityDescription; }
 
-    public String getActivityDifficulty() { return activityDifficulty; }
-    public void setActivityDifficulty(String activityDifficulty) { this.activityDifficulty = activityDifficulty; }
+    public String getActivityDifficulty() { return ActivityDifficulty; }
+    public void setActivityDifficulty(String activityDifficulty) { this.ActivityDifficulty = activityDifficulty; }
 
-    public boolean getWaitingListEnabled() { return waitingListEnabled; }
-    public void setWaitingListEnabled(boolean waitingListEnabled) { this.waitingListEnabled = waitingListEnabled; }
+    public boolean getWaitingListEnabled() { return WaitingListEnabled; }
+    public void setWaitingListEnabled(boolean waitingListEnabled) { this.WaitingListEnabled = waitingListEnabled; }
 
-    public List<String> getTags() { return tags; }
-    public void setTags(List<String> tags) { this.tags = tags; }
+    public List<String> getTags() { return Tags; }
+    public void setTags(List<String> tags) { this.Tags = tags; }
 
-    public String getImgUrl() { return imgUrl; }
-    public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
+    public String getImgUrl() { return ImgUrl; }
+    public void setImgUrl(String imgUrl) { this.ImgUrl = imgUrl; }
 }
