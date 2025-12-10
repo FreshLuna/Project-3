@@ -15,6 +15,7 @@ public class CancelController {
     private final ObjectMapper mapper = new ObjectMapper();
     Canceled canceled = new Canceled();
 
+    //recieves Firstname lastname email and activity as a json list
     public CancelResult processCancel(String JsonInput){
         try {
             CancelRequest cancelRequest = mapper.readValue(JsonInput,CancelRequest.class);
