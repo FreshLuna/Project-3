@@ -1,13 +1,18 @@
 package Classes;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Activity {
+
     // consider removing "Activity" prefix
     // consider using camelCase
 
@@ -119,9 +124,10 @@ public class Activity {
 
     @JsonIgnore
     public String getWeekday() {
-        long date = (getDateAndTime()/100)-3;
+        long date = (getDateAndTime()/10000)-3;
+
         date = date%7;
         String[] weekdays = {"Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"};
-        return weekdays[(int) date];
+        return weekdays[(int) date]; // is broken
     }
 }
