@@ -23,12 +23,15 @@ public class CancelController {
             boolean success = canceled.removeParticipantByDetails(
                     activity.getActivityName(), 
                     participant.getFirstName(), 
-                    participant.getLastName(), 
+                    participant.getLastName(),
                     participant.getEmail()
             );
             
             if (success) {
+                    Notification notification = new Notification(activity,participant);
+                    notification.emailNotification("Canceled");
                 return new CancelResult(true, "Deltager fjernet", participant);
+
             } else {
                 return new CancelResult(false, "Deltager kunne ikke findes", null);
             }

@@ -19,14 +19,18 @@ public class SignupController {
     private Activity activity = new Activity();
     private final SignedUp signedUp = new SignedUp();
 
+
     private static final List<Activity> activities = DataLoader.loadActivities();
 
     public SignUpResult processSignup( String jsonInput){
+
 
         try {
 
             SignUpRequest request = mapper.readValue(jsonInput,SignUpRequest.class);
             Participant participant = toParticipant(request);
+             Notification notification = new Notification(activity,participant);
+
             Activity match = activities.stream()
                     .filter(a->a.getActivityName().equalsIgnoreCase(participant.getActivity()))
                     .findFirst()
@@ -42,7 +46,8 @@ public class SignupController {
                 activity.setActivityName(match.getActivityName());
                 activity.setActivityCapacity(match.getActivityCapacity());
                 activity.setWaitingListEnabled(match.getWaitingListEnabled());
-            System.out.println(activity.getActivityCapacity());
+                activity.setInstructors(match.getInstructors());
+
             boolean isOpen = fullyBooked.isActivityOpen(
                     participant.getActivity(),
                     activity.getActivityCapacity(),
@@ -54,6 +59,7 @@ public class SignupController {
                 if (activity.getWaitingListEnabled()){
                     String line = participantToString(participant);
                     System.out.println("debug" + line );
+                    notification.emailNotification("WaitingList");
                     signedUp.appendParticipant(line);
 
                     return SignUpResult.successWaitingList(participant);
@@ -62,13 +68,16 @@ public class SignupController {
 
                 }
             }
+
+
             String line = participantToString(participant);
 
             signedUp.appendParticipant(line);
+            notification.emailNotification("SignUp");
             return SignUpResult.success(participant);
 
         } catch (Exception e) {
-            return  SignUpResult.fail("invalid JSON format");
+            return  SignUpResult.fail("exception: "+ "invalid JSON format");
         }
     }
     private Participant toParticipant(SignUpRequest r){ //used for verifying data
