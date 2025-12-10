@@ -1,8 +1,11 @@
 package model;
 
-public class SignUpRequest {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class SignUpRequest {
+    @JsonProperty("firstname")
     private String firstName;
+    @JsonProperty("lastname")
     private String lastName;
     private String dateOfBirth;
     private String email;

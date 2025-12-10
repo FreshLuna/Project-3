@@ -36,11 +36,13 @@ public class SignupController {
                     .findFirst()
                     .orElse(null);
                 if (match==null){
+                    System.out.println("no such activity");
                     return SignUpResult.fail("Aktiviteten findes ikke");
                 }
 
             boolean valid = verified.verifyParticipant(participant);
             if (!valid){
+                System.out.println("verified failed");
                 return SignUpResult.fail("invalid participant data");
             }
                 activity.setActivityName(match.getActivityName());
@@ -73,7 +75,7 @@ public class SignupController {
             String line = participantToString(participant);
 
             signedUp.appendParticipant(line);
-            notification.emailNotification("SignUp");
+           notification.emailNotification("SignUp");
             return SignUpResult.success(participant);
 
         } catch (Exception e) {
