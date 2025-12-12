@@ -2,12 +2,14 @@ package Events;
 
 import Classes.Activity;
 import Classes.Participant;
+import  controller.TLSEmailSender;
 
 public class Notification {
 private String message;
 
 private Participant participant;
 private Activity activity;
+private TLSEmailSender emailSender;
 
     public Notification(Activity activity, Participant participant) {
         this.activity = activity;
@@ -28,6 +30,14 @@ private Activity activity;
        case "WaitingList" ->{
             mail(waitingListNotification());
           yield waitingListNotification();
+       }
+       case "MovedFromWaitingList" ->{
+           mail(movedFromWaitingList());
+           yield movedFromWaitingList();
+       }
+       case "test" ->{
+           mail(test());
+           yield  test();
        }
        default -> throw new IllegalStateException("Unexpected value: " + message);
    };
@@ -73,12 +83,43 @@ private Activity activity;
                 activity.getActivityName()
         );
     }
+    private String movedFromWaitingList(){
+        return  String.format("""
+                Hej %s %s
+                
+                Der er nu en ledig plads på %s, og du er blevet automatisk tilmeldt.
+                """,
+                participant.getFirstName(),
+                participant.getLastName(),
+                activity.getActivityName()
+
+
+
+        );
+
+
+
+    }
+    private String test(){
+        return String.format("""
+                    
+                    Hey %s %s
+                    
+                    du er nu nummer  på venteliste til %s
+                    """,
+                participant.getFirstName(),
+                participant.getLastName(),
+                activity.getActivityName()
+        );
+    }
     public void mail(String msg){
 
-        /* here should the call to and email server go
-         We need maven dependencies  and a smpt wait to see Luna code
-        *  */
-
+      /*  try {
+            emailSender.sendTLSMail(participant.getEmail(),msg,activity.getActivityName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+            */ //need file
         System.out.println("send email to at: "+participant.getEmail() +"\n"+ msg);
 
     }

@@ -1,14 +1,26 @@
 package Classes;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Participant {
     private int UserID; // ID of the participant
     @JsonProperty("firstname")
     private String FirstName; // First name
-
+    @JsonProperty("lastname")
     private String LastName; // Last name
+
+    public Participant(String firstName, String lastName, String email, String activity) {// try to use this for removing and notifying
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        this.activity = activity;
+    }
+
+    // @JsonIgnore
+    @JsonProperty("dateofbirth")
     private String DateOfBirth; // Date of birth
+    @JsonProperty("email")
     private String Email; // Email address of the participant
 
     private Boolean AalborgTryOutIsAllowedToSendMessage; // This determines whether or not we are allowed to send them a notification message
