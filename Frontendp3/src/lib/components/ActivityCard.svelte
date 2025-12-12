@@ -12,7 +12,7 @@
 
     onMount(async () => {
         try {
-            activities = await loadActivities();
+            activities = await loadActivities("activities");
         } catch (err) {
             error = 'Failed to load activities.';
             console.error(err);

@@ -9,6 +9,8 @@ import model.SignUpRequest;
 
 import java.util.List;
 
+import static Events.Verified.verifyNotAlreadySignedUp;
+
 public class SignupController {
 
     private final Verified verified = new Verified();
@@ -32,7 +34,7 @@ public class SignupController {
              Notification notification = new Notification(activity,participant);
 
             Activity match = activities.stream()
-                    .filter(a->a.getActivityName().equalsIgnoreCase(participant.getActivity()))
+                    .filter(a->a.getActivityNameAndID().equalsIgnoreCase(participant.getActivity()))
                     .findFirst()
                     .orElse(null);
                 if (match==null){
@@ -46,9 +48,14 @@ public class SignupController {
                 return SignUpResult.fail("invalid participant data");
             }
                 activity.setActivityName(match.getActivityName());
+                activity.setActivityID(match.getActivityID());
                 activity.setActivityCapacity(match.getActivityCapacity());
                 activity.setWaitingListEnabled(match.getWaitingListEnabled());
-                activity.setInstructors(match.getInstructors());
+                activity.setWaitingListEnabled(match.getWaitingListEnabled());
+                System.out.println(activity.getActivityID());
+
+
+
 
             boolean isOpen = fullyBooked.isActivityOpen(
                     participant.getActivity(),
@@ -56,6 +63,8 @@ public class SignupController {
 
                     activity.getWaitingListEnabled()
             );
+
+            if (!verifyNotAlreadySignedUp(activity, participant)) {return SignUpResult.fail("participant already signed up");}
 
             if(isOpen){
                 if (activity.getWaitingListEnabled()){

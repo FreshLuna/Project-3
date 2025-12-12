@@ -1,13 +1,15 @@
 package Classes;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,7 +34,7 @@ public class Activity {
     private String instructors;
 
     @JsonProperty("DateAndTime")
-    private long dateAndTime;
+    private long dateAndTime; // stored as yyyyMMddmm
 
     @JsonProperty("Location")
     private String location;
@@ -68,10 +70,15 @@ public class Activity {
 
     @Override
     public String toString() {
-        return activityName + " | Location: " + location + " | Date: " + dateAndTime +
-                " | AgeGroup: " + ageGroup + " | GenderGroup: " + genderGroup +
-                " | Tags: " + tags;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            return "Activity{id=" + activityID + "}";
+        }
     }
+
 
     // Getters and setters
     public int getActivityID() { return activityID; }
@@ -124,10 +131,19 @@ public class Activity {
 
     @JsonIgnore
     public String getWeekday() {
-        long date = (getDateAndTime()/10000)-3;
-
-        date = date%7;
+        System.out.println(dateAndTime);
+        String s = String.format("%012d", dateAndTime);
+        String datePart = s.substring(0, 8);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate date = LocalDate.parse(datePart, formatter);
+        // Get the day of the week
+        DayOfWeek dayOfWeek = date.getDayOfWeek(); // MONDAY=1 ... SUNDAY=7
         String[] weekdays = {"Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"};
-        return weekdays[(int) date]; // is broken
+        return weekdays[dayOfWeek.getValue() - 1]; // subtract 1 because array is 0-indexed
+
+
     }
+    @JsonIgnore
+    public String getActivityNameAndID() { return activityName+activityID; }
+
 }

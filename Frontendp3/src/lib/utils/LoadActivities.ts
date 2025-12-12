@@ -1,13 +1,10 @@
 import { dateFormatter } from '$lib/utils/DateFormatter'; 
-export async function loadActivities() {
-    const res = await fetch('https://localhost:8443/server/activities');
-    if (!res.ok) throw new Error('Failed to load activities');
+export async function loadActivities(api: String) {
+    const res = await fetch('https://localhost:8443/server/'+api);
+    if (!res.ok) throw new Error('Failed to load '+ api);
 
     return res.json().then((data) =>
         data.map((item: any) => ({
-
-
-            
             id: item.ActivityID,
             title: item.ActivityName,
             organization: item.ActivityOrganizer,
@@ -28,3 +25,4 @@ export async function loadActivities() {
         }))
     );
 }
+

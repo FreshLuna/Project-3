@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
+import static Events.Expired.hasExpired;
+
 
 public class Verified {
 
@@ -27,22 +29,26 @@ public class Verified {
         return valid;
     }
 
-    public String verifyNotAlreadySignedUp(Activity activity, Participant participant) {
+    public static boolean verifyNotAlreadySignedUp(Activity activity, Participant participant) {
 
         // Clean participant fields first
         String cleanedFirst = cleanName(participant.getFirstName());
         String cleanedEmail = cleanEmail(participant.getEmail());
 
         if (cleanedFirst == null || cleanedEmail == null) {
-            return "Invalid participant data.";
+            System.out.println("Invalid participant data.");
+            return false;
         }
 
         // Correct file path
-        String activityName = activity.getActivityName();
+        String activityName = activity.getActivityNameAndID();
         Path filePath = Paths.get("src/main/sources/events/" + activityName + "_users.txt");
+        System.out.println(filePath);
 
         if (!Files.exists(filePath)) {
-            return "Could not read user file: " + filePath;
+            System.out.println("Could not read user file: ");
+
+            return false;
         }
 
         try (BufferedReader br = Files.newBufferedReader(filePath)) {
@@ -68,15 +74,17 @@ public class Verified {
                 boolean emailMatch = cleanedEmail.equalsIgnoreCase(existingEmail);
 
                 if (firstMatch && emailMatch) {
-                    return "User is already signed up to the activity.";
+                    System.out.println("User is already signed up to the activity.");
+                    return false;
                 }
             }
 
         } catch (IOException e) {
-            return "Could not read user file: " + filePath;
+            System.out.println("Could not read user file: " + filePath);
+            return false;
         }
 
-        return "OK"; // user not found → safe to sign up
+        return true; // user not found → safe to sign up
     }
 
     public boolean verifyActivity(Activity a) {
@@ -86,15 +94,14 @@ public class Verified {
         a.setAgeGroup(cleanAgeGroup(a.getAgeGroup()));
 
         //Validate cleaned fields
-        boolean valid = true;
-        if (isMissing(a.getActivityName())) valid = false;
-        if (a.getActivityCapacity() <= 0) valid = false;
-        if (isMissing(a.getLocation())) valid = false;
-        if (!isValidAgeGroup(a.getAgeGroup())) valid = false;
+        if (isMissing(a.getActivityName())) return(false);
+        if (a.getActivityCapacity() <= 0) return(false);
+        if (isMissing(a.getLocation())) return(false);
+        if (!isValidAgeGroup(a.getAgeGroup())) return(false);
+        if (hasExpired(a)) return(false);
 
-        return valid;
+        return true;
     }
-
 
     //STRING CLEANING HELPERS
     //Check if a string is null or empty after trimming
@@ -103,7 +110,7 @@ public class Verified {
     }
 
     //Remove numbers and special characters, trim, and capitalize first letter
-    private String cleanName(String input) {
+    private static String cleanName(String input) {
         if (input == null) return null;
         input = input.trim().replaceAll("[^a-zA-Z]", ""); // remove numbers/special chars
         if (input.isEmpty()) return null;
@@ -116,7 +123,7 @@ public class Verified {
     }
 
     //Lowercase the email and trim whitespace
-    private String cleanEmail(String email) {
+    private static String cleanEmail(String email) {
         if (email == null) return null;
         return email.trim().toLowerCase();
     }
@@ -145,7 +152,7 @@ public class Verified {
     //Check if date of birth is in the correct format dd/MM/yyyy
     private boolean isValidDateOfBirth(String dob) {
         if (dob == null) return false;
-        return dob.matches("\\d{2}/\\d{2}/\\d{4}");
+        return dob.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
     //Age group must be digits followed by + (e.g., "25+")
@@ -161,7 +168,7 @@ public class Verified {
     }
 
     //Simple JSON extraction
-    private String extractJsonValue(String json, String key) {
+    private static String extractJsonValue(String json, String key) {
         // Example pattern: "firstname":"pizza"
         String search = "\"" + key + "\":\"";
         int start = json.indexOf(search);

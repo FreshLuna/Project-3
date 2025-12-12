@@ -15,7 +15,7 @@ public class testMain {
         pub.publish(a);
         p.setUserID(1337);
        // CC.checkParticipant(a,p);
-        CC.removeParticipant("Yoga", p.getUserID());
+        //CC.removeParticipant("Yoga", p.getUserID());
 
 
     }

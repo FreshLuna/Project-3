@@ -23,4 +23,10 @@ public class DataLoader {
             throw new RuntimeException("Failed to load activities from classpath", e);
         }
     }
+    public static void main(String[] args) {
+        loadActivities();
+        System.out.println(loadActivities());
+
+    }
+
 }

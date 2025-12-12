@@ -3,7 +3,9 @@
     import { loadActivities } from '$lib/utils/LoadActivities';
     import type { Activity } from '$lib/types/Activities';
 
-    let activities: Activity[] = [];
+    let upcomingActivities: Activity[] = [];
+    let popularActivities: Activity[] = [];
+    let newActivities: Activity[] = [];
     let loading = true;
     let error: string | null = null;
 
@@ -22,7 +24,9 @@
 
     onMount(async () => {
         try {
-            activities = await loadActivities();
+            upcomingActivities = await loadActivities("activities");
+            popularActivities = await loadActivities("popularActivities");
+            newActivities = await loadActivities("newActivities");
         } catch (err) {
             error = 'Failed to load activities.';
             console.error(err);
@@ -38,11 +42,11 @@
     <p>{error}</p>
 {:else}
 
-    <h2>Featured Activities</h2>
+    <h2>UpcomingActivities</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car1)}>‹</button>
         <div class="carousel" bind:this={car1}>
-            {#each activities as activity (activity.id)}
+            {#each upcomingActivities as activity (activity.id)}
                 <a class="slide" href={`/${activity.id}`}>
                     {#if activity.imgUrl}
                         <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
@@ -57,11 +61,11 @@
         <button class="nav right" on:click={() => scrollRight(car1)}>›</button>
     </div>
 
-    <h2>New Activities</h2>
+    <h2>Popular Activities</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car2)}>‹</button>
         <div class="carousel" bind:this={car2}>
-            {#each activities as activity (activity.id + '-2')}
+            {#each popularActivities as activity (activity.id + '-2')}
                 <a class="slide" href={`/${activity.id}`}>
                     {#if activity.imgUrl}
                         <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
@@ -76,11 +80,11 @@
         <button class="nav right" on:click={() => scrollRight(car2)}>›</button>
     </div>
 
-    <h2>Popular Activities</h2>
+    <h2>New Activities</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car3)}>‹</button>
         <div class="carousel" bind:this={car3}>
-            {#each activities as activity (activity.id + '-3')}
+            {#each newActivities as activity (activity.id + '-3')}
                 <a class="slide" href={`/${activity.id}`}>
                     {#if activity.imgUrl}
                         <img src={activity.imgUrl} alt={activity.title} loading="lazy" />

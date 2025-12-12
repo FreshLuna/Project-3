@@ -15,7 +15,7 @@
   onMount(async () => {
     try {
       await loadStores();
-      const loaded = await loadActivities();
+      const loaded = await loadActivities("activities");
       activities.set(loaded);
     } catch (e) {
       console.error("Failed to load activities", e);

@@ -57,7 +57,7 @@ public class PostGetServer {
         System.out.println("HTTPS server running on https://localhost:8443/server");
     }
 
-    private static void handleRequest(HttpExchange exchange) throws IOException {
+    private static void handleRequest(HttpExchange exchange) {
         // CORS headers
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
@@ -65,23 +65,38 @@ public class PostGetServer {
 
         // Compacted The methodSwitch see getHandler and postHandler to add methods :D
         String method = exchange.getRequestMethod();
-
         if ("OPTIONS".equalsIgnoreCase(method)) {
-            exchange.sendResponseHeaders(204, -1); // No content
+            try {
+                exchange.sendResponseHeaders(204, -1); // No content
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             exchange.close();
             return;
         }
-        String response = methodSwitch(exchange);
+
+        String response = null;
+        try {
+            response = methodSwitch(exchange);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         assert response != null;
         byte[] bytes = response.getBytes();
+        try {
             exchange.sendResponseHeaders(200, bytes.length);
-            try (OutputStream os = exchange.getResponseBody()) {
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try (OutputStream os = exchange.getResponseBody()) {
                 os.write(bytes);
-            }
+            } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private static String methodSwitch(HttpExchange exchange) throws IOException {
+    private static String methodSwitch(HttpExchange exchange) throws Exception {
         //importing get and post functionality see the corresponding files for more info
         GetHandler getHandler = new GetHandler();
         PostHandler postHandler = new PostHandler();
@@ -90,7 +105,7 @@ public class PostGetServer {
         // We find out what method (get, post or options) the user has requested
         String method = exchange.getRequestMethod();
         String response;
-        
+
 
         switch (method) {    // this switch redirects the exchange to the correct handler.
             case "OPTIONS":  // options returns response headers that we defined previously

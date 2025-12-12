@@ -62,32 +62,6 @@ public class PostHandler {
                 yield "Activity published";
             }
 
-            case "/server/activities/filter" -> {
-                try {
-                    // 'body' contains the JSON request
-
-                    // Get all activities from your service
-                    List<Activity> allActivities = loadActivities();
-
-                    // Use FilterRequest to filter activities from JSON
-                    List<Activity> filteredActivities = FilterRequest.filterFromJson(allActivities, body);
-                    ObjectMapper mapper = new ObjectMapper();
-
-                    String jsonResult = mapper.writeValueAsString(filteredActivities);
-
-                    // Print JSON to console
-                    //System.out.println("Filtered JSON: " + jsonResult);
-
-                    // Return the filtered activities as JSON
-                    yield new ObjectMapper().writeValueAsString(filteredActivities);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    // In case of error, return empty list as JSON
-                    yield "[]";
-                }
-            }
-
             case "/server/shutdown" -> "bye";
 
             default -> "Unknown POST path: " + path;

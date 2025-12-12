@@ -55,7 +55,7 @@ async function submitHandler() {
         email,
         tosAccept,
         infoSendAccept,
-        activity: activity.id
+        activity: activity.title+activity.id
     };
 
     try {
