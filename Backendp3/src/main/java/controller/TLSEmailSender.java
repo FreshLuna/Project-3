@@ -39,16 +39,16 @@ public class TLSEmailSender {
         EmailUtil.sendEmail(session, toEmail,"Tilmeldning til: " + activity, body);
 
     }
-//    public static void main(String[] args) {
-//        // Replace this with the email you want to send to
-//        String toEmail = "mwsandager@gmail.com";
-//
-//        System.out.println("Sending test email to: " + toEmail);
-//
-//        // Call the TLS email sender
-//        TLSEmailSender.sendTLSMail(toEmail, "sagdujsahjdgshjakgfkjSAGFJHKSAGFsaJFGSAJGFjhkaSGFJKHG", "Vild Med Dans");
-//
-//        System.out.println("Test script finished.");
-//    }
+    public static void main(String[] args) {
+        // Replace this with the email you want to send to
+        String toEmail = "mwsandager@gmail.com";
+
+        System.out.println("Sending test email to: " + toEmail);
+
+        // Call the TLS email sender
+        TLSEmailSender.sendTLSMail(toEmail, "sagdujsahjdgshjakgfkjSAGFJHKSAGFsaJFGSAJGFjhkaSGFJKHG", "Vild Med Dans");
+
+        System.out.println("Test script finished.");
+    }
 
 }

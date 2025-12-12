@@ -43,7 +43,7 @@ public class GetTagsForFilter {
         locations.forEach(System.out::println);
 
         System.out.println("\nWeekdays:");
-        List<String> weekdays = GetTagsForFilter.getUniqueValues(Activity::getWeekday);
+        List<String> weekdays = GetTagsForFilter.getUniqueValues(Activity::getWeekdays);
         weekdays.forEach(System.out::println);
 
         System.out.println("\nAges:");

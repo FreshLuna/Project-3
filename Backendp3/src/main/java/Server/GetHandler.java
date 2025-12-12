@@ -35,7 +35,7 @@ public class GetHandler {
             case "/server/newActivities" -> getNewActivities();
             case "/server" -> fileReader("activities.json");
             case "/server/filter/locations" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getLocation));
-            case "/server/filter/weekdays" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getWeekday));
+            case "/server/filter/weekdays" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getWeekdays));
             case "/server/filter/ages" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getAgeGroup));
             case "/server/filter/genders" -> mapper.writeValueAsString(GetTagsForFilter.getUniqueValues(Activity::getGenderGroup));
             case "/server/filter/tags" -> mapper.writeValueAsString(GetTagsForFilter.getTags());

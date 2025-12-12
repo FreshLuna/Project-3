@@ -130,7 +130,7 @@ public class Activity {
     public void setImgUrl(String imgUrl) { this.imgUrl = imgUrl; }
 
     @JsonIgnore
-    public String getWeekday() {
+    public String getWeekdays() {
         System.out.println(dateAndTime);
         String s = String.format("%012d", dateAndTime);
         String datePart = s.substring(0, 8);

@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { writable, type Writable } from "svelte/store";
 
 export interface Filters {
   locations: string[];
@@ -39,14 +39,14 @@ async function fetchCheckboxItems(endpoint: string): Promise<CheckboxItem[]> {
 }
 
 export const locations = writable<CheckboxItem[]>([]);
-export const weekdays = writable<CheckboxItem[]>([]);
+//export const weekdays = writable<CheckboxItem[]>([]);
 export const ages = writable<CheckboxItem[]>([]);
 export const genders = writable<CheckboxItem[]>([]);
 export const tags = writable<CheckboxItem[]>([]);
 
 export async function loadStores() {
     locations.set(await fetchCheckboxItems(serverEndPoint + "/locations"));
-    weekdays.set(await fetchCheckboxItems(serverEndPoint + "/weekdays"));
+    //weekdays.set(await fetchCheckboxItems(serverEndPoint + "/weekdays"));
     ages.set(await fetchCheckboxItems(serverEndPoint + "/ages"));
     genders.set(await fetchCheckboxItems(serverEndPoint + "/genders"));
     tags.set(await fetchCheckboxItems(serverEndPoint + "/tags"));
@@ -62,16 +62,16 @@ export async function loadStores() {
 //     { id: 6, label: "Aalborg Vestby", checked: false }
 // ]);
 
-// // ----- WEEKDAY STORE -----
-// export const weekdays: Writable<CheckboxItem[]> = writable([
-//     { id: 1, label: "Mandag", checked: false },
-//     { id: 2, label: "Tirsdag", checked: false },
-//     { id: 3, label: "Onsdag", checked: false },
-//     { id: 4, label: "Torsdag", checked: false },
-//     { id: 5, label: "Fredag", checked: false },
-//     { id: 6, label: "Lørdag", checked: false },
-//     { id: 7, label: "Søndag", checked: false }
-// ]);
+// ----- WEEKDAY STORE -----
+export const weekdays: Writable<CheckboxItem[]> = writable([
+    { id: 1, label: "Mandag", checked: false },
+    { id: 2, label: "Tirsdag", checked: false },
+    { id: 3, label: "Onsdag", checked: false },
+    { id: 4, label: "Torsdag", checked: false },
+    { id: 5, label: "Fredag", checked: false },
+    { id: 6, label: "Lørdag", checked: false },
+    { id: 7, label: "Søndag", checked: false }
+]);
 
 // // ----- AGE STORE -----
 // export const ages: Writable<CheckboxItem[]> = writable([

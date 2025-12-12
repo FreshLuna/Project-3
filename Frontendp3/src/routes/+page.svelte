@@ -28,8 +28,7 @@
             popularActivities = await loadActivities("popularActivities");
             newActivities = await loadActivities("newActivities");
         } catch (err) {
-            error = 'Failed to load activities.';
-            console.error(err);
+            console.error('Failed to load activities');
         } finally {
             loading = false;
         }

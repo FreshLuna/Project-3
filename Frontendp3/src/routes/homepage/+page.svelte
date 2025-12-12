@@ -1,13 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import CheckboxDropdown from "$lib/CheckboxDropdown.svelte";
+  import CheckboxDropdown from "../../lib/CheckboxDropdown.svelte";
   import { locations, weekdays, ages, genders, tags, loadStores } from "$lib/types/filterStores";
   import { writable, get, type Writable } from "svelte/store";
   import { loadActivities } from "$lib/utils/LoadActivities";
   import type { Activity } from "$lib/types/Activities";
   import type { CheckboxItem, Filters } from "$lib/types/filterStores";
-  import { dateFormatter } from '$lib/utils/DateFormatter'; 
-
   // activities store
   const activities = writable<Activity[]>([]);
 
@@ -30,7 +28,7 @@
   }
 
   // Form submit
-  function handleSubmit(event: SubmitEvent) {
+  async function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
 
     const filters: Filters = {
@@ -42,40 +40,10 @@
     };
 
     console.log("Sending filters:", filters);
-    showFiltered(filters); // updates the activities store directly
-}
-
-  // Server-side filtering
- async function showFiltered(filters: Filters) {
-    const res = await fetch("https://localhost:8443/server/activities/filter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(filters)
-    });
-
-    const data = await res.json();
-
-    const mappedActivities = data.map((item: any) => ({
-        id: item.ActivityID,
-        title: item.ActivityName,
-        organization: item.ActivityOrganizer,
-        type: item.TypeOfActivity,
-        instructors: item.Instructors,
-        date: item.DateAndTime,
-        location: item.Location,
-        genderGroup: item.GenderGroup,
-        age: item.AgeGroup,
-        capacity: item.ActivityCapacity,
-        waitingListCapacity: item.WaitingListCapacity,
-        waitingListEnabled: item.WaitingListEnabled,
-        description: item.ActivityDescription,
-        difficulty: item.ActivityDifficulty,
-        tags: item.Tags ?? [],
-        imgUrl: item.ImgUrl,
-        formattedDate: dateFormatter(item.DateAndTime)
-    }));
-
-    activities.set(mappedActivities);
+    
+    //smarter code
+    const loaded = await loadActivities("filtered", filters);
+    activities.set(loaded);
 }
 </script>
 

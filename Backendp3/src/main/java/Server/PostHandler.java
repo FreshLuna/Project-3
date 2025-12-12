@@ -1,23 +1,16 @@
 package Server;
 
 import Classes.Activity;
-import Database.FilterRequest;
-import Events.FullyBooked;
 import Events.Published;
-import Events.Verified;
-import Classes.Participant;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
-import java.util.List;
-
-import Events.SignedUp;
 import controller.CancelController;
 import controller.CancelResult;
 import controller.SignUpResult;
 import controller.SignupController;
+import static Database.ActivityService.filterFromJson2;
 
-import static Database.DataLoader.loadActivities;
 
 public class PostHandler {
 
@@ -28,10 +21,20 @@ public class PostHandler {
     public String handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath(); // retrieves path
         String body = new String(exchange.getRequestBody().readAllBytes()); // retrieves the data send by the user
+        System.out.println("RAW JSON RECEIVED:\n" + body + path);
         System.out.println("RAW JSON RECEIVED:\n" + body);
+
 
         return switch (path) {
             case "/server/echo" -> body;
+
+            case "/server/filtered" -> {
+
+                System.out.println("step 1" + body);
+                System.out.println("step 2" + filterFromJson2(body));
+
+                yield filterFromJson2(body);
+            }
 
             case "/server/participants" -> {
                 SignUpResult result = signupController.processSignup(body);

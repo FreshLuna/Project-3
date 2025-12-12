@@ -1,47 +1,118 @@
 package Database;
 
 import Classes.Activity;
+import Classes.Filter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Function;
+
+import static Classes.Filter.*;
+
+//
+//    This shit works but is complicated we can use this or keep using the old stuff.
+//
+
 
 public class ActivityService {
-    private final List<Activity> activities;
-    private final Map<String, List<Activity>> tagIndex = new HashMap<>();
+
+
+    private static List<Activity> activities;
+    private static final Map<String, Map<String, List<Activity>>> indexes = new HashMap<>();
+
+    //field extractors are defined in filters and used to generate indexes.
 
     // No filepath needed now
     public ActivityService() {
-        this.activities = DataLoader.loadActivities(); // uses classpath
-        buildTagIndex();
+        activities = DataLoader.loadActivities(); // uses classpath
+        buildIndexes();
     }
 
-    private void buildTagIndex() {
+    private void buildIndexes() {
+        // Initialize all field indexes
+        for (String field : fieldGetters.keySet()) {
+            indexes.put(field, new HashMap<>());
+        }
+
+        // Populate indexes
         for (Activity activity : activities) {
-            for (String tag : activity.getTags()) {
-                tagIndex.computeIfAbsent(tag, k -> new ArrayList<>()).add(activity);
+            for (Map.Entry<String, Function<Activity, List<String>>> entry : fieldExtractors.entrySet()) {
+                String field = entry.getKey();
+                List<String> values = entry.getValue().apply(activity);
+
+                for (String value : values) {
+                    indexes.get(field).computeIfAbsent(value, k -> new ArrayList<>()).add(activity);
+                }
             }
         }
     }
 
     // filtering method
-    public List<Activity> filterByTags(List<String> selectedTags) {
-        if (selectedTags == null || selectedTags.isEmpty()) {
-            return activities;
+    private static List<Activity> filterByField(List<String> values, String field) {
+        if (values == null || values.isEmpty()) return null;
+
+        Map<String, List<Activity>> fieldIndex = indexes.get(field);
+        Set<Activity> resultSet = new LinkedHashSet<>(); // preserves order
+        for (String value : values) {
+            List<Activity> matches = fieldIndex.getOrDefault(value, Collections.emptyList());
+            resultSet.addAll(matches);
+        }
+        return new ArrayList<>(resultSet);
+    }
+
+
+    private static List<Activity> filterActivities(Filter filter) {
+
+        Set<Activity> result = new LinkedHashSet<>(activities);
+
+        for (String field : fieldGetters.keySet()) {
+            List<String> selected = filter.getFieldValues(field);
+            if (selected == null || selected.isEmpty()) continue;
+
+            List<Activity> fieldMatches = filterByField(selected, field);
+            result.retainAll(fieldMatches);
         }
 
-        List<Activity> result = new ArrayList<>(tagIndex.getOrDefault(
-                selectedTags.get(0), Collections.emptyList()
-        ));
+        return new ArrayList<>(result);
+    }
 
-        for (int i = 1; i < selectedTags.size(); i++) {
-            String tag = selectedTags.get(i);
-            List<Activity> taggedActivities = tagIndex.getOrDefault(tag, Collections.emptyList());
-            result.retainAll(taggedActivities);
-        }
+    public static String filterFromJson2(String body) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Filter filter = mapper.readValue(body, Filter.class);
 
-        return result;
+        ActivityService service = new ActivityService(); // builds indexes
+        List<Activity> filtered = filterActivities(filter);
+        return (mapper.writeValueAsString(filtered));
+    }
+
+
+
+    public static void main(String[] args) throws JsonProcessingException {
+
+        String jsonFromFrontend = "{\"locations\":[],\"weekdays\":[],\"ages\":[\"14\"],\"genders\":[],\"tags\":[]}";
+
+        ObjectMapper mapper = new ObjectMapper();
+        Filter filter = mapper.readValue(jsonFromFrontend, Filter.class);
+
+        ActivityService service = new ActivityService(); // builds indexes
+        List<Activity> filtered = filterActivities(filter);
+
+        System.out.println("Filtered activities: " + filtered.size());
+        System.out.println(filtered);
+
+//        new ActivityService(); // builds indexes
+//
+//        Filter filter = new Filter();
+//        filter.setTags(List.of("fun", "indoor"));
+//        filter.setAges(List.of("14+"));
+//        filter.setLocations(List.of());
+//        filter.setWeekdays(List.of());
+//        filter.setGenders(List.of());
+//
+//        List<Activity> filtered = ActivityService.filterActivities(filter);
+//
+//        System.out.println("Filtered activities: " + filtered.size());
+//        System.out.println(filtered);
     }
 }

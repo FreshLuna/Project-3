@@ -1,9 +1,8 @@
 <script lang="ts">
 import { page } from '$app/stores';
 import { onMount, tick } from 'svelte';
-import { loadActivity } from '$lib/utils/SingleActivity';
 import type { Activity } from '$lib/types/Activities';
-
+import { loadActivity } from '$lib/utils/LoadActivities';
 
 let firstName = '';
 let lastName = '';
@@ -16,23 +15,15 @@ let isPopUpOpen = false;
 let activity: Activity | null = null;
 let loading = true;
 let error: string | null = null;
-let formattedDate = "loading"
 
 // Reactive slug from route param
 let slug = Number($page.params.activity); // convert to number
-console.log('$page.params.activity:', $page.params.activity, 'slug:', slug);
+//console.log('$page.params.activity:', $page.params.activity, 'slug:', slug);
 
 onMount(async () => {
     try {
         if (!isNaN(slug)) {
             activity = await loadActivity(slug);
-            const date = activity.date.toString();
-            const year = date.slice(0, 4);    // 2025
-            const month = date.slice(4, 6);   // 03
-            const day = date.slice(6, 8);     // 10
-            const hour = date.slice(8, 10);   // 10
-            const minute = date.slice(10, 12);// 30
-            formattedDate = `${year}Y ${month}M ${day}D ${hour}:${minute}`;
         } else {
             throw new Error('Invalid activity ID');
         }
