@@ -3,13 +3,14 @@ package Events;
 import Classes.Activity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Published {
-    private static final File FILE = new File("src/main/resources/activities.json");
+    private static final File FILE = new File("src/Server.main/resources/activities.json");
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void publish(Activity inputActivity) {

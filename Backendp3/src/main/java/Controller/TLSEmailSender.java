@@ -1,12 +1,12 @@
-package controller;
+package Controller;
 
 
-import java.util.Properties;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import io.github.cdimascio.dotenv.Dotenv;
+import java.util.Properties;
 
 public class TLSEmailSender {
 

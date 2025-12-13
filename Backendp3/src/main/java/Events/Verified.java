@@ -1,11 +1,15 @@
 package Events;
+
 import Classes.Activity;
 import Classes.Participant;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.io.IOException;
+
+import static Config.FilePaths.EVENTS_FOLDER;
 import static Events.Expired.hasExpired;
 
 
@@ -42,7 +46,7 @@ public class Verified {
 
         // Correct file path
         String activityName = activity.getActivityNameAndID();
-        Path filePath = Paths.get("src/main/sources/events/" + activityName + "_users.txt");
+        Path filePath = Paths.get(EVENTS_FOLDER + activityName + "_users.txt");
         System.out.println(filePath);
 
         if (!Files.exists(filePath)) {
@@ -183,7 +187,7 @@ public class Verified {
     }
 
     //TEST METHOD FOR VERIFYING WHETHER PARTICIPANT IS ALREADY SIGNED UP
-   /* public static void main(String[] args) {
+   /* public static void Server.main(String[] args) {
 
         Verified verifier = new Verified();
 

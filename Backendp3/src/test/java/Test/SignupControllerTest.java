@@ -1,11 +1,9 @@
 package Test;
 
-import Classes.Activity;
-import Classes.Participant;
 import Events.FullyBooked;
-import controller.SignUpResult;
+import Controller.SignUpResult;
 import Events.Verified;
-import controller.SignupController;
+import Controller.SignupController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,11 +1,14 @@
-package controller;
+package Controller;
+
 import Classes.Activity;
 import Classes.Participant;
 import Database.DataLoader;
-import Events.*;
-
+import Events.FullyBooked;
+import Events.Notification;
+import Events.SignedUp;
+import Events.Verified;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.SignUpRequest;
+import Model.SignUpRequest;
 
 import java.util.List;
 

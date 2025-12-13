@@ -1,22 +1,19 @@
 package Database;
 
 import Classes.Activity;
-import Events.Expired;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
-
-
-import static Database.DataLoader.loadActivities;
-import static Events.FullyBooked.isActivityOpen;
+import java.util.Collections;
+import java.util.List;
+import static Config.FilePaths.EVENTS_FOLDER;
 
 public class ActivitySorter {
     private static final ObjectMapper mapper = new ObjectMapper();
     public static int activityCount(Activity a) throws Exception {
-        Path filePath = Paths.get("src/main/sources/events/" + a.getActivityName() + "_users.txt");
+        Path filePath = Paths.get(EVENTS_FOLDER + a.getActivityName() + "_users.txt");
 
         int participantCount = 0;
         if (Files.exists(filePath)) {
@@ -25,20 +22,12 @@ public class ActivitySorter {
         }
         return participantCount;
     }
-    public static String getNewActivities() throws Exception {
-        Expired manager = new Expired();
-        manager.removeExpiredActivities();
-        List<Activity> activities = loadActivities();
-        return Collections.unmodifiableList(activities).toString();
+    public static String getNewActivities(List<Activity> activities) {
+        Collections.reverse(activities);
+        return activities.toString();
     }
 
-    public static String getPopularActivities() throws Exception {
-        Expired manager = new Expired();
-        manager.removeExpiredActivities();
-        List<Activity> activities = new ArrayList<>(loadActivities()); // make mutable
-
-        // remove full activities
-        activities.removeIf(a -> !isActivityOpen(a.getActivityName(), a.getActivityCapacity(), a.getWaitingListEnabled()));
+    public static String getPopularActivities(List<Activity> activities) throws Exception {
 
         // Sort remaining activities by participant count descending
         activities.sort((a1, a2) -> {
@@ -55,13 +44,8 @@ public class ActivitySorter {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(activities);
     }
 
-    public static String getUpcomingActivities() throws Exception {
-        Expired manager = new Expired();
-        manager.removeExpiredActivities();
-        List<Activity> activities = new ArrayList<>(loadActivities()); // make mutable
-        activities.removeIf(a -> isActivityOpen(a.getActivityName(), a.getActivityCapacity(), a.getWaitingListEnabled()));
-        Collections.reverse(activities);
-        return Collections.unmodifiableList(activities).toString();       // return as unmodifiable
+    public static String getUpcomingActivities(List<Activity> activities) throws Exception {
+        return activities.toString();
     }
 }
 

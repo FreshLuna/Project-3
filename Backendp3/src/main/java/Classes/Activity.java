@@ -1,15 +1,15 @@
 package Classes;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -131,7 +131,6 @@ public class Activity {
 
     @JsonIgnore
     public String getWeekdays() {
-        System.out.println(dateAndTime);
         String s = String.format("%012d", dateAndTime);
         String datePart = s.substring(0, 8);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -144,6 +143,8 @@ public class Activity {
 
     }
     @JsonIgnore
-    public String getActivityNameAndID() { return activityName+activityID; }
+    public String getActivityNameAndID() {
+        System.out.println(activityName+activityID);
+        return activityName+activityID; }
 
 }

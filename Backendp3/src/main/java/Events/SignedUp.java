@@ -10,7 +10,7 @@ public class SignedUp {
             int start = text.indexOf("\"activity\":\"") + 12;
             int end = text.indexOf("\"", start);
             String activity = text.substring(start, end);
-            File outFile = new File("src/main/sources/events/" + activity + "_users.txt");
+            File outFile = new File("src/main/resources/events/" + activity + "_users.txt");
           /*  Obtains parent directory with outfile.getParentFile() and calls parent.mkdirs() if the
               directory does not exist.
               This creates the directory tree (txtFiles) if missing.

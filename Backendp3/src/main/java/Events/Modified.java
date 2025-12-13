@@ -1,14 +1,17 @@
 package Events;
-import java.lang.reflect.Field;
+
 import Classes.Activity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class Modified {
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final File FILE = new File("src/main/resources/activities.json");
+    private static final File FILE = new File("src/Server.main/resources/activities.json");
 
     public static void updateActivityById(int id, Activity updates) throws IOException, IllegalAccessException {
 
@@ -51,7 +54,7 @@ public class Modified {
         mapper.writerWithDefaultPrettyPrinter().writeValue(FILE, activities);
         System.out.println("Activity with ID " + id + " has been partially updated.");
     }
-    //public static void main(String[] args) throws Exception {
+    //public static void Server.main(String[] args) throws Exception {
     //    Activity updated = new Activity();
     //    updated.ActivityCapacity = 20;
     //

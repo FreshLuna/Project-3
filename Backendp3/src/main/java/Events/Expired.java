@@ -1,13 +1,15 @@
 package Events;
-import java.time.format.DateTimeFormatter;
+
 import Classes.Activity;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static Database.DataLoader.loadActivities;
 import static Events.Removed.removeActivityById;
 import static java.lang.Long.parseLong;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Expired { //returns true if event is expired

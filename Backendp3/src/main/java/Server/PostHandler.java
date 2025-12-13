@@ -4,11 +4,13 @@ import Classes.Activity;
 import Events.Published;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
+import Controller.CancelController;
+import Controller.CancelResult;
+import Controller.SignUpResult;
+import Controller.SignupController;
+
 import java.io.IOException;
-import controller.CancelController;
-import controller.CancelResult;
-import controller.SignUpResult;
-import controller.SignupController;
+
 import static Database.ActivityService.filterFromJson2;
 
 

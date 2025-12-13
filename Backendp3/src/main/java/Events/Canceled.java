@@ -1,15 +1,16 @@
 package Events;
-import Classes.Participant;
-import Classes.Activity;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static Config.FilePaths.EVENTS_FOLDER;
+
 public class Canceled {
     public boolean removeParticipantByDetails(String activityName, String firstName, String lastName, String email) {
-        Path filePath = Paths.get("src/main/sources/events/" + activityName + "_users.txt");
+        Path filePath = Paths.get(EVENTS_FOLDER + activityName + "_users.txt");
 
         try {
             if (!Files.exists(filePath)) {

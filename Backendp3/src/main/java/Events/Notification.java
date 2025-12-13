@@ -2,7 +2,7 @@ package Events;
 
 import Classes.Activity;
 import Classes.Participant;
-import  controller.TLSEmailSender;
+import Controller.TLSEmailSender;
 
 public class Notification {
 private String message;

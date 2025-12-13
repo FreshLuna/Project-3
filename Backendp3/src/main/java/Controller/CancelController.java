@@ -1,13 +1,13 @@
-package controller;
+package Controller;
 
 import Classes.Activity;
 import Classes.Participant;
 import Database.DataLoader;
-import Events.*;
+import Events.Canceled;
+import Events.Notification;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.CancelRequest;
-import Events.Canceled;
+import Model.CancelRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
+
+import static Config.FilePaths.EVENTS_FOLDER;
 
 
 public class CancelController {
@@ -108,7 +110,7 @@ public class CancelController {
     }
 
     private List<Participant> participantList(String activityName){
-        Path filePath = Paths.get("src/main/sources/events/" + activityName + "_users.txt");
+        Path filePath = Paths.get(EVENTS_FOLDER + activityName + "_users.txt");
         ObjectMapper participantMapper = new ObjectMapper();
         try {
         List<String> lines = Files.readAllLines(filePath);

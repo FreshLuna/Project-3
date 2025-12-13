@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static Config.FilePaths.EVENTS_FOLDER;
 import static org.junit.jupiter.api.Assertions.*;
 import Events.SignedUp;
 
@@ -13,7 +14,7 @@ import java.nio.file.Files;
 
 class SignedUpTest {
 
-  private String testPath = "src/main/sources/events/test_temp";
+  private String testPath = EVENTS_FOLDER + "test_temp";
 
  private static File testBaseDir ;
 
@@ -45,7 +46,7 @@ class SignedUpTest {
 
         File testFile = new File(testBaseDir, activity + "_users.txt");
 
-        String originalPath = "src/main/sources/events/";
+        String originalPath = EVENTS_FOLDER;
         File activityDir = new File(originalPath + "test_temp");
         if (!activityDir.exists()) activityDir.mkdirs();
 

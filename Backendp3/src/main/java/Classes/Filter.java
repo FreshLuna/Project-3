@@ -1,5 +1,5 @@
 package Classes;
-import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,23 +29,24 @@ public class Filter {
     public List<String> getTags() { return tags; }
     public void setTags(List<String> tags) { this.tags = tags; }
 
+
     public static final Map<String, Function<Activity, List<String>>> fieldExtractors = Map.of(
             "tags", Activity::getTags, // already a list
-            "age", a -> List.of(a.getAgeGroup()),
-            "location", a -> List.of(a.getLocation()),
-            "weekday", a -> List.of(a.getWeekdays()),
-            "gender", a -> List.of(a.getGenderGroup())
+            "ages", a -> List.of(a.getAgeGroup()),
+            "locations", a -> List.of(a.getLocation()),
+            "weekdays", a -> List.of(a.getWeekdays()),
+            "genders", a -> List.of(a.getGenderGroup())
 
     );
+
     public static final Map<String, Function<Filter, List<String>>> fieldGetters = Map.of(
             "tags", Filter::getTags,
-            "age", Filter::getAges,
-            "location", Filter::getLocations,
-            "weekday", Filter::getWeekdays,
-            "gender", Filter::getGenders
+            "ages", Filter::getAges,
+            "locations", Filter::getLocations,
+            "weekdays", Filter::getWeekdays,
+            "genders", Filter::getGenders
     );
     public List<String> getFieldValues(String field) {
         return fieldGetters.getOrDefault(field, f -> List.of()).apply(this);
     }
-
 }

@@ -4,6 +4,8 @@ import Events.FullyBooked;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static Config.FilePaths.EVENTS_FOLDER;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Files;
@@ -11,7 +13,7 @@ import java.nio.file.Path;
 
 class FullyBookedTest {
 
-    private static final Path TEST_DIR = Path.of("src/main/sources/events/test_temp");
+    private static final Path TEST_DIR = Path.of(EVENTS_FOLDER + "test_temp");
 
 
     @BeforeEach

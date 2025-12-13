@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import java.util.function.Function;
 
-import static Classes.Filter.*;
+import static Classes.Filter.fieldExtractors;
+import static Classes.Filter.fieldGetters;
+import static Events.FullyBooked.isActivityOpen;
 
 //
 //    This shit works but is complicated we can use this or keep using the old stuff.
@@ -19,6 +21,7 @@ public class ActivityService {
 
 
     private static List<Activity> activities;
+    private static final Map<Integer, Activity> idIndex = new HashMap<>();
     private static final Map<String, Map<String, List<Activity>>> indexes = new HashMap<>();
 
     //field extractors are defined in filters and used to generate indexes.
@@ -27,6 +30,20 @@ public class ActivityService {
     public ActivityService() {
         activities = DataLoader.loadActivities(); // uses classpath
         buildIndexes();
+    }
+
+    public static List<Activity> getAllActivities() throws Exception {
+        List<Activity> all = new ArrayList<>(activities);  // fresh copy thats modifiable
+        System.out.println(activities);
+        System.out.println("before");
+
+        all.removeIf(a -> isActivityOpen(a.getActivityNameAndID(), a.getActivityCapacity(), a.getWaitingListEnabled()));
+        return all;
+    }
+
+
+    public static Activity getActivityById(int id) {
+        return idIndex.get(id);
     }
 
     private void buildIndexes() {
@@ -45,6 +62,7 @@ public class ActivityService {
                     indexes.get(field).computeIfAbsent(value, k -> new ArrayList<>()).add(activity);
                 }
             }
+            idIndex.put(activity.getActivityID(), activity);
         }
     }
 
@@ -84,35 +102,5 @@ public class ActivityService {
         ActivityService service = new ActivityService(); // builds indexes
         List<Activity> filtered = filterActivities(filter);
         return (mapper.writeValueAsString(filtered));
-    }
-
-
-
-    public static void main(String[] args) throws JsonProcessingException {
-
-        String jsonFromFrontend = "{\"locations\":[],\"weekdays\":[],\"ages\":[\"14\"],\"genders\":[],\"tags\":[]}";
-
-        ObjectMapper mapper = new ObjectMapper();
-        Filter filter = mapper.readValue(jsonFromFrontend, Filter.class);
-
-        ActivityService service = new ActivityService(); // builds indexes
-        List<Activity> filtered = filterActivities(filter);
-
-        System.out.println("Filtered activities: " + filtered.size());
-        System.out.println(filtered);
-
-//        new ActivityService(); // builds indexes
-//
-//        Filter filter = new Filter();
-//        filter.setTags(List.of("fun", "indoor"));
-//        filter.setAges(List.of("14+"));
-//        filter.setLocations(List.of());
-//        filter.setWeekdays(List.of());
-//        filter.setGenders(List.of());
-//
-//        List<Activity> filtered = ActivityService.filterActivities(filter);
-//
-//        System.out.println("Filtered activities: " + filtered.size());
-//        System.out.println(filtered);
     }
 }

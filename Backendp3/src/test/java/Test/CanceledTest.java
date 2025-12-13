@@ -18,7 +18,7 @@ import java.nio.file.Path;
 
 class CanceledTest {
 
-    private String testPath = "src/main/sources/events";
+    private String testPath = "src/Server.main/sources/events";
     private static File testBaseDir;
     private Canceled canceledService;
 

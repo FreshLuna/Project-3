@@ -1,0 +1,2 @@
+{"firstname":"Sdasd","lastname":"Dsad","email":"sadsad@gmail.com","dateofbirth":"2003-11-11","activity":"Badminton Night"}
+{"firstname":"Penis","lastname":"Penis","email":"penis@fhak.com","dateofbirth":"2003-01-01","activity":"Badminton Night"}

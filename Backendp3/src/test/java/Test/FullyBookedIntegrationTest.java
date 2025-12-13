@@ -6,6 +6,8 @@ import Events.Canceled;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static Config.FilePaths.EVENTS_FOLDER;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
@@ -24,7 +26,7 @@ FullyBooked fb;
 Canceled c;
 
 
-    private static final Path EVENTS_DIR = Path.of("src/main/sources/events/");
+    private static final Path EVENTS_DIR = Path.of(EVENTS_FOLDER);
     private List<Path> beforeSnapshot;
 
     @BeforeEach

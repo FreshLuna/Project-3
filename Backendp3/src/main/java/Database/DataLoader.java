@@ -8,25 +8,22 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import static Config.FilePaths.ACTIVITIES_FOLDER;
+
 public class DataLoader {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static List<Activity> loadActivities() {
-        try (InputStream is = DataLoader.class.getClassLoader().getResourceAsStream("activities.json")) {
+        try (InputStream is = DataLoader.class.getClassLoader().getResourceAsStream(ACTIVITIES_FOLDER)) {
             if (is == null) {
-                throw new RuntimeException("activities.json not found in classpath");
+                throw new RuntimeException(ACTIVITIES_FOLDER + " is Empty");
             }
 
-            List<Activity> list = mapper.readValue(is, new TypeReference<List<Activity>>() {});
+            List<Activity> list = mapper.readValue(is, new TypeReference<>() {});
+
             return Collections.unmodifiableList(list); // unmodifiable = no accidental changes
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load activities from classpath", e);
+            throw new RuntimeException((ACTIVITIES_FOLDER + " not found in classpath"), e);
         }
     }
-    public static void main(String[] args) {
-        loadActivities();
-        System.out.println(loadActivities());
-
-    }
-
 }
