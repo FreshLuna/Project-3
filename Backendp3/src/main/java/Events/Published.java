@@ -9,15 +9,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Config.FilePaths.ACTIVITIES_FOLDER;
+
 public class Published {
-    private static final File FILE = new File("src/Server.main/resources/activities.json");
+    private static final File FILE = new File(ACTIVITIES_FOLDER);
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public static void publish(Activity inputActivity) {
-
-
-
-
         try {
             List<Activity> activities;
 

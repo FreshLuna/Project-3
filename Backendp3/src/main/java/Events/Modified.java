@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import static Config.FilePaths.ACTIVITIES_FOLDER;
+
 public class Modified {
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final File FILE = new File("src/Server.main/resources/activities.json");
+    private static final File FILE = new File(ACTIVITIES_FOLDER);
 
     public static void updateActivityById(int id, Activity updates) throws IOException, IllegalAccessException {
 

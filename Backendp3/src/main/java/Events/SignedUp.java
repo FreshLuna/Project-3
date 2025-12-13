@@ -4,13 +4,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static Config.FilePaths.EVENTS_FOLDER;
+
 public class SignedUp {
     public static void appendParticipant(String text) {
         try {
             int start = text.indexOf("\"activity\":\"") + 12;
             int end = text.indexOf("\"", start);
             String activity = text.substring(start, end);
-            File outFile = new File("src/main/resources/events/" + activity + "_users.txt");
+            File outFile = new File(EVENTS_FOLDER + activity + "_users.txt");
           /*  Obtains parent directory with outfile.getParentFile() and calls parent.mkdirs() if the
               directory does not exist.
               This creates the directory tree (txtFiles) if missing.

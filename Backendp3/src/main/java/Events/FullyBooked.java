@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static Config.FilePaths.EVENTS_FOLDER;
+
 public class FullyBooked {
     //If activity is fully booked, then print "Aktiviteten * er fuldt booket"
     public void checkActivity(Activity activity) {
@@ -20,7 +22,7 @@ public class FullyBooked {
     // Checks if an activity is fully booked if it is return isFullyBooked
     public static boolean isActivityOpen(String activityName, int activityCapacity, boolean waitingListEnabled) {
         try {
-            Path filePath = Paths.get("src/main/sources/events/" + activityName + "_users.txt");
+            Path filePath = Paths.get(EVENTS_FOLDER + activityName + "_users.txt");
 
             // If no file exists, there are no users → activity not full
             if (!Files.exists(filePath)) {

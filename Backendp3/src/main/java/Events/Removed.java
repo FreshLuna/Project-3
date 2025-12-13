@@ -8,10 +8,12 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static Config.FilePaths.ACTIVITIES_FOLDER;
+
 public class Removed {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final File FILE = new File("src/main/resources/activities.json");
+    private static final File FILE = new File(ACTIVITIES_FOLDER);
 
     public static void removeActivityById(int id) throws Exception {
 
