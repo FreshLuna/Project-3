@@ -144,7 +144,6 @@ public class Activity {
     }
     @JsonIgnore
     public String getActivityNameAndID() {
-        System.out.println(activityName+activityID);
         return activityName+activityID; }
 
 }

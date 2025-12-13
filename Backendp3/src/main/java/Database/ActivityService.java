@@ -34,9 +34,6 @@ public class ActivityService {
 
     public static List<Activity> getAllActivities() throws Exception {
         List<Activity> all = new ArrayList<>(activities);  // fresh copy thats modifiable
-        System.out.println(activities);
-        System.out.println("before");
-
         all.removeIf(a -> isActivityOpen(a.getActivityNameAndID(), a.getActivityCapacity(), a.getWaitingListEnabled()));
         return all;
     }

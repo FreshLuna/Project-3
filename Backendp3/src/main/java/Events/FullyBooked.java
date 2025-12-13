@@ -26,19 +26,14 @@ public class FullyBooked {
 
             // If no file exists, there are no users → activity not full
             if (!Files.exists(filePath)) {
-                System.out.println("no file");
                 return false;
             }
 
             // Read all lines to count participants
             List<String> users = Files.readAllLines(filePath);
             int participantCount = users.size();
-            System.out.println(participantCount);
-
             // Activity is fully booked when participant count >= capacity
             boolean isActivityOpen = participantCount >= activityCapacity;
-            System.out.println(isActivityOpen);
-
 
 
             if (isActivityOpen) {
