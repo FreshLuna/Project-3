@@ -94,6 +94,7 @@
               <h5>{a.organization}</h5>
               <p>🗓️{a.formattedDate}</p>
               <p>🎂{a.age}</p>
+              <p>pladser tilbage:{a.participantCount}</p>
             </div>
           </a>
         {/each}

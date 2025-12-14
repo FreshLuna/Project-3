@@ -47,7 +47,7 @@
   "ActivityDescription" : "Friendly matches and practice games.",
   "ActivityDifficulty" : "Beginner",
   "WaitingListEnabled" : false,
-  "Tags" : [ "indoor" ,"Solsikke"],
+  "Tags" : [ "outdoor" ,"Solsikke"],
   "ImgUrl" : "https://i.imgur.com/vFQzI53.jpeg"
 }, {
   "ActivityID" : 14,

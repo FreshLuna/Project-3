@@ -18,16 +18,31 @@ public class FilterService {
     private static List<Activity> filterByField(List<String> values, String field) {
         if (values == null || values.isEmpty()) return null;
 
+        if (Objects.equals(field, "tags")) {
+            if (values.contains("Solsikke")) {
+                // Return only activities that include the "Solsikke" tag
+                List<Activity> result = new ArrayList<>();
+                for (Activity a : ActivityService.getActivities()) {
+                    if (a.getTags().contains("Solsikke")) {
+                        result.add(a);
+                    }
+                }
+                return result;
+            }
+        }
+
         Map<String, List<Activity>> fieldIndex = ActivityService.getIndexes().get(field);
         Set<Activity> resultSet = new LinkedHashSet<>();
         for (String value : values) {
             List<Activity> matches = fieldIndex.getOrDefault(value, Collections.emptyList());
             resultSet.addAll(matches);
         }
+
         return new ArrayList<>(resultSet);
     }
 
     private static List<Activity> filterActivities(Filter filter) {
+
         Set<Activity> result = new LinkedHashSet<>(ActivityService.getActivities());
 
         for (String field : fieldGetters.keySet()) {
