@@ -26,7 +26,7 @@ public class GetHandler {
         if(path.startsWith("/server/activities/")){
             String idStr = path.substring("/server/activities/".length());
             int id = Integer.parseInt(idStr);
-            return(mapper.writeValueAsString(ActivityService.getActivityById(id)));
+            return(singleExtractor(ActivityService.getActivityById(id)));
 
         }
 

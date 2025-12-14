@@ -6,6 +6,7 @@
   import { loadActivities } from "$lib/utils/LoadActivities";
   import type { Activity } from "$lib/types/Activities";
   import type { CheckboxItem, Filters } from "$lib/types/filterStores";
+  import SpotsDisplay from "$lib/utils/ParticipantSpotsVisualizer.svelte";
   // activities store
   const activities = writable<Activity[]>([]);
   const solsikke = writable<CheckboxItem>({id: 0, label: "Solsikke", checked: false });
@@ -83,18 +84,21 @@
       <div class="ActivityList">
         {#each $activities as a}
           <a href={`/${a.id}`} class="activity-link">
-           <div class="b">
+            <div class="b">
               {#if a.imgUrl}
-                <img class="img" src={a.imgUrl} alt={a.title} />
+                <div class="img-container">
+                  <img class="img" src={a.imgUrl} alt={a.title} />
+                  <SpotsDisplay count={a.participantCount} />
+                </div>
               {:else}
-               <div class="img placeholder"></div>
+                <div class="img placeholder"></div>
               {/if}
 
               <h3>{a.title}</h3>
               <h5>{a.organization}</h5>
               <p>🗓️{a.formattedDate}</p>
               <p>🎂{a.age}</p>
-              <p>pladser tilbage:{a.participantCount}</p>
+
             </div>
           </a>
         {/each}

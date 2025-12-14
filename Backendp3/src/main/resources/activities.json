@@ -9,10 +9,10 @@
   "GenderGroup" : "All",
   "AgeGroup" : "18+",
   "ActivityCapacity" : 16,
-  "WaitingListCapacity" : 4,
+  "WaitingListCapacity" : 100,
   "ActivityDescription" : "Friendly matches and practice games.",
   "ActivityDifficulty" : "Beginner",
-  "WaitingListEnabled" : false,
+  "WaitingListEnabled" : true,
   "Tags" : [ "indoor" ],
   "ImgUrl" : "https://i.imgur.com/vFQzI53.jpeg"
 }, {

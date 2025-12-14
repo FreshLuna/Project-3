@@ -86,4 +86,22 @@ public class ActivitySorter {
         }
         return array;
     }
+    public static String singleExtractor(Activity activity) throws Exception {
+        ArrayNode array = mapper.createArrayNode();
+
+        // calculate remaining spots for this single activity
+        int max = activity.getActivityCapacity();
+        int current = activityCount(activity);  // make sure this method works for a single activity
+        int remaining = max - current;
+
+        // convert Activity → JSON tree
+        ObjectNode activityNode = mapper.valueToTree(activity);
+
+        // inject frontend-only field
+        activityNode.put("ParticipantCount", remaining);
+
+        array.add(activityNode);
+
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(array);
+    }
 }

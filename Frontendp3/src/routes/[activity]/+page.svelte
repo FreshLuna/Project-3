@@ -16,6 +16,8 @@ let isPopUpOpen = false;
 let activity: Activity | null = null;
 let loading = true;
 let error: string | null = null;
+$: isWaitingList = true
+
 
 
 function goToCancel(sendTo?: string | null) {
@@ -48,7 +50,6 @@ onMount(async () => {
 
 async function submitHandler() {
     if (!activity) return;
-    const activityTitleAndId = activity ? activity.title + "" + activity.id: "indlæser"
 
     const payload = {
         firstname: firstName,
@@ -124,7 +125,7 @@ function handleClosePopUp() {
 
             <!-- Left: Name + Organizer -->
             <div class="noiRightBox">
-                <h2>{activity ? activity.title : 'Indlæser...'} </h2>
+                <h2>{(activity ? activity.title : 'Indlæser...') + (isWaitingList ? " - venteliste" : "")} </h2>
                 <p>{activity ? activity.organization : 'Indlæser...'}</p>
             </div>
 
@@ -140,7 +141,7 @@ function handleClosePopUp() {
                     <tr>
                         <td>
                             <b>Aktivitet</b><br>
-                            {activity ? activity.title : 'Indlæser...'}
+                            {(activity ? activity.title : 'Indlæser...')}
                         </td>
                         <td>
                             <b>Instruktør</b><br>
@@ -195,7 +196,7 @@ function handleClosePopUp() {
                     <button class="closeBtn" on:click={handleClosePopUp}>Luk</button> <!-- When the button within the popup is clicked, the pop up will close -->
 
                     <div class="popUpTitle">
-                        <h2>Tilmeld dig gratis til <b>{activity ? activity.title : 'Indlæser...'}</b>!</h2>
+                        <h2>Tilmeld dig gratis til <b>{(activity ? activity.title : 'Indlæser...') + (isWaitingList ? " - venteliste" : "")}</b>!</h2>
                     </div>
                 
                 <form class="formLayout" on:submit|preventDefault={submitHandler}>

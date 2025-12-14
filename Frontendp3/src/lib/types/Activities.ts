@@ -22,7 +22,9 @@ export interface Activity {
 
     tags: string[];
 
-    imgUrl?: string | null;
+    imgUrl?: string;
+
+    participantCount: number;
 
     formattedDate: string;
 }
@@ -45,6 +47,7 @@ export function mapActivity(item: any): Activity {
         difficulty: item.ActivityDifficulty,
         tags: item.Tags ?? [],
         imgUrl: item.ImgUrl,
+        participantCount: item.ParticipantCount,
         formattedDate: dateFormatter(item.DateAndTime)
     };
 }
