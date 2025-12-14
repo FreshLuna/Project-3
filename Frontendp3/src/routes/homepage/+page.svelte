@@ -7,9 +7,28 @@
   import type { Activity } from "$lib/types/Activities";
   import type { CheckboxItem, Filters } from "$lib/types/filterStores";
   import SpotsDisplay from "$lib/utils/ParticipantSpotsVisualizer.svelte";
+  import { derived } from 'svelte/store';
+
   // activities store
   const activities = writable<Activity[]>([]);
   const solsikke = writable<CheckboxItem>({id: 0, label: "Solsikke", checked: false });
+  const waitinglist = writable<CheckboxItem>({id: 0, label: "Venteliste", checked: false });
+
+  const filteredActivities = derived(
+  [activities, waitinglist, solsikke],
+  ([$activities, $waitinglist, $solsikke]) => {
+    return $activities.filter(a => {
+      // Check waiting list condition
+      const waitingCondition = $waitinglist.checked ? a.participantCount > 0 : true;
+
+      // Check solsikke tag condition
+      const solsikkeCondition = $solsikke.checked ? a.tags?.includes("Solsikke") : true;
+
+      // Return only activities that meet both conditions
+      return waitingCondition && solsikkeCondition;
+    });
+  }
+);
 
   // Load activities from backend
   onMount(async () => {
@@ -44,7 +63,7 @@
     if (get(solsikke).checked) {
       filters.tags.push("Solsikke");
     }
-
+  
     console.log("Sending filters:", filters);
     
     //smarter code
@@ -68,7 +87,10 @@
           <input type="checkbox" bind:checked={$solsikke.checked} />
           Solsikke
         </label>
-
+        <label class="Waitinglist-checkbox">
+          <input type="checkbox" bind:checked={$waitinglist.checked} />
+          Uden Venteliste
+        </label>
         <button type="submit" class="submit-btn">Vis filtrerede</button>
       </div>
     </form>
@@ -78,11 +100,11 @@
 <!-- ACTIVITIES -->
 <div>
   <section class="dynamicActivities">
-    {#if $activities.length === 0}
+    {#if $filteredActivities.length === 0}
       <p>Loading dynamic activities...</p>
     {:else}
       <div class="ActivityList">
-        {#each $activities as a}
+        {#each $filteredActivities as a}
           <a href={`/${a.id}`} class="activity-link">
             <div class="b">
               {#if a.imgUrl}
@@ -152,6 +174,10 @@
     box-sizing: border-box;
     transition: background-color 180ms ease, transform 140ms ease, box-shadow 180ms ease;
     text-decoration: none;
+  }
+  .img-container {
+  position: relative; /* Needed for absolute positioning of overlay */
+  display: inline-block; /* Ensures container wraps image */
   }
 
   .b .img {

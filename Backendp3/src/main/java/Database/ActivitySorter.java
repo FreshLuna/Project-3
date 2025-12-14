@@ -25,11 +25,13 @@ public class ActivitySorter {
         }
         return participantCount;
     }
+
     public static String getNewActivities(List<Activity> activities) throws Exception {
         List<Activity> sorted = new ArrayList<>(activities);
         Collections.reverse(activities);
         ArrayNode enriched = extracted(sorted);
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(enriched);}
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(enriched);
+    }
 
     public static String getPopularActivities(List<Activity> activities) throws Exception {
         List<Activity> sorted = new ArrayList<>(activities);
@@ -74,7 +76,7 @@ public class ActivitySorter {
         for (Activity activity : activities) {
             int max = activity.getActivityCapacity();
             int current = activityCount(activity);
-            int remaining = max-current;
+            int remaining = max - current;
 
             // convert Activity → JSON tree
             ObjectNode activityNode = mapper.valueToTree(activity);
@@ -86,12 +88,11 @@ public class ActivitySorter {
         }
         return array;
     }
-    public static String singleExtractor(Activity activity) throws Exception {
-        ArrayNode array = mapper.createArrayNode();
 
+    public static String singleExtractor(Activity activity) throws Exception {
         // calculate remaining spots for this single activity
         int max = activity.getActivityCapacity();
-        int current = activityCount(activity);  // make sure this method works for a single activity
+        int current = activityCount(activity);  // method works for a single activity
         int remaining = max - current;
 
         // convert Activity → JSON tree
@@ -100,8 +101,7 @@ public class ActivitySorter {
         // inject frontend-only field
         activityNode.put("ParticipantCount", remaining);
 
-        array.add(activityNode);
-
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(array);
+        // return JSON string of the object, not an array
+        return mapper.writeValueAsString(activityNode);
     }
 }

@@ -30,16 +30,18 @@ public class CancelController {
     public CancelResult processCancel(String JsonInput){
         try {
             CancelRequest cancelRequest = mapper.readValue(JsonInput,CancelRequest.class);
+            System.out.println(cancelRequest);
+
             Participant participant = toParticipant(cancelRequest);
             Activity activity = toActivity(cancelRequest);
-            placeOnList = IntStream.range(0, participantList(activity.getActivityName()).size())
-                    .filter(i -> participantList(activity.getActivityName()).get(i).getFirstName().equals(participant.getFirstName())
-                            && participantList(activity.getActivityName()).get(i).getLastName().equals(participant.getLastName())
-                            && participantList(activity.getActivityName()).get(i).getEmail().equals(participant.getEmail()))
-                    .findFirst()
-                    .orElse(-1);
-
-            System.out.println(placeOnList);
+//            placeOnList = IntStream.range(0, participantList(activity.getActivityName()).size())
+//                    .filter(i -> participantList(activity.getActivityName()).get(i).getFirstName().equals(participant.getFirstName())
+//                            && participantList(activity.getActivityName()).get(i).getLastName().equals(participant.getLastName())
+//                            && participantList(activity.getActivityName()).get(i).getEmail().equals(participant.getEmail()))
+//                    .findFirst()
+//                    .orElse(-1);
+//
+//            System.out.println(placeOnList);
             boolean success = canceled.removeParticipantByDetails(
                     activity.getActivityName(),
                     participant.getFirstName(),

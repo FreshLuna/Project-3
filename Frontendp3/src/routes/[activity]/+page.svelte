@@ -16,8 +16,7 @@ let isPopUpOpen = false;
 let activity: Activity | null = null;
 let loading = true;
 let error: string | null = null;
-$: isWaitingList = true
-
+$: isWaitingList = activity ? activity.participantCount <= 0 : true;
 
 
 function goToCancel(sendTo?: string | null) {
