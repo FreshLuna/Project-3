@@ -25,6 +25,7 @@ public class CancelController {
     Canceled canceled = new Canceled();
     private static final List<Activity> activities = DataLoader.loadActivities();
     private int placeOnList;
+    TLSEmailSender realSender = new DefaultTLSEmailSender();
 
     public CancelResult processCancel(String JsonInput){
         try {
@@ -52,11 +53,11 @@ public class CancelController {
                 if (checkForWaiting(activity)){
                     Participant p = participantList(activity.getActivityName()).get(activity.getActivityCapacity()-1);
 
-                    Notification notificationToPart = new Notification(activity, p );
+                    Notification notificationToPart = new Notification(activity, p ,realSender);
                     System.out.println("here we see if a new participant get the message"+p.getLastName());
                     notificationToPart.emailNotification("MovedFromWaitingList");
                 }
-                Notification notification = new Notification(activity,participant);
+                Notification notification = new Notification(activity,participant,realSender);
 
                 notification.emailNotification("Canceled");
                 return new CancelResult(true, "Deltager fjernet", participant);

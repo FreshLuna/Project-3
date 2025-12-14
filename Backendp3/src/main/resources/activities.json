@@ -7,7 +7,7 @@
   "DateAndTime" : 202603121900,
   "Location" : "Badminton Hall B",
   "GenderGroup" : "All",
-  "AgeGroup" : "14+",
+  "AgeGroup" : "18+",
   "ActivityCapacity" : 16,
   "WaitingListCapacity" : 4,
   "ActivityDescription" : "Friendly matches and practice games.",
@@ -39,7 +39,7 @@
   "TypeOfActivity" : "Badminton",
   "Instructors" : "Jakob Kristensen",
   "DateAndTime" : 202605071900,
-  "Location" : "Badminton Hall B",
+  "Location" : "Badminton Hall A",
   "GenderGroup" : "All",
   "AgeGroup" : "14+",
   "ActivityCapacity" : 16,
@@ -47,7 +47,7 @@
   "ActivityDescription" : "Friendly matches and practice games.",
   "ActivityDifficulty" : "Beginner",
   "WaitingListEnabled" : false,
-  "Tags" : [ "indoor" ],
+  "Tags" : [ "indoor" ,"SolSikke"],
   "ImgUrl" : "https://i.imgur.com/vFQzI53.jpeg"
 }, {
   "ActivityID" : 14,

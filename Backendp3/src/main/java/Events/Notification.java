@@ -5,15 +5,16 @@ import Classes.Participant;
 import Controller.TLSEmailSender;
 
 public class Notification {
-private String message;
-
 private Participant participant;
 private Activity activity;
-private TLSEmailSender emailSender;
+private  final TLSEmailSender emailSender;
 
-    public Notification(Activity activity, Participant participant) {
+
+
+    public Notification(Activity activity, Participant participant, TLSEmailSender emailSender) {
         this.activity = activity;
         this.participant = participant;
+        this.emailSender = emailSender;
     }
 
     public String emailNotification(String message){
@@ -114,12 +115,11 @@ private TLSEmailSender emailSender;
     }
     public void mail(String msg){
 
-      /*  try {
+        try {
             emailSender.sendTLSMail(participant.getEmail(),msg,activity.getActivityName());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-            */ //need file
         System.out.println("send email to at: "+participant.getEmail() +"\n"+ msg);
 
     }

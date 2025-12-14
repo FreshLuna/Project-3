@@ -19,7 +19,7 @@ public class SignupController {
     private final Verified verified = new Verified();
     private final FullyBooked fullyBooked = new FullyBooked();
     private final ObjectMapper mapper = new ObjectMapper();
-
+    TLSEmailSender realSender = new DefaultTLSEmailSender();
 
     private Activity activity = new Activity();
     private final SignedUp signedUp = new SignedUp();
@@ -34,7 +34,7 @@ public class SignupController {
 
             SignUpRequest request = mapper.readValue(jsonInput,SignUpRequest.class);
             Participant participant = toParticipant(request);
-             Notification notification = new Notification(activity,participant);
+             Notification notification = new Notification(activity,participant,realSender);
 
             Activity match = activities.stream()
                     .filter(a->a.getActivityNameAndID().equalsIgnoreCase(participant.getActivity()))

@@ -52,7 +52,7 @@ public class Verified {
         if (!Files.exists(filePath)) {
             System.out.println("Could not read user file: ");
 
-            return false;
+            return true;
         }
 
         try (BufferedReader br = Files.newBufferedReader(filePath)) {
