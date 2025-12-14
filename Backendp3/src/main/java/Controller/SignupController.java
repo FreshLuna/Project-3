@@ -4,7 +4,7 @@ import Classes.Activity;
 import Classes.Participant;
 import Database.DataLoader;
 import Events.FullyBooked;
-import Events.Notification;
+import Events.Notified;
 import Events.SignedUp;
 import Events.Verified;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +34,7 @@ public class SignupController {
 
             SignUpRequest request = mapper.readValue(jsonInput,SignUpRequest.class);
             Participant participant = toParticipant(request);
-             Notification notification = new Notification(activity,participant,realSender);
+             Notified notified = new Notified(activity,participant,realSender);
 
             Activity match = activities.stream()
                     .filter(a->a.getActivityNameAndID().equalsIgnoreCase(participant.getActivity()))
@@ -73,7 +73,7 @@ public class SignupController {
                 if (activity.getWaitingListEnabled()){
                     String line = participantToString(participant);
                     System.out.println("debug" + line );
-                    notification.emailNotification("WaitingList");
+                    notified.emailNotification("WaitingList");
                     signedUp.appendParticipant(line);
 
                     return SignUpResult.successWaitingList(participant);
@@ -87,7 +87,7 @@ public class SignupController {
             String line = participantToString(participant);
 
             signedUp.appendParticipant(line);
-           notification.emailNotification("SignUp");
+           notified.emailNotification("SignUp");
             return SignUpResult.success(participant);
 
         } catch (Exception e) {

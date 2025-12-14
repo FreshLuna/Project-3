@@ -4,14 +4,14 @@ import Classes.Activity;
 import Classes.Participant;
 import Controller.TLSEmailSender;
 
-public class Notification {
+public class Notified {
 private Participant participant;
 private Activity activity;
 private  final TLSEmailSender emailSender;
 
 
 
-    public Notification(Activity activity, Participant participant, TLSEmailSender emailSender) {
+    public Notified(Activity activity, Participant participant, TLSEmailSender emailSender) {
         this.activity = activity;
         this.participant = participant;
         this.emailSender = emailSender;
@@ -36,10 +36,7 @@ private  final TLSEmailSender emailSender;
            mail(movedFromWaitingList());
            yield movedFromWaitingList();
        }
-       case "test" ->{
-           mail(test());
-           yield  test();
-       }
+
        default -> throw new IllegalStateException("Unexpected value: " + message);
    };
     }
@@ -101,17 +98,23 @@ private  final TLSEmailSender emailSender;
 
 
     }
-    private String test(){
-        return String.format("""
-                    
-                    Hey %s %s
-                    
-                    du er nu nummer  på venteliste til %s
-                    """,
-                participant.getFirstName(),
-                participant.getLastName(),
-                activity.getActivityName()
+
+    public void  upDatedTop3(int index){
+        String number =""+ index;
+
+        String message =String.format("""
+               Hej %s %s
+               Du er nu nummer %s på ventelisten til %s
+               
+                """,
+        participant.getFirstName(),
+        participant.getLastName(),
+        number,
+        activity.getActivityName()
+
+
         );
+        mail(message);
     }
     public void mail(String msg){
 
