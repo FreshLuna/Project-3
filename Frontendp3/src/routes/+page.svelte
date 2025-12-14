@@ -71,9 +71,6 @@
 {/if}
 
 <style>
-h2 {
-    margin: 1.5rem 0 0.5rem;
-}
 
 .carousel-wrapper {
     position: relative;
@@ -93,11 +90,6 @@ h2 {
 
 .carousel::-webkit-scrollbar {
     display: none;
-}
-
-h4 {
-    margin: 0.4rem 0 0;
-    font-size: 1rem;
 }
 
 p {

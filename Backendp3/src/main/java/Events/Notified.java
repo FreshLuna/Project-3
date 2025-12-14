@@ -79,10 +79,16 @@ private  final TLSEmailSender emailSender;
                 
                 Aktiviteten %s er fuldt booket, og du er nu tilmeldt ventelisten.
                 Hvis der bliver en ledig plads, vil du automatisk blive tilmeldt.
+                
+                Afmeld her: https://localhost:5173/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
                 """,
                 participant.getFirstName(),
                 participant.getLastName(),
-                activity.getActivityName()
+                activity.getActivityName(),
+                activity.getActivityNameAndID().replace(" ", "%20"),
+                participant.getFirstName(),
+                participant.getLastName(),
+                participant.getEmail()
         );
     }
     private String movedFromWaitingList(){
