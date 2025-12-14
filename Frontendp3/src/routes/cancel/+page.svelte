@@ -7,7 +7,8 @@
     let email = '';
     let activityName = '';
     $: activityParam = $page.url.searchParams.get('activity');
-    $: activityName = activityParam ? decodeURIComponent(activityParam) : '';
+    $: activityName = activityParam ? decodeURIComponent(activityParam):"";
+    $: displayName = activityName.replace(/\d+/g, '');
 
     async function submitCancel() {
         if (!firstname.trim() || !lastname.trim() || !email.trim()) {
@@ -37,9 +38,9 @@
 
             alert('Afmelding sendt: ' + text);
             // reset
-            firstname = '';
-            lastname = '';
-            email = '';
+            // firstname = '';
+            // lastname = '';
+            // email = '';
         } catch (err) {
             console.error(err);
             alert('Netværksfejl ved afmelding. Tjek server.');
@@ -50,7 +51,7 @@
 <div class="container">
     <div class="inner">
         <h1>Afmeld fra aktivitet her</h1>
-        <p>{activityName ? `Du afmelder dig fra: ${activityName}` : 'Vælg aktivitet fra forsiden for at forudfylde.'}</p>
+        <p>{activityName ? `Du afmelder dig fra: ${displayName}` : 'Vælg aktivitet fra forsiden for at forudfylde.'}</p>
 
         <form on:submit|preventDefault={submitCancel} class="form">
             <div class="row">

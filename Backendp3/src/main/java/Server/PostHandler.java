@@ -23,7 +23,6 @@ public class PostHandler {
     public String handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath(); // retrieves path
         String body = new String(exchange.getRequestBody().readAllBytes()); // retrieves the data send by the user
-        System.out.println("RAW JSON RECEIVED:\n" + body + path);
         System.out.println("RAW JSON RECEIVED:\n" + body);
 
 

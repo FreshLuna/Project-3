@@ -3,6 +3,7 @@ import { page } from '$app/stores';
 import { onMount, tick } from 'svelte';
 import type { Activity } from '$lib/types/Activities';
 import { loadActivity } from '$lib/utils/LoadActivities';
+import { goto } from '$app/navigation';
 
 let firstName = '';
 let lastName = '';
@@ -16,13 +17,22 @@ let activity: Activity | null = null;
 let loading = true;
 let error: string | null = null;
 
+
+function goToCancel(sendTo?: string | null) {
+    goto(
+        sendTo?.trim()
+            ? `/cancel?activity=${encodeURIComponent(sendTo)}`
+            : '/homepage'
+    );
+}
+
 // Reactive slug from route param
 let slug = Number($page.params.activity); // convert to number
 //console.log('$page.params.activity:', $page.params.activity, 'slug:', slug);
 
 onMount(async () => {
     try {
-        if (!isNaN(slug)) {
+        if (!isNaN(slug)) {activity ? activity.title + "" + activity.id: "indlæser"
             activity = await loadActivity(slug);
         } else {
             throw new Error('Invalid activity ID');
@@ -38,6 +48,7 @@ onMount(async () => {
 
 async function submitHandler() {
     if (!activity) return;
+    const activityTitleAndId = activity ? activity.title + "" + activity.id: "indlæser"
 
     const payload = {
         firstname: firstName,
@@ -164,12 +175,16 @@ function handleClosePopUp() {
         <div class="innerBox">
             <h3>Beskrivelse</h3>
             <p>{activity ? activity.description : 'Indlæser...'}</p>
+
+
         </div>
+        
 
         <!-- SIGN UP BUTTON (outside) -->
-        
+        <div class="buttonWrapper">
             <button class="signUpBtn" on:click={handleOpenPopUp}>Tilmeld til aktivitet</button> <!-- When the button is clicked, the pop up will open -->
-        
+            <button class="cancelBtn" on:click={() => goToCancel(activity ? activity.title + "" + activity.id: "indlæser")}>Afmeld</button>
+        </div>
 
         <!-- POP UP BOX (inside) -->
         <div class="popUpBox" class:open={isPopUpOpen}> <!-- to connect to the css -->
@@ -348,6 +363,12 @@ function handleClosePopUp() {
         background-color: #5e3b85ff;
     }
 
+    .buttonWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
     .signUpBtn{
         background-color: #6E479B;
         border: none;
@@ -360,6 +381,21 @@ function handleClosePopUp() {
         margin-top: 20px;
         margin-left: 33px; 
         width: 500px; 
+        position: relative; 
+
+    }
+    .cancelBtn{
+        background-color: #840808;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        margin-top: 50px;
+        margin-left: 33px; 
+        width: 200px; 
         position: relative; 
 
     }
