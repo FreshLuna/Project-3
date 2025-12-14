@@ -1,6 +1,7 @@
 package Server;
 
 import Classes.Activity;
+import Database.ActivityService;
 import Events.Published;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
@@ -10,8 +11,9 @@ import Controller.SignUpResult;
 import Controller.SignupController;
 
 import java.io.IOException;
+import java.util.List;
 
-import static Database.ActivityService.filterFromJson2;
+import static Database.FilterService.filterFromJson2;
 
 
 public class PostHandler {
@@ -20,22 +22,17 @@ public class PostHandler {
     private final SignupController signupController = new SignupController();
     private final CancelController cancelController= new CancelController();
 
-    public String handle(HttpExchange exchange) throws IOException {
+    public String handle(HttpExchange exchange) throws Exception {
         String path = exchange.getRequestURI().getPath(); // retrieves path
         String body = new String(exchange.getRequestBody().readAllBytes()); // retrieves the data send by the user
         System.out.println("RAW JSON RECEIVED:\n" + body);
+        List<Activity> activities = ActivityService.getAllActivities();
 
 
         return switch (path) {
             case "/server/echo" -> body;
 
-            case "/server/filtered" -> {
-
-                System.out.println("step 1" + body);
-                System.out.println("step 2" + filterFromJson2(body));
-
-                yield filterFromJson2(body);
-            }
+            case "/server/filtered" -> filterFromJson2(body);
 
             case "/server/participants" -> {
                 SignUpResult result = signupController.processSignup(body);

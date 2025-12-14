@@ -57,7 +57,7 @@ private  final TLSEmailSender emailSender;
                 activity.getActivityNameAndID().replace(" ", "%20"),
                 participant.getFirstName(),
                 participant.getLastName(),
-                participant.getEmail()w
+                participant.getEmail()
                 );
     }
 

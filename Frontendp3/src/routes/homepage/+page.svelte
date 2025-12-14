@@ -8,6 +8,7 @@
   import type { CheckboxItem, Filters } from "$lib/types/filterStores";
   // activities store
   const activities = writable<Activity[]>([]);
+  const solsikke = writable<CheckboxItem>({id: 0, label: "Solsikke", checked: false });
 
   // Load activities from backend
   onMount(async () => {
@@ -39,6 +40,10 @@
         tags: getChecked(tags)
     };
 
+    if (get(solsikke).checked) {
+      filters.tags.push("Solsikke");
+    }
+
     console.log("Sending filters:", filters);
     
     //smarter code
@@ -58,6 +63,10 @@
         <CheckboxDropdown store={ages} label="Alder" />
         <CheckboxDropdown store={genders} label="Køn" />
         <CheckboxDropdown store={tags} label="Tags" />
+        <label class="solsikke-checkbox">
+          <input type="checkbox" bind:checked={$solsikke.checked} />
+          Solsikke
+        </label>
 
         <button type="submit" class="submit-btn">Vis filtrerede</button>
       </div>
