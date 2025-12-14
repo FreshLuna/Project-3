@@ -2,7 +2,8 @@
     import { onMount } from 'svelte';
     import { loadActivities } from '$lib/utils/LoadActivities';
     import type { Activity } from '$lib/types/Activities';
-
+    import ActivityCard from '$lib/components/ActivityCard.svelte';
+    
     let upcomingActivities: Activity[] = [];
     let popularActivities: Activity[] = [];
     let newActivities: Activity[] = [];
@@ -40,60 +41,29 @@
 {:else if error}
     <p>{error}</p>
 {:else}
-
-    <h2>UpcomingActivities</h2>
+    <h2>Afholdes Snart</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car1)}>‹</button>
         <div class="carousel" bind:this={car1}>
-            {#each upcomingActivities as activity (activity.id)}
-                <a class="slide" href={`/${activity.id}`}>
-                    {#if activity.imgUrl}
-                        <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
-                    {:else}
-                        <div class="placeholder"></div>
-                    {/if}
-                    <h4>{activity.title}</h4>
-                    <p>{activity.organization}</p>
-                </a>
-            {/each}
+            <ActivityCard activities={upcomingActivities}/>
         </div>
         <button class="nav right" on:click={() => scrollRight(car1)}>›</button>
     </div>
 
-    <h2>Popular Activities</h2>
+    <h2>Populære Aktiviteter</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car2)}>‹</button>
         <div class="carousel" bind:this={car2}>
-            {#each popularActivities as activity (activity.id + '-2')}
-                <a class="slide" href={`/${activity.id}`}>
-                    {#if activity.imgUrl}
-                        <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
-                    {:else}
-                        <div class="placeholder"></div>
-                    {/if}
-                    <h4>{activity.title}</h4>
-                    <p>{activity.organization}</p>
-                </a>
-            {/each}
+            <ActivityCard activities={popularActivities}/>
         </div>
         <button class="nav right" on:click={() => scrollRight(car2)}>›</button>
     </div>
 
-    <h2>New Activities</h2>
+    <h2>Nye Aktiviteter</h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car3)}>‹</button>
         <div class="carousel" bind:this={car3}>
-            {#each newActivities as activity (activity.id + '-3')}
-                <a class="slide" href={`/${activity.id}`}>
-                    {#if activity.imgUrl}
-                        <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
-                    {:else}
-                        <div class="placeholder"></div>
-                    {/if}
-                    <h4>{activity.title}</h4>
-                    <p>{activity.organization}</p>
-                </a>
-            {/each}
+            <ActivityCard activities={newActivities}/>
         </div>
         <button class="nav right" on:click={() => scrollRight(car3)}>›</button>
     </div>
@@ -123,22 +93,6 @@ h2 {
 
 .carousel::-webkit-scrollbar {
     display: none;
-}
-
-/* Each item = 1/3 of the screen */
-.slide {
-    width: 33.33vw;
-    flex-shrink: 0;
-    text-decoration: none;
-    color: inherit;
-}
-
-.slide img, .placeholder {
-    width: 100%;
-    height: 300px;
-    border-radius: 10px;
-    object-fit: cover;
-    background: #eee;
 }
 
 h4 {

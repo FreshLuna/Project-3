@@ -7,6 +7,7 @@
   import type { Activity } from "$lib/types/Activities";
   import type { CheckboxItem, Filters } from "$lib/types/filterStores";
   import SpotsDisplay from "$lib/utils/ParticipantSpotsVisualizer.svelte";
+  import Sunflower from "$lib/utils/Sunflower.svelte";
   import { derived } from 'svelte/store';
 
   // activities store
@@ -111,16 +112,15 @@
                 <div class="img-container">
                   <img class="img" src={a.imgUrl} alt={a.title} />
                   <SpotsDisplay count={a.participantCount} />
+                  <Sunflower tags={a.tags} />
                 </div>
               {:else}
                 <div class="img placeholder"></div>
               {/if}
-
               <h3>{a.title}</h3>
               <h5>{a.organization}</h5>
               <p>🗓️{a.formattedDate}</p>
               <p>🎂{a.age}</p>
-
             </div>
           </a>
         {/each}

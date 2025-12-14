@@ -1,56 +1,32 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { loadActivities } from '$lib/utils/LoadActivities';
     import type { Activity } from '$lib/types/Activities';
+    import SpotsDisplay from "$lib/utils/ParticipantSpotsVisualizer.svelte";
+    import Sunflower from "$lib/utils/Sunflower.svelte";
 
-    let activities: Activity[] = [];
-    let loading = true;
-    let error: string | null = null;
-    export let activity: Activity | undefined;
+    export let activities: Activity[] = [];
 
-    
-
-    onMount(async () => {
-        try {
-            activities = await loadActivities("activities");
-        } catch (err) {
-            error = 'Failed to load activities.';
-            console.error(err);
-        } finally {
-            loading = false;
-        }
-    });
 </script>
-
-{#if loading}
-    <p>Loading activities…</p>
-{:else if error}
-    <p>{error}</p>
-{:else}
     {#each activities as activity (activity.id)}
         <a class="card" href={`/${activity.id}`} aria-label={`Open ${activity.title}`}>
             <div class="poster">
-                {#if activity.imgUrl}
-                    <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
-                {:else}
-                    <div class="placeholder"></div>
-                {/if}
+                <img src={activity.imgUrl} alt={activity.title} loading="lazy" />
+                <Sunflower tags={activity.tags} />
+                <SpotsDisplay count={activity.participantCount} />
             </div>
 
             <div class="meta">
                 <h4>{activity.title}</h4>
                 <p class="org">{activity.organization}</p>
+
             </div>
         </a>
     {/each}
-{/if}
 
 <style>
-.card { display:block; width:200px; color:inherit; text-decoration:none; }
-.poster { border-radius:8px; overflow:hidden; background:#eee; height:120px; }
-.poster img { display:block; width:100%; height:100%; object-fit:cover; transition: transform .18s ease; }
-.card:hover .poster img { transform: scale(1.06); }
-.placeholder { width:100%; height:100%; background:linear-gradient(90deg,#eee,#ddd); }
+.card { display:block; color:inherit; text-decoration:none; }
+.poster {width: 33.33vw; flex-shrink: 0; text-decoration: none; color: inherit; position: relative;}
+.poster img { display:block; width:100%; aspect-ratio: 16 / 8; object-fit:cover; border-radius: 10px;}
+.card:hover .poster { transform: scale(1.02); transition: transform .18s ease;}
 .meta { padding-top:0.5rem; }
 .meta h4 { margin:0; font-size:0.95rem; }
 .org { margin:0; color:var(--muted,#666); font-size:0.85rem; }

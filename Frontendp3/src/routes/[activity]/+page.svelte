@@ -4,6 +4,8 @@ import { onMount, tick } from 'svelte';
 import type { Activity } from '$lib/types/Activities';
 import { loadActivity } from '$lib/utils/LoadActivities';
 import { goto } from '$app/navigation';
+import SpotsDisplay from "$lib/utils/ParticipantSpotsVisualizer.svelte";
+import Sunflower from "$lib/utils/Sunflower.svelte";
 
 let firstName = '';
 let lastName = '';
@@ -11,9 +13,8 @@ let dateOfBirth = '';
 let email = '';
 let tosAccept = false;
 let infoSendAccept = false;
-
 let isPopUpOpen = false;
-let activity: Activity | null = null;
+let activity: Activity
 let loading = true;
 let error: string | null = null;
 $: isWaitingList = activity ? activity.participantCount <= 0 : true;
@@ -33,7 +34,7 @@ let slug = Number($page.params.activity); // convert to number
 
 onMount(async () => {
     try {
-        if (!isNaN(slug)) {activity ? activity.title + "" + activity.id: "indlæser"
+        if (!isNaN(slug)) {
             activity = await loadActivity(slug);
         } else {
             throw new Error('Invalid activity ID');
@@ -107,15 +108,20 @@ function handleClosePopUp() {
 </script>
 
 
-
+{#if loading}
+    <p>Loading activities…</p>
+{:else if error}
+    <p>{error}</p>
+{:else}
 <!-- <h1>Aalborg Try Out: Activity Test!!! (vi prøver igen)</h1> -->
-<div class="container">
-    
-    
-
+<div class="container">  
     <!-- Left half: Activity Image -->
     <div class="halfPageBox">
-        <img class="activityImage" src="{activity ? activity.imgUrl : 'Indlæser...'}" alt="activityImage"/>
+        <div class="imageWrapper">
+            <img class="activityImage" src={activity.imgUrl} alt="activityImage" />
+            <Sunflower tags={activity.tags} />
+            <SpotsDisplay count={activity.participantCount} />
+        </div>
     </div>
 
     <!-- Right half: Activity info and Description box -->
@@ -124,8 +130,8 @@ function handleClosePopUp() {
 
             <!-- Left: Name + Organizer -->
             <div class="noiRightBox">
-                <h2>{(activity ? activity.title : 'Indlæser...') + (isWaitingList ? " - venteliste" : "")} </h2>
-                <p>{activity ? activity.organization : 'Indlæser...'}</p>
+                <h2>{(activity.title) + (isWaitingList ? " - venteliste" : "")} </h2>
+                <p>{activity.organization}</p>
             </div>
 
             <!-- Right: Invite button -->
@@ -140,31 +146,31 @@ function handleClosePopUp() {
                     <tr>
                         <td>
                             <b>Aktivitet</b><br>
-                            {(activity ? activity.title : 'Indlæser...')}
+                            {activity.title}
                         </td>
                         <td>
                             <b>Instruktør</b><br>
-                            {activity ? activity.instructors : 'Indlæser...'}
+                            {activity.instructors}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <b>Tidspunkt</b><br>
-                            {activity ? activity.formattedDate : 'Indlæser...'}
+                            {activity.formattedDate}
                         </td>
                         <td>
                             <b>Adresse og mødested</b><br>
-                            {activity ? activity.location : 'Indlæser...'}
+                            {activity.location}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <b>Køn</b><br>
-                            {activity ? activity.genderGroup : 'Indlæser...'}
+                            {activity.genderGroup}
                         </td>
                         <td>
                             <b>Aldersgruppe</b><br>
-                            {activity ? activity.age : 'Indlæser...'}
+                            {activity.age}
                         </td>
                     </tr>
                 </tbody>
@@ -174,16 +180,14 @@ function handleClosePopUp() {
         <!-- DESCRIPTION BOX (outside) -->
         <div class="innerBox">
             <h3>Beskrivelse</h3>
-            <p>{activity ? activity.description : 'Indlæser...'}</p>
-
-
+            <p>{activity.description}</p>
         </div>
         
 
         <!-- SIGN UP BUTTON (outside) -->
         <div class="buttonWrapper">
             <button class="signUpBtn" on:click={handleOpenPopUp}>Tilmeld til aktivitet</button> <!-- When the button is clicked, the pop up will open -->
-            <button class="cancelBtn" on:click={() => goToCancel(activity ? activity.title + "" + activity.id: "indlæser")}>Afmeld</button>
+            <button class="cancelBtn" on:click={() => goToCancel(activity.title + "" + activity.id)}>Afmeld</button>
         </div>
 
         <!-- POP UP BOX (inside) -->
@@ -195,7 +199,7 @@ function handleClosePopUp() {
                     <button class="closeBtn" on:click={handleClosePopUp}>Luk</button> <!-- When the button within the popup is clicked, the pop up will close -->
 
                     <div class="popUpTitle">
-                        <h2>Tilmeld dig gratis til <b>{(activity ? activity.title : 'Indlæser...') + (isWaitingList ? " - venteliste" : "")}</b>!</h2>
+                        <h2>Tilmeld dig gratis til <b>{(activity.title) + (isWaitingList ? " - venteliste" : "")}</b>!</h2>
                     </div>
                 
                 <form class="formLayout" on:submit|preventDefault={submitHandler}>
@@ -203,7 +207,7 @@ function handleClosePopUp() {
                     <div class="formRowNameDOB">
                         <div class="formField">
                             <label for="activityName">Tidspunkt</label>
-                            <b>{activity ? activity.formattedDate : 'Indlæser...'}</b>
+                            <b>{activity.formattedDate}</b>
                         </div>
                     </div>
 
@@ -254,6 +258,8 @@ function handleClosePopUp() {
 
     </div>
 </div>
+{/if}
+
 
 <style>
     /* General container */
@@ -265,12 +271,18 @@ function handleClosePopUp() {
         margin-right: 10%;
         font-family: 'Trebuchet MS'; 
     }
+    .imageWrapper {
+        position: relative;
+        width: 100%;
+    }
+
     
     .halfPageBox {
         flex: 1;
         padding: 1%;
         border-radius: 25px;
         display: absolute;
+        position: relative;
     }
 
     .activityImage{
