@@ -35,9 +35,5 @@ public class Expired { //returns true if event is expired
             }
         }
     }
-    public static void main(String[] args) throws Exception {
-        Expired manager = new Expired();
-        manager.removeExpiredActivities();
-    }
 }
 
