@@ -4,7 +4,7 @@ import Classes.Activity;
 import Classes.Participant;
 import Database.DataLoader;
 import Events.Canceled;
-import Events.Notification;
+import Events.Notified;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Model.CancelRequest;
@@ -53,13 +53,13 @@ public class CancelController {
                 if (checkForWaiting(activity)){
                     Participant p = participantList(activity.getActivityName()).get(activity.getActivityCapacity()-1);
 
-                    Notification notificationToPart = new Notification(activity, p ,realSender);
+                    Notified notifiedToPart = new Notified(activity, p ,realSender);
                     System.out.println("here we see if a new participant get the message"+p.getLastName());
-                    notificationToPart.emailNotification("MovedFromWaitingList");
+                    notifiedToPart.emailNotification("MovedFromWaitingList");
                 }
-                Notification notification = new Notification(activity,participant,realSender);
+                Notified notified = new Notified(activity,participant,realSender);
 
-                notification.emailNotification("Canceled");
+                notified.emailNotification("Canceled");
                 return new CancelResult(true, "Deltager fjernet", participant);
 
             } else {
@@ -83,7 +83,7 @@ public class CancelController {
         Activity a = new Activity();
             try{
         Activity match = activities.stream()
-                .filter(act->act.getActivityName().equalsIgnoreCase(r.getActivity()))
+                .filter(act->act.getActivityNameAndID().equalsIgnoreCase(r.getActivity()))
                 .findFirst()
                 .orElse(null);
 
@@ -106,7 +106,6 @@ public class CancelController {
             int participantCount = participants.size();
             boolean hasWaitingList = participantCount >= act.getActivityCapacity();
             boolean participantNotOnWaitingList = placeOnList<act.getActivityCapacity();
-        System.out.println(participantNotOnWaitingList+"where is ");
         return act.getWaitingListEnabled() && hasWaitingList && participantNotOnWaitingList;
     }
 
@@ -133,6 +132,22 @@ public class CancelController {
         } catch (IOException e) {
             System.out.println("could not read file");
             return List.of();
+
+        }
+
+    }
+    public void checkTop3(Activity activity){
+        int capacity= activity.getActivityCapacity();
+
+        List<Participant> participants = participantList(activity.getActivityName());
+        List<Participant> part = participants.subList(capacity,
+                Math.min(capacity + 3,participants.size())
+        );
+
+        for(Participant participant: part){
+            Notified notifiedToPart = new Notified(activity, participant ,realSender);
+
+                notifiedToPart.upDatedTop3(part.indexOf(participant)+1);
 
         }
 
