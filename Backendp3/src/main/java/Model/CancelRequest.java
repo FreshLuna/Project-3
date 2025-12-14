@@ -32,7 +32,6 @@ public class CancelRequest {
         this.activity = activity;
     }
 
-
     public String getFirstName() {
         return firstName;
     }

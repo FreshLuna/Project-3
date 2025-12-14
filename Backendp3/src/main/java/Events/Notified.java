@@ -49,11 +49,15 @@ private  final TLSEmailSender emailSender;
                 
                 Aktivitet: %s
                 
+                Afmeld her: https://localhost:5173/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
                 """,
                 participant.getFirstName(),
                 participant.getLastName(),
-                activity.getActivityName()
-
+                activity.getActivityName(),
+                activity.getActivityNameAndID().replace(" ", "%20"),
+                participant.getFirstName(),
+                participant.getLastName(),
+                participant.getEmail()w
                 );
     }
 
@@ -118,11 +122,11 @@ private  final TLSEmailSender emailSender;
     }
     public void mail(String msg){
 
-        try {
-            emailSender.sendTLSMail(participant.getEmail(),msg,activity.getActivityName());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            emailSender.sendTLSMail(participant.getEmail(),msg,activity.getActivityName());
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
         System.out.println("send email to at: "+participant.getEmail() +"\n"+ msg);
 
     }

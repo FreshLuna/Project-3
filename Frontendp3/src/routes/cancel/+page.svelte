@@ -7,8 +7,17 @@
     let email = '';
     let activityName = '';
     $: activityParam = $page.url.searchParams.get('activity');
+    $: firstnameParam = $page.url.searchParams.get('firstname');
+    $: lastnameParam = $page.url.searchParams.get('lastname');
+    $: emailParam = $page.url.searchParams.get('email');
+
+
     $: activityName = activityParam ? decodeURIComponent(activityParam):"";
     $: displayName = activityName.replace(/\d+/g, '');
+
+    $: if (firstnameParam) firstname = decodeURIComponent(firstnameParam);
+    $: if (lastnameParam) lastname = decodeURIComponent(lastnameParam);
+    $: if (emailParam) email = decodeURIComponent(emailParam);
 
     async function submitCancel() {
         if (!firstname.trim() || !lastname.trim() || !email.trim()) {
