@@ -11,7 +11,7 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  background-color: #6E479B;
+  background-color: var(--color-primary-purple);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,7 +29,7 @@ ul .nav-links {
 
 ul .nav-links a {
   display: block;
-  color: white;
+  color: var(--color-white);
   text-decoration: none;
   padding: 25px 25px;
   font-size: 20px;
@@ -37,7 +37,7 @@ ul .nav-links a {
 }
 
 ul .nav-links a:hover {
-  background-color: #5e3b85ff;
+  background-color: #var(--color-primary-purple-dark);
 }
 </style>
 

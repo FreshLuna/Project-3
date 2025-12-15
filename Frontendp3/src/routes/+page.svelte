@@ -85,28 +85,22 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     gap: 1rem;
-    padding: 1rem 0;
+    padding: 1rem, 0;
 }
 
 .carousel::-webkit-scrollbar {
     display: none;
 }
 
-p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: #666;
-}
-
 .nav {
-    background: white;
+    background: var(--color-white);
     border: none;
     font-size: 2rem;
     padding: 0 0.5rem;
     cursor: pointer;
-    z-index: 50;
+    z-index: 20;
 }
 
-.left { margin-right: 0.5rem; }
-.right { margin-left: 0.5rem; }
+.left { margin-right: 1rem; }
+.right { margin-left: 1rem; }
 </style>

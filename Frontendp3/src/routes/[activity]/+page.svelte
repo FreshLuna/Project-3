@@ -269,7 +269,7 @@ function handleClosePopUp() {
         margin-top: 2%;
         margin-left: 10%;
         margin-right: 10%;
-        font-family: 'Trebuchet MS'; 
+        font-family: var(--app-font); 
     }
     .imageWrapper {
         position: relative;
@@ -341,9 +341,9 @@ function handleClosePopUp() {
     }
 
     .btn {
-        background-color: #6E479B;
+        background-color: var(--color-primary-purple);
         border: none;
-        color: white;
+        color: var(--color-white);
         padding: 10px 15px;
         text-align: center;
         font-size: 16px;
@@ -353,13 +353,13 @@ function handleClosePopUp() {
     }
 
     .btn:hover {
-        background-color: #5e3b85ff;
+        background-color: var(--color-primary-purple-dark);
     }
 
     .closeBtn{
-        background-color: #6E479B;
+        background-color: var(--color-primary-purple);
         border: none;
-        color: white;
+        color: var(--color-white);
         padding: 10px 15px;
         text-align: right; 
         width: 8%; 
@@ -372,7 +372,7 @@ function handleClosePopUp() {
     }
 
     .closeBtn:hover {
-        background-color: #5e3b85ff;
+        background-color: var(--color-primary-purple-dark);
     }
 
     .buttonWrapper {
@@ -382,10 +382,10 @@ function handleClosePopUp() {
 }
 
     .signUpBtn{
-        background-color: #6E479B;
+        background-color: var(--color-primary-purple);
         border: none;
         border-radius: 5px;
-        color: white;
+        color: var(--color-white);
         text-align: center;
         font-size: 16px;
         padding: 0.75rem 1.5rem;
@@ -400,7 +400,7 @@ function handleClosePopUp() {
         background-color: #840808;
         border: none;
         border-radius: 5px;
-        color: white;
+        color: var(--color-white);
         text-align: center;
         font-size: 16px;
         padding: 0.75rem 1.5rem;
@@ -413,7 +413,7 @@ function handleClosePopUp() {
     }
 
     .signUpBtn:hover {
-        background-color: #5e3b85ff;
+        background-color: var(--color-primary-purple-dark);
     }
 
 
@@ -474,13 +474,6 @@ function handleClosePopUp() {
         justify-content: space-between;
     }
 
-    /* .formRowEmailPN {
-        display: center;
-        flex-wrap: wrap;
-        /* gap: 1rem; */
-        /* justify-content: space-between;
-    } */
-
     .formField {
         display: flex;
         flex-direction: column;
@@ -488,24 +481,10 @@ function handleClosePopUp() {
     }
 
     .formField input,
-    .formField select {
-        padding: 0.5rem;
-        border: 1px solid black;
-        border-radius: 4px;
-        box-sizing: border-box;
-        min-width: 0;
-    }
 
     /* Width classes */
     .formField.half {
-        /* flex: 1 2;
-        width: 50%; */
-        /* flex: 0 0 50%; */
-
         min-width: 0;
-        /* flex: 2; */
-
-        /* flex: 0 0 calc(50% - 1rem); */
         flex: 0 0 calc((100% - 1rem) / 2);
     }
 
