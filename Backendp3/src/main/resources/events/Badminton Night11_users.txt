@@ -19,3 +19,4 @@
 {"firstname":"Hfgdsa","lastname":"Jhfgds","email":"fhjgdsa@gmail.com","dateofbirth":"2003-11-11","activity":"Badminton Night11"}
 {"firstname":"Hfgdsa","lastname":"Jhfgds","email":"fhjgdsa@gmail.com","dateofbirth":"2003-11-11","activity":"Badminton Night11"}
 {"firstname":"Hfgdsa","lastname":"Jhfgds","email":"fhjgdsa@gmail.com","dateofbirth":"2003-11-11","activity":"Badminton Night11"}
+{"firstname":"Lunawinther","lastname":"Sandager","email":"mwsandager@gmail.com","dateofbirth":"2003-01-01","activity":"Badminton Night11"}
