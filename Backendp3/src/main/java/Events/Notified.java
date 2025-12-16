@@ -74,7 +74,7 @@ private  final TLSEmailSender emailSender;
     }
 
     private String waitingListNotification(){
-        return String.format("""
+       return String.format("""
                 Hej %s %s,
                 
                 Aktiviteten %s er fuldt booket, og du er nu tilmeldt ventelisten.
@@ -90,9 +90,11 @@ private  final TLSEmailSender emailSender;
                 participant.getLastName(),
                 participant.getEmail()
         );
+
+
     }
     private String movedFromWaitingList(){
-        return  String.format("""
+       return  String.format("""
                 Hej %s %s
                 
                 Der er nu en ledig plads på %s, og du er blevet automatisk tilmeldt.
@@ -102,6 +104,7 @@ private  final TLSEmailSender emailSender;
                 participant.getFirstName(),
                 participant.getLastName(),
                 activity.getActivityName(),
+               activity.getActivityNameAndID().replace(" ", "%20"),
                 participant.getFirstName(),
                 participant.getLastName(),
                 participant.getEmail()
@@ -109,6 +112,8 @@ private  final TLSEmailSender emailSender;
 
 
         );
+       // return "cancel-move";
+
 
 
 
@@ -127,12 +132,15 @@ private  final TLSEmailSender emailSender;
         participant.getLastName(),
         number,
         activity.getActivityName(),
+         activity.getActivityNameAndID().replace(" ", "%20"),
         participant.getFirstName(),
         participant.getLastName(),
         participant.getEmail()
 
         );
-        mail(message);
+        System.out.println(message);
+
+        //mail(message);
     }
     public void mail(String msg){
 

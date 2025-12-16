@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import Events.SignedUp;
 import Events.Canceled;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,7 +60,6 @@ public class FileParticipantProvider implements ParticipantRepository{
             e.printStackTrace();
             System.out.println("Could not read participant file: " + filePath);
         }
-        System.out.println(participants);
         return participants;
     }
 
@@ -85,7 +83,7 @@ public class FileParticipantProvider implements ParticipantRepository{
 
     @Override
     public int indexOfParticipant(String activityName, Participant participant) {
-        System.out.println(activityName+" indexParty");
+
         List<Participant> participants = getParticipants(activityName);
         return IntStream.range(0, participants.size())
                 .filter(i ->
@@ -112,7 +110,7 @@ public class FileParticipantProvider implements ParticipantRepository{
     public Participant getPromotedParticipant(String activityName, int activityCapacity) {
         List<Participant> participants = getParticipants(activityName);
         if (participants.size() > activityCapacity) {
-            return participants.get(activityCapacity); // first on waiting list
+            return participants.get(activityCapacity-1);
         }
         return null; // no one to promote
     }
@@ -120,7 +118,7 @@ public class FileParticipantProvider implements ParticipantRepository{
 
     public List<Participant> getTopWaitingListParticipants(String activityName, int activityCapacity, int topCount) {
         List<Participant> participants = getParticipants(activityName);
-        System.out.println("FileParticipantProvider: getParticipants called with -> " + activityName);
+
         // Waiting list starts after capacity
         int fromIndex = Math.min(activityCapacity, participants.size());
         int toIndex = Math.min(activityCapacity + topCount, participants.size());
