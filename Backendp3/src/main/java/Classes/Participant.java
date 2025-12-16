@@ -1,5 +1,7 @@
 package Classes;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Participant {
@@ -16,7 +18,7 @@ public class Participant {
         this.activity = activity;
     }
 
-    // @JsonIgnore
+
     @JsonProperty("dateofbirth")
     private String DateOfBirth; // Date of birth
     @JsonProperty("email")
@@ -33,6 +35,8 @@ public class Participant {
     }
 
     private String activity;
+
+    @JsonCreator
     public Participant() {}
 
     public int getUserID() {

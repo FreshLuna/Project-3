@@ -96,10 +96,15 @@ private  final TLSEmailSender emailSender;
                 Hej %s %s
                 
                 Der er nu en ledig plads på %s, og du er blevet automatisk tilmeldt.
+                
+                Afmeld her: https://localhost:5173/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
                 """,
                 participant.getFirstName(),
                 participant.getLastName(),
-                activity.getActivityName()
+                activity.getActivityName(),
+                participant.getFirstName(),
+                participant.getLastName(),
+                participant.getEmail()
 
 
 
@@ -116,12 +121,15 @@ private  final TLSEmailSender emailSender;
                Hej %s %s
                Du er nu nummer %s på ventelisten til %s
                
-                """,
+               Afmeld her: https://localhost:5173/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
+               """,
         participant.getFirstName(),
         participant.getLastName(),
         number,
-        activity.getActivityName()
-
+        activity.getActivityName(),
+        participant.getFirstName(),
+        participant.getLastName(),
+        participant.getEmail()
 
         );
         mail(message);

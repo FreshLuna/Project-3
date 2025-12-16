@@ -25,14 +25,14 @@ public class SignupControllerTest {
     void testInvalidJson() {
         SignUpResult result = controller.processSignup("not-json");
         assertFalse(result.isSuccess());
-       assertEquals("invaild JSON format", result.getMessage());
+        assertEquals("exception: invalid JSON format", result.getMessage());
     }
 
     @Test
     void testInvalidParticipant() {
         // Verified.verifyParticipant() should return false for this
         String json = """
-                {"firstName":"","lastName":"","email":""}
+                {"firstname":" ","lastname":" ","dateOfBirth":" ","email":" ","tosAccept":true,"infoSendAccept":false,"activity":"Badminton Night11"}
                 """;
 
         SignUpResult result = controller.processSignup(json);
@@ -58,6 +58,24 @@ public class SignupControllerTest {
 
         assertNotNull(result);
     }
+
+
+
+    @Test
+    void testParticipantAlreadySignedUp() {
+
+
+
+    }
+
+
+
+    /*
+
+    fake email sender
+    fake activity
+    fake participants
+
 /*
     @Test
     void testSuccessSignupWhenOpen() {

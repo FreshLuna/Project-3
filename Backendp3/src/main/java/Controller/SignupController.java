@@ -2,15 +2,11 @@ package Controller;
 
 import Classes.Activity;
 import Classes.Participant;
-import Database.DataLoader;
 import Events.FullyBooked;
 import Events.Notified;
-import Events.SignedUp;
 import Events.Verified;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Model.SignUpRequest;
-
-import java.util.List;
 
 import static Events.Verified.verifyNotAlreadySignedUp;
 
@@ -19,13 +15,19 @@ public class SignupController {
     private final Verified verified = new Verified();
     private final FullyBooked fullyBooked = new FullyBooked();
     private final ObjectMapper mapper = new ObjectMapper();
-    TLSEmailSender realSender = new DefaultTLSEmailSender();
+    private TLSEmailSender realSender = new DefaultTLSEmailSender();
+    private ActivityProvider activityProvider = new FileActivityProvider();
+    private ParticipantRepository participantRepository = new FileParticipantProvider();
 
-    private Activity activity = new Activity();
-    private final SignedUp signedUp = new SignedUp();
 
+    public SignupController() {
+    }
 
-    private static final List<Activity> activities = DataLoader.loadActivities();
+    public SignupController(TLSEmailSender realSender, ActivityProvider activityProvider, ParticipantRepository participantRepository) {
+        this.realSender = realSender;
+        this.activityProvider = activityProvider;
+        this.participantRepository = participantRepository;
+    }
 
     public SignUpResult processSignup( String jsonInput){
 
@@ -34,28 +36,17 @@ public class SignupController {
 
             SignUpRequest request = mapper.readValue(jsonInput,SignUpRequest.class);
             Participant participant = toParticipant(request);
-             Notified notified = new Notified(activity,participant,realSender);
+            Activity activity = activityProvider.getActivity(participant.getActivity());
+            if(activity==null){
+                return SignUpResult.fail("Aktiviteten findes ikke");
+            }
 
-            Activity match = activities.stream()
-                    .filter(a->a.getActivityNameAndID().equalsIgnoreCase(participant.getActivity()))
-                    .findFirst()
-                    .orElse(null);
-                if (match==null){
-                    System.out.println("no such activity");
-                    return SignUpResult.fail("Aktiviteten findes ikke");
-                }
 
             boolean valid = verified.verifyParticipant(participant);
             if (!valid){
-                System.out.println("verified failed");
+
                 return SignUpResult.fail("invalid participant data");
             }
-                activity.setActivityName(match.getActivityName());
-                activity.setActivityID(match.getActivityID());
-                activity.setActivityCapacity(match.getActivityCapacity());
-                activity.setWaitingListEnabled(match.getWaitingListEnabled());
-                activity.setWaitingListEnabled(match.getWaitingListEnabled());
-                System.out.println(activity.getActivityID());
 
 
 
@@ -63,18 +54,21 @@ public class SignupController {
             boolean isOpen = fullyBooked.isActivityOpen(
                     participant.getActivity(),
                     activity.getActivityCapacity(),
-
                     activity.getWaitingListEnabled()
             );
 
-            if (!verifyNotAlreadySignedUp(activity, participant)) {return SignUpResult.fail("participant already signed up");}
+            if (!verifyNotAlreadySignedUp(activity, participant)) {
+                return SignUpResult.fail("participant already signed up");}
+
+            Notified notified = new Notified(activity,participant,realSender);
+
 
             if(isOpen){
                 if (activity.getWaitingListEnabled()){
-                    String line = participantToString(participant);
-                    System.out.println("debug" + line );
+                    participantRepository.addParticipant(participant);
+
                     notified.emailNotification("WaitingList");
-                    signedUp.appendParticipant(line);
+
 
                     return SignUpResult.successWaitingList(participant);
                 }else {
@@ -84,9 +78,8 @@ public class SignupController {
             }
 
 
-            String line = participantToString(participant);
+            participantRepository.addParticipant(participant);
 
-            signedUp.appendParticipant(line);
            notified.emailNotification("SignUp");
             return SignUpResult.success(participant);
 
@@ -105,15 +98,7 @@ public class SignupController {
         p.setActivity(r.getActivity());
         return p;
     }
-    private String participantToString(Participant p) { // used to return it to text for writing to file
-        return "{"
-                + "\"firstname\":\"" + p.getFirstName() + "\","
-                + "\"lastname\":\"" + p.getLastName() + "\","
-                + "\"email\":\"" + p.getEmail() + "\","
-                + "\"dateofbirth\":\"" + p.getDateOfBirth() + "\","
-                + "\"activity\":\"" + p.getActivity() + "\""
-                + "}";
-    }
+
 
 
 }
