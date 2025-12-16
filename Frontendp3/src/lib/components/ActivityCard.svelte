@@ -26,7 +26,7 @@
     {/each}
 
 <style>
-.card { display:block; color:inherit; text-decoration:none; }
+.card { display:block; color:inherit; text-decoration:none;}
 .poster {width: 33.33vw; flex-shrink: 0; text-decoration: none; color: inherit; position: relative;}
 .poster img { display:block; width:100%; aspect-ratio: 16 / 8; object-fit:cover; border-radius: 10px;}
 .card:hover .poster { transform: scale(1.02); transition: transform .18s ease;}
