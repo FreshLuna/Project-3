@@ -192,7 +192,7 @@ function handleClosePopUp() {
 
         <!-- SIGN UP BUTTON (outside) -->
         <div class="buttonWrapper">
-            <button class="signUpBtn" on:click={handleOpenPopUp}>Tilmeld til aktivitet</button> <!-- When the button is clicked, the pop up will open -->
+            <button class="signUpBtn" on:click={handleOpenPopUp}>Tilmeld dig til {isWaitingList ? "ventelisten" : "aktiviteten"}</button> <!-- When the button is clicked, the pop up will open -->
             <button class="cancelBtn" on:click={() => goToCancel(activity.title + "" + activity.id)}>Afmeld</button>
         </div>
 
@@ -254,7 +254,7 @@ function handleClosePopUp() {
                         <label for="infoSendAccept">Tillad Aalborg Try Out at sende mig notifikationer med information om aktiviteten</label>
                     </div>
 
-                    <button type="submit" class="btn">Tilmeld til aktivitet</button> <!--class="signUpButton"-->
+                    <button type="submit" class="btn">Tilmeld dig til {isWaitingList ? "ventelisten" : "aktiviteten"} </button> <!--class="signUpButton"-->
                 </form>
     
             </div>
