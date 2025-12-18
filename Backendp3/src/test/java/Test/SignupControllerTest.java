@@ -1,5 +1,7 @@
 package Test;
 
+import Classes.Activity;
+import Classes.Participant;
 import Events.FullyBooked;
 import Controller.SignUpResult;
 import Events.Verified;
@@ -12,27 +14,37 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SignupControllerTest {
 
     private SignupController controller;
-
+    private FakeTLSEmailSender fakeTLSEmailSender;
+    private FakeActivityProvider fakeActivityProvider;
+    private FakeParticipantProvider fakeParticipantProvider;
     @BeforeEach
     void setup() {
         Verified verified = new Verified();
         FullyBooked fullyBooked = new FullyBooked();
+        fakeTLSEmailSender = new FakeTLSEmailSender();
+        fakeParticipantProvider = new FakeParticipantProvider();
+        Activity testActivity = new Activity();
+        testActivity.setActivityName("testActivity");
+        testActivity.setActivityCapacity(2);
+        testActivity.setActivityID(11);
+        testActivity.setWaitingListEnabled(true);
+        fakeActivityProvider = new FakeActivityProvider(testActivity);
 
-        controller = new SignupController();
+        controller = new SignupController(fakeTLSEmailSender,fakeActivityProvider,fakeParticipantProvider,fullyBooked,verified);
     }
 
     @Test
     void testInvalidJson() {
         SignUpResult result = controller.processSignup("not-json");
         assertFalse(result.isSuccess());
-       assertEquals("invaild JSON format", result.getMessage());
+        assertEquals("exception: invalid JSON format", result.getMessage());
     }
 
     @Test
-    void testInvalidParticipant() {
+    void testInvalidParticipantData() {
         // Verified.verifyParticipant() should return false for this
         String json = """
-                {"firstName":"","lastName":"","email":""}
+                {"firstname":" ","lastname":" ","dateOfBirth":" ","email":" ","tosAccept":true,"infoSendAccept":false,"activity":"testActivity11"}
                 """;
 
         SignUpResult result = controller.processSignup(json);
@@ -42,43 +54,61 @@ public class SignupControllerTest {
     }
 
     @Test
-    void testActivityFullReturnsFail() {
-        // Adjust your FullyBooked logic or test data if necessary
-        // This test assumes activity is NOT open and waiting list disabled -> fail
-
+    void signupSuccess() {
         String json = """
-                {"firstName":"Test User","lastName":"super cat","email":"test@example.com"}
+                {"firstname":"A ","lastname":"May ","dateOfBirth":"1995-02-23 ","email":"a@mail.com ","tosAccept":true,"infoSendAccept":false,"activity":"testActivity11"}
                 """;
 
         SignUpResult result = controller.processSignup(json);
 
-        // Depends on how FullyBooked uses the empty Activity object:
-        // With default Activity values, isOpen likely returns false → success()
-        // If yours returns true + no waiting list, this becomes fail.
-
-        assertNotNull(result);
+        assertTrue(result.isSuccess());
+        assertEquals("a@mail.com", fakeTLSEmailSender.lastToEmail);
+        assertTrue(fakeTLSEmailSender.lastBody.contains("tilmelding"));
     }
-/*
-    @Test
-    void testSuccessSignupWhenOpen() {
-        // ⚠️ This test requires your Activity() default values
-        // to produce: isOpen == false → success()
-        String json = """
-{
-    "firstName": "Anita",
-    "lastName": "Eat",
-    "dateOfBirth": "20/02/1999",
-    "email": "food@mail.com",
-    "tosAccept": true,
-    "infoSendAccept": true,
-    "activity": "Advanced Trail Hike"
-}
-""";
 
+    @Test
+    void signupWaitingList() {
+        // Fill capacity first
+        fakeParticipantProvider.addParticipant(
+                new Participant("A","May","a@mail.com","testActivity11"));
+
+        fakeParticipantProvider.addParticipant(
+                new Participant("B","May","b@mail.com","testActivity11"));
+
+        String json = """
+        {
+          "firstname":"C",
+          "lastname":"May",
+          "email":"c@mail.com",
+          "dateofbirth":"1990-01-01",
+          "activity":"testActivity11"
+        }
+        """;
 
         SignUpResult result = controller.processSignup(json);
-        System.out.println(result.getParticipant());
+
         assertTrue(result.isSuccess());
-        assertEquals("Anna er tilmeldt", result.getMessage());
-    }*/
+
+        assertEquals("c@mail.com", fakeTLSEmailSender.lastToEmail);
+    }
+
+    @Test
+    void participantAlreadySignedUp() {
+        Participant existing =
+                new Participant("A","May","a@mail.com","1990-01-01",
+                "testActivity11");
+        fakeParticipantProvider.addParticipant(existing);
+
+        String json = """
+                {"firstname":"A ","lastname":"May ","dateOfBirth":"1995-02-23 ","email":"a@mail.com ","tosAccept":true,"infoSendAccept":false,"activity":"testActivity11"}
+                """;
+
+        SignUpResult result = controller.processSignup(json);
+
+        assertFalse(result.isSuccess());
+        assertEquals("participant already signed up", result.getMessage());
+    }
+
 }
+
+

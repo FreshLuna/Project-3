@@ -11,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class NotifiedTest {
-    FakeTLSemailSender f = new FakeTLSemailSender();
+    FakeTLSEmailSender f = new FakeTLSEmailSender();
     Activity a = new Activity();
     Participant p = new Participant();
     Notified n = new Notified(a,p,f);

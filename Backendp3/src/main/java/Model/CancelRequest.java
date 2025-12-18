@@ -56,4 +56,15 @@ public class CancelRequest {
         this.email = email;
     }
 
+    @Override
+    public String toString() {
+        return "CancelRequest{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", activity='" + activity + '\'' +
+                ", userID=" + userID +
+                '}';
+    }
+
 }

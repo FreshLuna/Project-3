@@ -55,3 +55,4 @@ localCA.pem
 Backendp3/out/production/Backendp3/activities.json
 /Backendp3/out
 /Backendp3/src/main/sources/events
+Backendp3/src/main/resources/activities.json

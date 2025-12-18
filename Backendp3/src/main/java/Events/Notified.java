@@ -77,7 +77,7 @@ private  final TLSEmailSender emailSender;
     }
 
     private String waitingListNotification(){
-        return String.format("""
+       return String.format("""
                 Hej %s %s,
                 
                 Aktiviteten %s er fuldt booket, og du er nu tilmeldt ventelisten.
@@ -94,20 +94,30 @@ private  final TLSEmailSender emailSender;
                 participant.getLastName(),
                 participant.getEmail()
         );
+
+
     }
     private String movedFromWaitingList(){
-        return  String.format("""
+       return  String.format("""
                 Hej %s %s
                 
                 Der er nu en ledig plads på %s, og du er blevet automatisk tilmeldt.
+                
+                Afmeld her: https://localhost:5173/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
                 """,
                 participant.getFirstName(),
                 participant.getLastName(),
-                activity.getActivityName()
+                activity.getActivityName(),
+               activity.getActivityNameAndID().replace(" ", "%20"),
+                participant.getFirstName(),
+                participant.getLastName(),
+                participant.getEmail()
 
 
 
         );
+       // return "cancel-move";
+
 
 
 
@@ -120,14 +130,20 @@ private  final TLSEmailSender emailSender;
                Hej %s %s
                Du er nu nummer %s på ventelisten til %s
                
-                """,
+               Afmeld her: https://localhost:5173/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
+               """,
         participant.getFirstName(),
         participant.getLastName(),
         number,
-        activity.getActivityName()
-
+        activity.getActivityName(),
+         activity.getActivityNameAndID().replace(" ", "%20"),
+        participant.getFirstName(),
+        participant.getLastName(),
+        participant.getEmail()
 
         );
+        //System.out.println(message);
+
         mail(message);
     }
     public void mail(String msg){

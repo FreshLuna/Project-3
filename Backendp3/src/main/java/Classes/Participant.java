@@ -1,5 +1,7 @@
 package Classes;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Participant {
@@ -14,9 +16,19 @@ public class Participant {
         LastName = lastName;
         Email = email;
         this.activity = activity;
+
+    }
+//used for testing
+    public Participant(String firstName,String lastName, String email, String dateOfBirth, String activity
+    ) {
+
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        DateOfBirth = dateOfBirth;
+        this.activity = activity;
     }
 
-    // @JsonIgnore
     @JsonProperty("dateofbirth")
     private String DateOfBirth; // Date of birth
     @JsonProperty("email")
@@ -33,6 +45,8 @@ public class Participant {
     }
 
     private String activity;
+
+    @JsonCreator
     public Participant() {}
 
     public int getUserID() {
