@@ -7,7 +7,6 @@
     export let activities: Activity[] = [];
 
 </script>
-
     {#each activities as activity (activity.id)}
         <a class="card" href={`/${activity.id}`} aria-label={`Open ${activity.title}`}>
             <div class="poster">
@@ -19,16 +18,15 @@
             <div class="meta">
                 <h4>{activity.title}</h4>
                 <description>{activity.organization}</description>
-                <description><Calendar size="1rem"/> Dato: {activity.formattedDate}</description>
-                <description><Cake size="1rem"/> Aldersgruppe: {activity.age}</description>
+                <description><Calendar size="1rem"/> {activity.formattedDate}</description>
+                <description><Cake size="1rem"/> {activity.age}</description>
             </div>
         </a>
     {/each}
-
 <style>
-.card { display:block; color:inherit; text-decoration:none;}
-.poster {width: 33.33vw; flex-shrink: 0; text-decoration: none; color: inherit; position: relative;}
-.poster img { display:block; width:100%; aspect-ratio: 16 / 8; object-fit:cover; border-radius: 10px;}
-.card:hover .poster { transform: scale(1.02); transition: transform .18s ease;}
-.meta { padding-top:0.5rem; }
+.card { color:inherit; text-decoration:none; background-color: var(--color-white); border-radius: 10px; margin: 1rem 1rem; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);}
+.poster { width: 32vw; flex-shrink: 0; position: relative; overflow: hidden;}
+.poster img { display: block; width:100%; aspect-ratio: 16 / 8; object-fit:cover; border-radius: 10px; }
+.card:hover { transform: scale(1.02); transition: .18s ease; }
+.meta { padding: 1rem; }
 </style>

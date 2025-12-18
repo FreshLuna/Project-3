@@ -19,19 +19,18 @@
 
             <div class="meta">
                 <h4>{activity.title}</h4>
-                <p class="org">{activity.organization}</p>
-                <description><Calendar size="1rem"/> Dato: {activity.formattedDate}</description>
-                <description><Cake size="1rem"/> Aldersgruppe: {activity.age}</description>
+                <description>{activity.organization}</description> 
+                <description><Calendar size="1rem"/> {activity.formattedDate}</description>
+                <description><Cake size="1rem"/> {activity.age}</description>
             </div>
         </a>
     {/each}
 </div>
 <style>
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 3rem 1rem; min-width: calc(2 * 15rem + 2 * 1rem); max-width: calc(5 * 15rem + 5 * 1rem); padding: 1.5rem;}
-.card { display:block; color:inherit; text-decoration:none; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); border-radius: 10px}
+.card { display:block; color:inherit; text-decoration:none; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); border-radius: 10px; background-color: var(--color-white);}
 .poster { flex-shrink: 0; color: inherit; position: relative;}
 .poster img { display:block; width:100%; aspect-ratio: 4 / 3 ; object-fit:cover; border-top-left-radius: 10px; border-top-right-radius: 10px;}
 .card:hover { transform: scale(1.02); transition: .18s ease;}
 .meta { padding:1rem; }
-.org { margin:0; color:var(--muted,#666); font-size:0.85rem; }
 </style>

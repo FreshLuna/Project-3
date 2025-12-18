@@ -26,7 +26,6 @@
     z-index: 10;
     display: inline-block;
     padding: 0.25rem 0.5rem;
-    border-bottom-left-radius: 0.75rem;
     font-weight: bold;
     font-size: 0.85rem;
     color: var(--color-white);

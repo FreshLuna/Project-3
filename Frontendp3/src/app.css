@@ -5,7 +5,7 @@
   --color-primary-purple-dark: #5e3b85ff;  /* hover/darker variant */
   --color-black: #000000;                 /* standard black */
   --color-white: #FFFFFF;                 /* standard white */
-  --color-bg-white: #F9F9F9;              /* background white/light grey */
+  --color-bg-white: #f4f4f4;              /* background white/light grey */
   --color-grey: #B0B0B0;                  /* neutral grey, e.g., for borders/text */
   --color-danger-red: #840808;    
 
@@ -14,6 +14,7 @@
 
 html, body, #svelte, #svelte > * {
   font-family: var(--app-font);
+  background-color: var(--color-bg-white);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -25,15 +26,15 @@ input, textarea, select, button { font-family: inherit; }
 /* Base text sizing for consistent appearance */
 
 h1 { font-size: 2.5rem; font-weight: 900; margin:0 0 1rem 0; font-family: var(--app-font); }
-h2 { font-size: 2rem; font-weight: 700; font-family: var(--app-font); }
+h2 { font-size: 2rem; font-weight: 700; font-family: var(--app-font); padding: 0rem 2.2rem;}
 h3 { font-size: 1.5rem; font-weight: 600; }
-h4 { font-size: 1.25rem; font-weight: 600; margin-top: 0.25rem; margin-bottom: 1rem; font-family: var(--app-font); }
+h4 { font-size: 1.5rem; font-weight: 600; margin-top: 0.25rem; margin-bottom: 1rem; font-family: var(--app-font); position: relative;}
 p  { font-size: 1rem; font-weight: 400; line-height: 1.5; color: #333; font-family: var(--app-font); }
 
 label{ font-weight:600; margin-bottom:0.25rem; font-family: var(--app-font);  }
 input{ padding:0.5rem; border-radius:4px; border:1px solid #ccc; font-family: var(--app-font); }
 
 body { font-size: 16px; color: #222; font-family: var(--app-font); }
-description { display: block; margin: 0.25rem 0; color: var(--muted,#666); font-size: 1rem; font-family: var(--app-font); }
+description { display: block; margin: 0.25rem 0; color: var(--muted,#666); font-size: 1.2rem; font-family: var(--app-font); text-align:bottom;}
 
 
