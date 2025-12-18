@@ -455,7 +455,7 @@ function handleClosePopUp() {
     .popUpSignUp{
         background-color: aliceblue;
         border-radius: 10px; 
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 3); 
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 1); 
         padding: 5px 5px; 
         text-align: center; 
         width: 700px; 

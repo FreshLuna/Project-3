@@ -1,15 +1,17 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import CheckboxDropdown from "$lib/CheckboxDropdown.svelte";
-  import {locations, weekdays, ages, genders, tags, loadStores, } from "$lib/types/filterStores";
+  import { locations, weekdays, ages, genders, tags } from "$lib/types/filterStores";
   import { activities, solsikke, waitinglist,} from "$lib/utils/GetFilteredActivities";
   import { loadActivities } from "$lib/utils/LoadActivities";
   import type { Filters } from "$lib/types/filterStores";
-
+  import { loadFilterStores } from "$lib/utils/loadFilterStores.client";
+  import { clearAllFilters } from "$lib/types/filterStores";
+  
   // Load activities initially
   onMount(async () => {
     try {
-      await loadStores();
+      await loadFilterStores();
       const loaded = await loadActivities("activities");
       activities.set(loaded);
     } catch (e) {
@@ -30,6 +32,7 @@
   if ($solsikke.checked) filters.tags.push("Solsikke");
 
   filterActivities(filters);
+
 }
 
   async function filterActivities(filters: Filters) {
@@ -40,6 +43,13 @@
       console.error("Failed to load filtered activities", e);
     }
   }
+
+  function clearAllFiltersAndSolsikkeWaitinglist () {
+    clearAllFilters()
+    $solsikke.checked = false
+    $waitinglist.checked = false
+  }
+  
 </script>
 
 <div class="filtersRow">
@@ -49,6 +59,8 @@
     <CheckboxDropdown store={ages} label="Alder" />
     <CheckboxDropdown store={genders} label="Køn" />
     <CheckboxDropdown store={tags} label="Tags" />
+    <button type="button" class="removeall" on:click={clearAllFiltersAndSolsikkeWaitinglist} >Ryd alle filtre </button>
+
     <label>
       <input type="checkbox" bind:checked={$solsikke.checked} />
       Solsikke

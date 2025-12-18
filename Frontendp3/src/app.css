@@ -2,7 +2,8 @@
 :root {
   --app-font: Arial, 'Trebuchet MS', 'Segoe UI', Roboto, sans-serif;
   --color-primary-purple: #6E479B;       /* main purple used for buttons */
-  --color-primary-purple-dark: #5e3b85ff;  /* hover/darker variant */
+  --color-primary-purple-dark: rgb(77, 33, 127);  /* hover/darker variant */
+  --color-primary-purple-light: #8864b0;
   --color-black: #000000;                 /* standard black */
   --color-white: #FFFFFF;                 /* standard white */
   --color-bg-white: #f4f4f4;              /* background white/light grey */
@@ -37,4 +38,103 @@ input{ padding:0.5rem; border-radius:4px; border:1px solid #ccc; font-family: va
 body { font-size: 16px; color: #222; font-family: var(--app-font); }
 description { display: block; margin: 0.25rem 0; color: var(--muted,#666); font-size: 1.2rem; font-family: var(--app-font); text-align:bottom;}
 
+    .dropdownButton {
+        background: var(--color-primary-purple);
+        border: 0.2rem solid var(--color-primary-purple);
+        color: var(--color-white);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 200ms ease;
+    }
+    .dropdownButton:hover {
+        background: var(--color-white);
+        border: 0.2rem solid var(--color-primary-purple);
+        color: var(--color-primary-purple);
+    }
+    .dropdownButton.active {
+        background: var(--color-white);
+        border: 0.2rem solid var(--color-primary-purple);
+        color: var(--color-primary-purple);
+    }
 
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .menu {
+        position: absolute;
+        background: var(--color-white);
+        border: 0.2rem solid var(--color-primary-purple);
+        border-radius: 4px;
+        padding: 0.5rem;
+        z-index: 100;
+        min-width: 200px;
+        top: calc(100% + 4px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkbox-label {
+        display: block;
+        padding: 0.4rem 0.5rem;
+        cursor: pointer;
+        transition: background-color 150ms ease;
+        border-radius: 2px;
+    }
+
+    .checkbox-label:hover {
+        background-color: #f5f5f5;
+    }
+
+    .checkbox-label input[type="checkbox"] {
+        margin-right: 0.5rem;
+        cursor: pointer;
+    }
+    
+    .clear-btn {
+        width: 100%;
+        display: block;
+        margin-bottom: 0.5rem;
+
+        font-size: 0.9rem;
+        cursor: pointer;
+        border: 0.2rem solid var(--color-primary-purple);
+
+        background: var(--color-primary-purple);
+        color: var(--color-white);
+
+        padding: 0.4rem;
+        border-radius: 4px;
+        transition: all 200ms ease;
+    }
+    .clear-btn:hover {
+        background: var(--color-white);
+        color: var(--color-primary-purple);
+        border: 0.2rem solid var(--color-primary-purple);
+    }
+    
+    
+
+      .removeall {
+        background: var(--color-primary-purple-dark);
+        border: 0.2rem solid var(--color-primary-purple-dark);
+        color: var(--color-white);
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 200ms ease;
+    }
+    .removeall:hover {
+        background: var(--color-white);
+        border: 0.2rem solid var(--color-primary-purple-dark);
+        color: var(--color-dark-purple);
+    }
+    .removeall.active {
+        background: var(--color-white);
+        border: 0.2rem solid var(--color-primary-purple-dark);
+        color: var(--color-primary-purple-dark);
+    }
