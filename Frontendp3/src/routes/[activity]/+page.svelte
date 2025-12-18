@@ -67,15 +67,21 @@ async function submitHandler() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
+        const text = await res.text();
+
 
         if (!res.ok) {
             alert('Failed to send sign-up: ' + res.status);
             return;
         }
 
-        alert('Sign-up sent successfully email has been send!');
+        
+        alert(text);
+        
         firstName = lastName = dateOfBirth = email = '';
-        tosAccept = infoSendAccept = false;
+        tosAccept = infoSendAccept = false; 
+        
+
     } catch (err) {
         console.error(err);
         alert('Network error sending sign-up.');

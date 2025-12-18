@@ -26,12 +26,4 @@ public class CancelResult {
         return participant;
     }
 
-    public CancelResult success(Participant p){
-        return new CancelResult(true,"Deltager er afmeldt",p);
-    }
-
-    public CancelResult fail(String message){
-        return new CancelResult(false,"Deltager kunne findes", null);
-
-    }
 }
