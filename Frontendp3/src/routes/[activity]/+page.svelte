@@ -430,7 +430,7 @@ function handleClosePopUp() {
     }
 
     .popUpBox{
-        background-color: rgba(0, 0, 0, 3); 
+        background-color: rgba(0, 0, 0, 0.8); 
         opacity: 0; 
         position: fixed; 
         top: 0; 
