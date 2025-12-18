@@ -23,9 +23,13 @@ public class Canceled {
 
             // Filter out JSON line containing matching participant details
             List<String> updatedUsers = users.stream()
-                    .filter(line -> !(line.contains("\"firstname\":\"" + firstName + "\"") &&
-                                      line.contains("\"lastname\":\"" + lastName + "\"") &&
-                                      line.contains("\"email\":\"" + email + "\"")))
+                    .filter(line -> {
+                        String lowerLine = line.toLowerCase();
+                        return !(lowerLine.contains("\"firstname\":\"" + firstName.toLowerCase() + "\"") &&
+                                lowerLine.contains("\"lastname\":\"" + lastName.toLowerCase() + "\"") &&
+                                lowerLine.contains("\"email\":\"" + email.toLowerCase() + "\""));
+
+                    })
                     .collect(Collectors.toList());
 
             // If nothing was removed
