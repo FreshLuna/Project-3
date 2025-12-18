@@ -16,6 +16,16 @@ public class CancelController {
     private ActivityProvider activityProvider = new FileActivityProvider();
     private TLSEmailSender realSender = new DefaultTLSEmailSender();
 
+    public CancelController() {
+    }
+// this constructor is only to be used for testing
+    public CancelController(TLSEmailSender realSender, ActivityProvider activityProvider, ParticipantRepository participantRepository) {
+        this.realSender = realSender;
+        this.activityProvider = activityProvider;
+        this.participantRepository = participantRepository;
+    }
+
+
     public CancelResult processCancel(String JsonInput) {
         try {
             CancelRequest cancelRequest =

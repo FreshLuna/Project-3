@@ -138,18 +138,18 @@ private  final TLSEmailSender emailSender;
         participant.getEmail()
 
         );
-        System.out.println(message);
+        //System.out.println(message);
 
-        //mail(message);
+        mail(message);
     }
     public void mail(String msg){
 
-//        try {
-//            emailSender.sendTLSMail(participant.getEmail(),msg,activity.getActivityName());
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        System.out.println("send email to at: "+participant.getEmail() +"\n"+ msg);
+        try {
+            emailSender.sendTLSMail(participant.getEmail(),msg,activity.getActivityName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+       // System.out.println("send email to at: "+participant.getEmail() +"\n"+ msg);
 
     }
 }

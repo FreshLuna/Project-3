@@ -16,8 +16,5 @@ public class FileActivityProvider implements ActivityProvider{
                 .orElse(null);
     }
 
-    @Override
-    public List<Activity> getAllActivities() {
-        return activities;
-    }
+
 }

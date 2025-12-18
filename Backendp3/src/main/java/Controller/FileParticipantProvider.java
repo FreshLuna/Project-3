@@ -26,15 +26,10 @@ public class FileParticipantProvider implements ParticipantRepository{
 
     @Override
     public List<Participant> getParticipants(String activityName) {
-
-
-
-
         Path filePath = Paths.get(
                 EVENTS_FOLDER + activityName + "_users.txt"
 
         );
-
 
         List<Participant> participants = new ArrayList<>();
 
@@ -46,7 +41,9 @@ public class FileParticipantProvider implements ParticipantRepository{
         try {
             List<String> lines = Files.readAllLines(filePath);
             for (String line : lines) {
-
+                if (line == null || line.trim().isEmpty()) {
+                    continue;
+                }
 
                 try {
                     Participant participant = mapper.readValue(line, Participant.class);
@@ -116,31 +113,18 @@ public class FileParticipantProvider implements ParticipantRepository{
     }
 
 
-    public List<Participant> getTopWaitingListParticipants(String activityName, int activityCapacity, int topCount) {
-        List<Participant> participants = getParticipants(activityName);
-
-        // Waiting list starts after capacity
-        int fromIndex = Math.min(activityCapacity, participants.size());
-        int toIndex = Math.min(activityCapacity + topCount, participants.size());
-
-        return participants.subList(fromIndex, toIndex);
-    }
 
     @Override
-    public List<Participant> handleWaitingListAfterCancel(
-            String activityName,
-            int capacity,
-            boolean waitingListEnabled,
-            int removedIndex
+    public List<Participant> handleWaitingListAfterCancel(String activityName,int activityCapacity,boolean waitingListEnabled,int removedIndex
     ) {
         List<Participant> participants = getParticipants(activityName);
 
         if (!waitingListEnabled) return List.of();
-        if (participants.size() < capacity) return List.of();
-        if (removedIndex >= capacity) return List.of();
+        if (participants.size() < activityCapacity) return List.of();
+        if (removedIndex >= activityCapacity) return List.of();
 
-        int from = capacity;
-        int to = Math.min(capacity + 3, participants.size());
+        int from = activityCapacity;
+        int to = Math.min(activityCapacity + 3, participants.size());
 
         return participants.subList(from, to);
     }

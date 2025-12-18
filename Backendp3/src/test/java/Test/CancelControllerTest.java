@@ -1,9 +1,10 @@
 package Test;
 
+import Classes.Activity;
+import Classes.Participant;
 import Controller.CancelController;
 import Controller.CancelResult;
-import Model.CancelRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,67 +23,113 @@ class CancelControllerTest {
 
     private CancelController controller;
     private FakeTLSEmailSender fakeSender;
-    private ObjectMapper mapper = new ObjectMapper();
+
+    private FakeActivityProvider activityProvider;
+    private FakeParticipantProvider participantProvider;
 
     @BeforeEach
     void setUp() {
-        controller = new CancelController();
+
         fakeSender = new FakeTLSEmailSender();
-        //controller.setEmailSender(fakeSender);
+        Activity activity = new Activity();
+        activity.setActivityName("Yoga");
+        activity.setActivityCapacity(2);
+        activity.setActivityID(11);
+        activity.setWaitingListEnabled(true);
+        activityProvider = new FakeActivityProvider(activity);
+        participantProvider = new FakeParticipantProvider();
+        controller = new CancelController(fakeSender, activityProvider, participantProvider);
+        Participant a = new Participant("A", "May", "amay@mail.com", activity.getActivityNameAndID());
+        Participant b = new Participant("B", "May", "bmay@mail.com", activity.getActivityNameAndID());
+        Participant c = new Participant("C", "May", "cmay@mail.com", activity.getActivityNameAndID());
+        Participant d = new Participant("D", "May", "dmay@mail.com", activity.getActivityNameAndID());
+        Participant e = new Participant("E", "May", "emay@mail.com", activity.getActivityNameAndID());
 
-
+        participantProvider.addParticipant(a);
+        participantProvider.addParticipant(b);
+        participantProvider.addParticipant(c);
+        participantProvider.addParticipant(d);
+        participantProvider.addParticipant(e);
     }
 
     @AfterEach
     void tearDown() {
     }
 
-   /* @Test
-    void testProcessCancelParticipantRemoved() throws Exception {
-        CancelRequest request = new CancelRequest();
-        request.setFirstName("John");
-        request.setLastName("Doe");
-        request.setEmail("john@example.com");
-        request.setActivity("Yoga101");
+    @Test
+    void activityNotFound() {
 
-        String json = mapper.writeValueAsString(request);
+        String testJson = """
+                {
+                  "firstname":"A",
+                  "lastname":"May",
+                  "email":"amay@mail.com",
+                  "activity":"DoesNotExist"
+                }
+                """;
+
+        CancelResult result = controller.processCancel(testJson);
+
+        assertNotNull(result);
+        assertFalse(result.isSuccess());
+        assertEquals("Aktiviteten findes ikke", result.getMessage());
+        assertNull(result.getParticipant());
+    }
+
+    @Test
+    void cancelConfirmedParticipant_success() {
+
+        String json = """
+                {
+                  "firstname":"A",
+                  "lastname":"May",
+                  "email":"amay@mail.com",
+                  "activity":"Yoga11"
+                }
+                """;
 
         CancelResult result = controller.processCancel(json);
 
-        assertNotNull(fakeSender.lastToEmail);
-        assertEquals("john@example.com", fakeSender.lastToEmail);
-        assertEquals("Yoga101", fakeSender.lastActivity);
-    }
-
-    */
-
-    @Test
-    void test2(){}
-
-
-   /* @Test
-    void testCancelWaitingListParticipant() throws Exception {
-        CancelRequest request = new CancelRequest();
-        request.setFirstName("Lena");
-        request.setLastName("Hayes");
-        request.setEmail("lena.shayes@gmail.com");
-        request.setActivity("Badminton Night19");
-
-        String json = mapper.writeValueAsString(request);
-
-        CancelResult result = controller.processCancel(json);
-
-        //assertTrue(result.success());
-
+        assertTrue(result.isSuccess());
     }
 
 
-    */
+    @Test //A is removed and C is promoted to activity
+    void promotesFirstWaitingListParticipant() {
 
+        String json = """
+                {
+                  "firstname":"A",
+                  "lastname":"May",
+                  "email":"amay@mail.com",
+                  "activity":"Yoga11"
+                }
+                """;
 
-
-
+        controller.processCancel(json);
+      String promotedEmail=  participantProvider.getParticipants("Yoga11").get(1).getEmail();
+        assertEquals(
+                "cmay@mail.com",
+                promotedEmail  // because of order of operation is the last email to be send to the cancelled participant so we look for the new one at index 1
+        );
+    }
     @Test
+    void noPromotionWhenWaitingListDisabled() {
 
-    void test(){}
+        activityProvider.getActivity("Yoga11").setWaitingListEnabled(false);
+
+        String json = """
+        {
+          "firstname":"A",
+          "lastname":"May",
+          "email":"amay@mail.com",
+          "activity":"Yoga11"
+        }
+        """;
+
+        controller.processCancel(json);
+
+        assertNull(fakeSender.lastToEmail);
+    }
+
 }

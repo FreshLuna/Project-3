@@ -16,8 +16,18 @@ public class Participant {
         LastName = lastName;
         Email = email;
         this.activity = activity;
-    }
 
+    }
+//used for testing
+    public Participant(String firstName,String lastName, String email, String dateOfBirth, String activity
+    ) {
+
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        DateOfBirth = dateOfBirth;
+        this.activity = activity;
+    }
 
     @JsonProperty("dateofbirth")
     private String DateOfBirth; // Date of birth

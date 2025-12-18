@@ -82,18 +82,7 @@ class FileParticipantProviderTest {
         assertEquals("User11", promoted.getFirstName());
     }
 
-    @Test
-    void getTopWaitingListParticipants() {
-        List<Participant> waiting = provider.getTopWaitingListParticipants(
-                activity,
-                10,
-                2
-        );
 
-        assertEquals(2, waiting.size());
-        assertEquals("User11", waiting.get(0).getFirstName());
-        assertEquals("User12", waiting.get(1).getFirstName());
-    }
 
 
     @Test

@@ -12,8 +12,8 @@ import static Events.Verified.verifyNotAlreadySignedUp;
 
 public class SignupController {
 
-    private final Verified verified = new Verified();
-    private final FullyBooked fullyBooked = new FullyBooked();
+    private  Verified verified = new Verified();
+    private  FullyBooked fullyBooked = new FullyBooked();
     private final ObjectMapper mapper = new ObjectMapper();
     private TLSEmailSender realSender = new DefaultTLSEmailSender();
     private ActivityProvider activityProvider = new FileActivityProvider();
@@ -23,10 +23,12 @@ public class SignupController {
     public SignupController() {
     }
 
-    public SignupController(TLSEmailSender realSender, ActivityProvider activityProvider, ParticipantRepository participantRepository) {
+    public SignupController(TLSEmailSender realSender, ActivityProvider activityProvider, ParticipantRepository participantRepository, FullyBooked fullyBooked, Verified verified) {
         this.realSender = realSender;
         this.activityProvider = activityProvider;
         this.participantRepository = participantRepository;
+        this.fullyBooked= fullyBooked;
+        this.verified = verified;
     }
 
     public SignUpResult processSignup( String jsonInput){

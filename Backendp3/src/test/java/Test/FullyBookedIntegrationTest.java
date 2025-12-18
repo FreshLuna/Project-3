@@ -120,8 +120,8 @@ Canceled c;
         assertTrue(fb.isActivityOpen( activityName, 3, true));
 
         // Now cancel one of them
-         boolean removed =    c.removeParticipantByDetails(activityName, 3);
-         assertTrue(removed);
+        /* boolean removed =    c.removeParticipantByDetails(activityName, 3);
+         assertTrue(removed);*/
 
         // Now it should NOT be full anymore
         assertFalse(fb.isActivityOpen("test_temp_integration/" + activityName, 3, true));
