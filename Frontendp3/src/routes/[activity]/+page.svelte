@@ -1,80 +1,149 @@
-<script>
-    import { page } from "$app/stores";
+<script lang="ts">
+import { page } from '$app/stores';
+import { onMount, tick } from 'svelte';
+import type { Activity } from '$lib/types/Activities';
+import { loadActivity } from '$lib/utils/LoadActivities';
+import { goto } from '$app/navigation';
+import SpotsDisplay from "$lib/utils/ParticipantSpotsVisualizer.svelte";
+import Sunflower from "$lib/utils/Sunflower.svelte";
 
-    // Form state
-    let firstName = "";
-    let lastName = "";
-    let dateOfBirth = "";
-    let email = "";
-    let phoneNumber = "";
-    let tosAccept = false;
-    let infoSendAccept = false;
+let firstName = '';
+let lastName = '';
+let dateOfBirth = '';
+let email = '';
+let tosAccept = false;
+let infoSendAccept = false;
+let isPopUpOpen = false;
+let activity: Activity
+let loading = true;
+let error: string | null = null;
+$: isWaitingList = activity ? activity.participantCount <= 0 : true;
 
-    // FIX: Correctly read params from $page store
-    let activity = "";
-    // @ts-ignore
-    $: activity = $page.params.activity;
 
-    async function submitHandler() {
-        const payload = {
-            firstname: firstName,
-            lastname: lastName,
-            dateOfBirth: dateOfBirth,
-            email: email,
-            phoneNumber: phoneNumber,
-            tosAccept: tosAccept,
-            infoSendAccept: infoSendAccept,
-            activity: activity
-        };
+function goToCancel(sendTo?: string | null) {
+    goto(
+        sendTo?.trim()
+            ? `/cancel?activity=${encodeURIComponent(sendTo)}`
+            : '/homepage'
+    );
+}
 
+// Reactive slug from route param
+let slug = Number($page.params.activity); // convert to number
+//console.log('$page.params.activity:', $page.params.activity, 'slug:', slug);
+
+onMount(async () => {
+    try {
+        if (!isNaN(slug)) {
+            activity = await loadActivity(slug);
+        } else {
+            throw new Error('Invalid activity ID');
+        }
+    } catch (err) {
+        console.error(err);
+        error = 'Failed to load activity.';
+    } finally {
+        loading = false;
+    }
+});
+
+
+async function submitHandler() {
+    if (!activity) return;
+
+    const payload = {
+        firstname: firstName,
+        lastname: lastName,
+        dateOfBirth,
+        email,
+        tosAccept,
+        infoSendAccept,
+        activity: activity.title+activity.id
+    };
+
+    try {
+        const res = await fetch('https://localhost:8443/server/participants', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const text = await res.text();
+
+
+        if (!res.ok) {
+            alert('Failed to send sign-up: ' + res.status);
+            return;
+        }
+
+        
+        alert(text);
+        
+        firstName = lastName = dateOfBirth = email = '';
+        tosAccept = infoSendAccept = false; 
+        
+
+    } catch (err) {
+        console.error(err);
+        alert('Network error sending sign-up.');
+    }
+}
+
+    let copied = false;
+
+    async function copyLink() {
         try {
-            const res = await fetch('https://localhost:8443/server/participants', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!res.ok) {
-                alert('Failed to send sign-up: ' + res.status);
-                return;
-            }
-
-            const text = await res.text();
-            alert('Sign-up sent: ' + text);
-
-            // Reset form
-            firstName = "";
-            lastName = "";
-            dateOfBirth = "";
-            email = "";
-            phoneNumber = "";
-            tosAccept = false;
-            infoSendAccept = false;
-
+            const currentUrl = window.location.href; // Get current page URL
+            await navigator.clipboard.writeText(currentUrl);
+            copied = true;
+            await tick(); // Wait for DOM update
+            setTimeout(() => {
+                copied = false;
+            }, 2000); // Hide message after 2 seconds
         } catch (err) {
-            console.error(err);
-            alert("Network error sending sign-up. Check server and HTTPS settings.");
+            console.error("Failed to copy: ", err);
         }
     }
+
+function handleOpenPopUp() {
+    isPopUpOpen = true;
+}
+
+function handleClosePopUp() {
+    isPopUpOpen = false;
+}
 </script>
 
 
+{#if loading}
+    <p>Loading activities…</p>
+{:else if error}
+    <p>{error}</p>
+{:else}
 <!-- <h1>Aalborg Try Out: Activity Test!!! (vi prøver igen)</h1> -->
-<div class="container">
+<div class="container">  
+    <!-- Left half: Activity Image -->
+    <div class="halfPageBox">
+        <div class="imageWrapper">
+            <img class="activityImage" src={activity.imgUrl} alt="activityImage" />
+            <Sunflower tags={activity.tags} />
+            <SpotsDisplay count={activity.participantCount} />
+        </div>
+    </div>
 
-    <!-- Left half: Activity info -->
+    <!-- Right half: Activity info and Description box -->
     <div class="halfPageBox">
         <div class="nameOrganizerInviteBox">
+
             <!-- Left: Name + Organizer -->
             <div class="noiRightBox">
-                <h2>Name of activity ({$page.params.activity})</h2>
-                <p>Organizer</p>
+                <h2>{(activity.title) + (isWaitingList ? " - venteliste" : "")} </h2>
+                <p>{activity.organization}</p>
             </div>
 
             <!-- Right: Invite button -->
             <div class="noiLeftBox">
-                <button>Invite a friend</button>
-            </div>
+                <button on:click={copyLink}>{copied ? 'Link kopieret!' : 'Invitér en ven'}</button>
+</div>
         </div>
 
         <div class="activityInfoTable">
@@ -82,127 +151,149 @@
                 <tbody>
                     <tr>
                         <td>
-                            <b>Activity</b><br>
-                            Example Activity
+                            <b>Aktivitet</b><br>
+                            {activity.title}
                         </td>
                         <td>
-                            <b>Instructor</b><br>
-                            Lars Larsen
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>Time and Date</b><br>
-                            17:00 10th November 2025
-                        </td>
-                        <td>
-                            <b>Place</b><br>
-                            Selma Lagerlöfsvej 300, 9220 Aalborg
+                            <b>Instruktør</b><br>
+                            {activity.instructors}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <b>Gender</b><br>
-                            Any
+                            <b>Tidspunkt</b><br>
+                            {activity.formattedDate}
                         </td>
                         <td>
-                            <b>Age Group</b><br>
-                            15-25
+                            <b>Adresse og mødested</b><br>
+                            {activity.location}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Køn</b><br>
+                            {activity.genderGroup}
+                        </td>
+                        <td>
+                            <b>Aldersgruppe</b><br>
+                            {activity.age}
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    </div>
 
-    <!-- Right half: Sign-up & description -->
-    <div class="halfPageBox">
-
+        <!-- DESCRIPTION BOX (outside) -->
         <div class="innerBox">
-            <h3>Sign up for FREE to the activity</h3>
-            <p>Optional custom message to display</p>
+            <h3>Beskrivelse</h3>
+            <p>{activity.description}</p>
+        </div>
+        
 
-            <form class="formLayout" on:submit|preventDefault={submitHandler}>
+        <!-- SIGN UP BUTTON (outside) -->
+        <div class="buttonWrapper">
+            <button class="signUpBtn" on:click={handleOpenPopUp}>Tilmeld til aktivitet</button> <!-- When the button is clicked, the pop up will open -->
+            <button class="cancelBtn" on:click={() => goToCancel(activity.title + "" + activity.id)}>Afmeld</button>
+        </div>
+
+        <!-- POP UP BOX (inside) -->
+        <div class="popUpBox" class:open={isPopUpOpen}> <!-- to connect to the css -->
+            <div class="popUpSignUp">
+
+            <div class="innerBox">
+                
+                    <button class="closeBtn" on:click={handleClosePopUp}>Luk</button> <!-- When the button within the popup is clicked, the pop up will close -->
+
+                    <div class="popUpTitle">
+                        <h2>Tilmeld dig gratis til <b>{(activity.title) + (isWaitingList ? " - venteliste" : "")}</b>!</h2>
+                    </div>
+                
+                <form class="formLayout" on:submit|preventDefault={submitHandler}>
+
+                    <div class="formRowNameDOB">
+                        <div class="formField">
+                            <label for="activityName">Tidspunkt</label>
+                            <b>{activity.formattedDate}</b>
+                        </div>
+                    </div>
 
                 <!-- Row 1: two quarter-width + one half-width inputs -->
-                <div class="formRowNameDOB">
-                    <div class="formField quarter">
-                        <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" name="firstName" bind:value={firstName}>
-                    </div>
+                    <div class="formRowNameDOB">
+                        <div class="formField half">
+                            <label for="firstName">Fornavn</label>
+                            <input type="text" id="firstName" name="firstName" required bind:value={firstName}>
+                        </div>
 
-                    <div class="formField quarter">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" id="lastName" name="lastName" bind:value={lastName}>
+                        <div class="formField half">
+                            <label for="lastName">Efternavn</label>
+                            <input type="text" id="lastName" name="lastName" required bind:value={lastName}>
+                        </div>
                     </div>
-
-                    <div class="formField half">
-                        <label for="dateOfBirth">Date of Birth</label>
-                        <input type="text" id="dateOfBirth" name="dateOfBirth" bind:value={dateOfBirth}>
-                    </div>
-                </div>
 
                 <!-- Row 2: two half-width inputs -->
-                <div class="formRowEmailPN">
-                    <div class="formField half">
-                        <label for="email">Email</label>
-                        <input type="text" id="email" name="email" required bind:value={email}>
+                    <div class="formRowNameDOB">
+                        <div class="formField half">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email" required bind:value={email}>
+                        </div>
+
+                        <div class="formField half">
+                            <label for="dateOfBirth">Fødselsdato</label>
+                            <input type="date" id="dateOfBirth" name="dateOfBirth" bind:value={dateOfBirth}>
+                        </div>
+                    </div> 
+
+                 <!-- Checkboxes -->
+                    <div class="checkboxRow">
+                        <input type="checkbox" id="tosAccept" name="tosAccept" required bind:checked={tosAccept} />
+                        <label for="tosAccept">Jeg accepterer Aalborg Try Out's Terms of Service</label>
                     </div>
 
-                    <div class="formField half">
-                        <label for="phoneNumber">Phone Number</label>
-                        <input type="text" id="phoneNumber" name="phoneNumber" required bind:value={phoneNumber}>
+                    <div class="checkboxRow">
+                        <input type="checkbox" id="infoSendAccept" name="infoSendAccept" bind:checked={infoSendAccept} />
+                        <label for="infoSendAccept">Tillad Aalborg Try Out at sende mig notifikationer med information om aktiviteten</label>
                     </div>
-                </div>
 
-                <!-- Checkboxes -->
-                <div class="checkboxRow">
-                    <input type="checkbox" id="tosAccept" name="tosAccept" bind:checked={tosAccept} />
-                    <label for="tosAccept">I accept Aalborg Try Out's Terms of Service</label>
-                </div>
-
-                <div class="checkboxRow">
-                    <input type="checkbox" id="infoSendAccept" name="infoSendAccept" bind:checked={infoSendAccept} />
-                    <label for="infoSendAccept">Allow Aalborg Try Out to send me information such as notifications</label>
-                </div>
-
-                <button type="submit" class="signUpButton">Sign up for activity</button>
-            </form>
+                    <button type="submit" class="btn">Tilmeld til aktivitet</button> <!--class="signUpButton"-->
+                </form>
+    
+            </div>
+            </div> 
         </div>
 
-        <div class="innerBox">
-            <h3>Description</h3>
-            <p>Placeholder description</p>
-            <button>Read more</button>
-
-            <h4>Difficulty</h4>
-            <p>How difficult the activity is</p>
-        </div>
 
     </div>
 </div>
+{/if}
 
-<br><br>
-
-<p>Her er også lidt tekst under det hele. Hvilken aktivitet er dette? Det er [{$page.params.activity}]!!!!</p>
 
 <style>
     /* General container */
     .container {
         display: flex;
-        gap: 2%;
+        gap: 1%;
+        margin-top: 2%;
         margin-left: 10%;
         margin-right: 10%;
-        font-family: 'Trebuchet MS'
+        font-family: var(--app-font); 
+    }
+    .imageWrapper {
+        position: relative;
+        width: 100%;
     }
 
+    
     .halfPageBox {
         flex: 1;
         padding: 1%;
         border-radius: 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+        display: absolute;
+        position: relative;
+    }
+
+    .activityImage{
+        width: 100%;
+        border-radius: 10px; 
     }
 
     /* Invite & name box */
@@ -245,15 +336,135 @@
 
     /* Inner box (description & form container) */
     .innerBox {
-        border-radius: 25px;
+        border-radius: 10px;
         border: 2px solid black;
         padding: 1rem;
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        /* margin-top: 1rem;
+        margin-bottom: 1rem; */
     }
 
-    /* Form layout */
+    .btn {
+        background-color: var(--color-primary-purple);
+        border: none;
+        color: var(--color-white);
+        padding: 10px 15px;
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        
+    }
+
+    .btn:hover {
+        background-color: var(--color-primary-purple-dark);
+    }
+
+    .closeBtn{
+        background-color: var(--color-primary-purple);
+        border: none;
+        color: var(--color-white);
+        padding: 10px 15px;
+        text-align: right; 
+        width: 8%; 
+        position: relative; 
+        left: 610px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+       
+    }
+
+    .closeBtn:hover {
+        background-color: var(--color-primary-purple-dark);
+    }
+
+    .buttonWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .signUpBtn{
+        background-color: var(--color-primary-purple);
+        border: none;
+        border-radius: 5px;
+        color: var(--color-white);
+        text-align: center;
+        font-size: 16px;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        margin-top: 20px;
+        margin-left: 33px; 
+        width: 500px; 
+        position: relative; 
+
+    }
+    .cancelBtn{
+        background-color: #840808;
+        border: none;
+        border-radius: 5px;
+        color: var(--color-white);
+        text-align: center;
+        font-size: 16px;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        margin-top: 50px;
+        margin-left: 33px; 
+        width: 200px; 
+        position: relative; 
+
+    }
+
+    .signUpBtn:hover {
+        background-color: var(--color-primary-purple-dark);
+    }
+
+
+/* **** POP UP WINDOW CSS STYLE **** */
+    .popUpTitle{
+        margin-top: -66px;
+        margin-bottom: 20px;
+    }
+
+    .popUpBox{
+        background-color: rgba(0, 0, 0, 3); 
+        opacity: 0; 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0; 
+        transition: all 0.3s ease-in-out; 
+        z-index: -1;
+
+        /* to keep the inner box in the center */
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+    }
+
+    /* the pop up */
+    .popUpBox.open{
+        opacity: 1; 
+        z-index: 999; 
+    }
+
+    .popUpSignUp{
+        background-color: aliceblue;
+        border-radius: 10px; 
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 3); 
+        padding: 5px 5px; 
+        text-align: center; 
+        width: 700px; 
+        height: auto; 
+    }
+/* ************************** */
+
+
+/* Form layout */
     .formLayout {
         display: flex;
         flex-direction: column;
@@ -269,13 +480,6 @@
         justify-content: space-between;
     }
 
-    .formRowEmailPN {
-        display: flex;
-        flex-wrap: wrap;
-        /* gap: 1rem; */
-        justify-content: space-between;
-    }
-
     .formField {
         display: flex;
         flex-direction: column;
@@ -283,24 +487,10 @@
     }
 
     .formField input,
-    .formField select {
-        padding: 0.5rem;
-        border: 1px solid black;
-        border-radius: 4px;
-        box-sizing: border-box;
-        min-width: 0;
-    }
 
     /* Width classes */
     .formField.half {
-        /* flex: 1 2;
-        width: 50%; */
-        /* flex: 0 0 50%; */
-
         min-width: 0;
-        /* flex: 2; */
-
-        /* flex: 0 0 calc(50% - 1rem); */
         flex: 0 0 calc((100% - 1rem) / 2);
     }
 
@@ -322,15 +512,10 @@
         display: flex;
         align-items: center;
         gap: 0.5rem;
+        margin: 0.5rem; 
     }
 
-    /* Sign-up button */
-    .signUpButton {
-        padding: 0.75rem 1.5rem;
-        border-radius: 6px;
-        cursor: pointer;
-        align-self: flex-start;
-    }
+/* ----------------------------------- */
 
     /* Responsive adjustments */
     @media (max-width: 800px) {
@@ -354,4 +539,8 @@
 
     /* REPLACE ALMOST ALL FLEX WITH GRID BECAUSE FLEX BAD */
     /* remember media queries */
+
+
+
+
 </style>
