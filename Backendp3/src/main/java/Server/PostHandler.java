@@ -42,16 +42,16 @@ public class PostHandler {
                     yield  result.getMessage();
                 }
 
-                yield "Deltager er blevet tilmeldt";
+                yield result.getMessage();
             }
             case "/server/cancel" -> {
                 CancelResult cancelResult = cancelController.processCancel(body);
 
                         if(!cancelResult.isSuccess()){
 
-                            yield "afmelding mislykkedes";
+                            yield cancelResult.getMessage();
                         }
-                        yield "Deltager fjernet";
+                        yield cancelResult.getMessage();
             }
 
             case "/server/publish" -> {

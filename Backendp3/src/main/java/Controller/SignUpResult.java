@@ -14,7 +14,7 @@ public class SignUpResult {
 
     public static SignUpResult success(Participant p){
 
-        return new SignUpResult (true, p.getFirstName()+ "er tilmeldt", p);
+        return new SignUpResult (true, p.getFirstName()+ "er tilmeldt, email sendt til " + p.getEmail() , p);
     }
 
     public static SignUpResult fail(String msg){
@@ -22,8 +22,8 @@ public class SignUpResult {
         return new SignUpResult(false,msg,null);
     }
 
-    public static SignUpResult successWaitingList(Participant participant) {
-        return new SignUpResult (true, "Du er nu på venteliste",participant);
+    public static SignUpResult successWaitingList(Participant p) {
+        return new SignUpResult (true, "Du er nu på venteliste email sendt til " + p.getEmail() , p);
 
     }
 

@@ -21,3 +21,4 @@
 {"firstname":"Hfgdsa","lastname":"Jhfgds","email":"fhjgdsa@gmail.com","dateofbirth":"2003-11-11","activity":"Badminton Night11"}
 {"firstname":"Lunawinther","lastname":"Sandager","email":"mwsandager@gmail.com","dateofbirth":"2003-01-01","activity":"Badminton Night11"}
 {"firstname":"Afadsgas","lastname":"Adsfasdfads","email":"sfddasf@gmail.com","dateofbirth":"0003-01-01","activity":"Badminton Night11"}
+{"firstname":"Fjkdnabsjs","lastname":"Adsgijadshkgbj","email":"mwsandager@gmail.com","dateofbirth":"2003-01-01","activity":"Badminton Night11"}
