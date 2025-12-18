@@ -73,7 +73,7 @@ async function submitHandler() {
             return;
         }
 
-        alert('Sign-up sent successfully!');
+        alert('Sign-up sent successfully email has been send!');
         firstName = lastName = dateOfBirth = email = '';
         tosAccept = infoSendAccept = false;
     } catch (err) {
