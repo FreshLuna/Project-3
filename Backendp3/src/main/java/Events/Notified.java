@@ -4,6 +4,8 @@ import Classes.Activity;
 import Classes.Participant;
 import Controller.TLSEmailSender;
 
+import static Config.FilePaths.DOMAIN;
+
 public class Notified {
 private Participant participant;
 private Activity activity;
@@ -49,11 +51,12 @@ private  final TLSEmailSender emailSender;
                 
                 Aktivitet: %s
                 
-                Afmeld her: https://localhost:5173/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
+                Afmeld her: %s/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
                 """,
                 participant.getFirstName(),
                 participant.getLastName(),
                 activity.getActivityName(),
+                DOMAIN,
                 activity.getActivityNameAndID().replace(" ", "%20"),
                 participant.getFirstName(),
                 participant.getLastName(),
@@ -80,11 +83,12 @@ private  final TLSEmailSender emailSender;
                 Aktiviteten %s er fuldt booket, og du er nu tilmeldt ventelisten.
                 Hvis der bliver en ledig plads, vil du automatisk blive tilmeldt.
                 
-                Afmeld her: https://localhost:5173/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
+                Afmeld her: %s/cancel?activity=%s&firstname=%s&lastname=%s&email=%s
                 """,
                 participant.getFirstName(),
                 participant.getLastName(),
                 activity.getActivityName(),
+                DOMAIN,
                 activity.getActivityNameAndID().replace(" ", "%20"),
                 participant.getFirstName(),
                 participant.getLastName(),
@@ -149,7 +153,7 @@ private  final TLSEmailSender emailSender;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-       // System.out.println("send email to at: "+participant.getEmail() +"\n"+ msg);
+        System.out.println("send email to at: "+participant.getEmail() +"\n"+ msg);
 
     }
 }

@@ -37,7 +37,7 @@ public class Main {
         } catch (Exception e) {
             System.err.println("Failed to start HTTPS server");
             e.printStackTrace();
-        }
 
+        }
     }
 }

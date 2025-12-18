@@ -1,6 +1,5 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { onMount } from 'svelte';
 
     let firstname = '';
     let lastname = '';
@@ -98,9 +97,6 @@
         text-align:left;
         width:480px;
     }
-    h1{ margin:0 0 1rem 0 }
     .row{ display:flex; flex-direction:column; margin-bottom:0.75rem }
-    label{ font-weight:600; margin-bottom:0.25rem }
-    input{ padding:0.5rem; border-radius:4px; border:1px solid #ccc }
-    .btn{ background:#6E479B; color:white; padding:0.5rem 1rem; border-radius:6px; border:none; cursor:pointer }
+    .btn{ background:var(--color-primary-purple); color:var(--color-white); padding:0.5rem 1rem; border-radius:6px; border:none; cursor:pointer }
 </style>

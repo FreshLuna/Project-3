@@ -1,12 +1,10 @@
 <script lang="ts">
-    //import { clear } from "console";
-
     import { onDestroy, onMount } from "svelte";
     import type { Writable } from "svelte/store";
-
     export let store: Writable<{ id: number; label: string; checked: boolean }[]>;
     export let label: string;
 
+    $: hasChecked = $store.some((item) => item.checked);
     let open = false;
     let dropdownRef: HTMLElement;
 
@@ -15,14 +13,16 @@
             list.map((item) =>
                 item.id === id // please please please make this a real if
                     ? { ...item, checked: !item.checked }
-                    : item
-            )
+                    : item,
+            ),
         );
     }
 
     // script: clear all checkboxes
     function clearAll() {
-        store.update((list) => list.map((item) => ({ ...item, checked: false })));
+        store.update((list) =>
+            list.map((item) => ({ ...item, checked: false })),
+        );
     }
 
     // script: close dropdown when clicking outisde
@@ -34,27 +34,25 @@
 
     // // event listeners for closing dropdowns
     onMount(() => {
-        if (typeof document !== 'undefined') {
-        document.addEventListener('click', closeDropdownOnClickOutside);
+        if (typeof document !== "undefined") {
+            document.addEventListener("click", closeDropdownOnClickOutside);
         }
     });
 
     onDestroy(() => {
-        if (typeof document !== 'undefined') {
-            document.removeEventListener('click', closeDropdownOnClickOutside);
+        if (typeof document !== "undefined") {
+            document.removeEventListener("click", closeDropdownOnClickOutside);
         }
     });
-
-
-
-
-
-
 </script>
 
 <div class="dropdown" bind:this={dropdownRef}>
-    <button type="button" class="dropdownButton" on:click={() => (open = !open)}>
-        {label}
+    <button
+        type="button"
+        class="dropdownButton"
+        class:active={hasChecked}
+        on:click={() => (open = !open)}
+        >{label}
     </button>
 
     {#if open}
@@ -62,10 +60,7 @@
             <button type="button" class="clear-btn" on:click={clearAll}>
                 Fjern filtre
             </button>
-
-
             {#each $store as item}
-
                 <label class="checkbox-label">
                     <input
                         type="checkbox"
@@ -78,12 +73,11 @@
         </div>
     {/if}
 </div>
-
 <style>
     .dropdownButton {
-        background: #6e479b;
-        border: 0.2rem solid #6e479b;
-        color: white;
+        background: var(--color-primary-purple);
+        border: 0.2rem solid var(--color-primary-purple);
+        color: var(--color-white);
         padding: 0.5rem 1rem;
         border-radius: 4px;
         font-size: 1rem;
@@ -92,21 +86,24 @@
         transition: all 200ms ease;
     }
     .dropdownButton:hover {
-        background: white;
-        border: 0.2rem solid #6e479b;
-        color: #6e479b;
+        background: var(--color-white);
+        border: 0.2rem solid var(--color-primary-purple);
+        color: var(--color-primary-purple);
     }
+    .dropdownButton.active {
+        background: var(--color-white);
+        border: 0.2rem solid var(--color-primary-purple);
+        color: var(--color-primary-purple);
+    }
+
     .dropdown {
         position: relative;
         display: inline-block;
-
-
-
     }
     .menu {
         position: absolute;
-        background: white;
-        border: 0.2rem solid #6e479b;
+        background: var(--color-white);
+        border: 0.2rem solid var(--color-primary-purple);
         border-radius: 4px;
         padding: 0.5rem;
 
@@ -140,19 +137,18 @@
 
         font-size: 0.9rem;
         cursor: pointer;
-        border: 0.2rem solid #6e479b;
+        border: 0.2rem solid var(--color-primary-purple);
 
-
-        background: #6e479b;
-        color: white;
+        background: var(--color-primary-purple);
+        color: var(--color-white);
 
         padding: 0.4rem;
         border-radius: 4px;
         transition: all 200ms ease;
     }
     .clear-btn:hover {
-        background: white;
-        color: #6e479b;
-        border: 0.2rem solid #6e479b;
+        background: var(--color-white);
+        color: var(--color-primary-purple);
+        border: 0.2rem solid var(--color-primary-purple);
     }
 </style>

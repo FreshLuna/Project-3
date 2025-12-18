@@ -41,16 +41,17 @@
 {:else if error}
     <p>{error}</p>
 {:else}
-    <h2>Afholdes Snart</h2>
+    <h2><span>Afholdes Snart</span></h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car1)}>‹</button>
-        <div class="carousel" bind:this={car1}>
-            <ActivityCard activities={upcomingActivities}/>
-        </div>
+            <div class="carousel" bind:this={car1}>
+                    <ActivityCard activities={upcomingActivities}/>
+            </div>
         <button class="nav right" on:click={() => scrollRight(car1)}>›</button>
+
     </div>
 
-    <h2>Populære Aktiviteter</h2>
+    <h2><span>Populære Aktiviteter</span></h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car2)}>‹</button>
         <div class="carousel" bind:this={car2}>
@@ -59,7 +60,7 @@
         <button class="nav right" on:click={() => scrollRight(car2)}>›</button>
     </div>
 
-    <h2>Nye Aktiviteter</h2>
+    <h2><span>Nye Aktiviteter</span></h2>
     <div class="carousel-wrapper">
         <button class="nav left" on:click={() => scrollLeft(car3)}>‹</button>
         <div class="carousel" bind:this={car3}>
@@ -72,41 +73,26 @@
 
 <style>
 
-.carousel-wrapper {
-    position: relative;
+.carousel-wrapper {    
     width: 100%;
     display: flex;
     align-items: center;
-    margin-bottom: 2rem;
+    background-color: transparent;
+    position: relative;
 }
 
 .carousel {
     display: flex;
-    overflow-x: auto;
+    overflow-x: scroll;
     scroll-behavior: smooth;
-    gap: 1rem;
-    padding: 1rem 0;
-}
-
-.carousel::-webkit-scrollbar {
-    display: none;
-}
-
-p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: #666;
+    scrollbar-width: none;
 }
 
 .nav {
-    background: white;
     border: none;
-    font-size: 2rem;
-    padding: 0 0.5rem;
+    font-size: 3rem;
     cursor: pointer;
-    z-index: 50;
+    z-index: 20;
 }
 
-.left { margin-right: 0.5rem; }
-.right { margin-left: 0.5rem; }
 </style>

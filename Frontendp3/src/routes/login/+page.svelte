@@ -14,9 +14,6 @@
             <input type="password" id="password" name="password" required>
 
             <div class="wrap">
-                <button type="Login">
-                    Log ind
-                </button>
             </div>
         </form>
         

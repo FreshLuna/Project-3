@@ -28,7 +28,7 @@ public class ActivitySorter {
 
     public static String getNewActivities(List<Activity> activities) throws Exception {
         List<Activity> sorted = new ArrayList<>(activities);
-        Collections.reverse(activities);
+        Collections.reverse(sorted);
         ArrayNode enriched = extracted(sorted);
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(enriched);
     }
@@ -37,7 +37,7 @@ public class ActivitySorter {
         List<Activity> sorted = new ArrayList<>(activities);
 
         // Sort remaining activities by participant count descending
-        activities.sort((a1, a2) -> {
+        sorted.sort((a1, a2) -> {
             int count1;
             int count2;
             try {
@@ -55,7 +55,7 @@ public class ActivitySorter {
     public static String getUpcomingActivities(List<Activity> activities) throws Exception {
         List<Activity> sorted = new ArrayList<>(activities);
 
-        activities.sort((a1, a2) -> {
+        sorted.sort((a1, a2) -> {
             long count1;
             long count2;
             try {
