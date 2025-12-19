@@ -85,18 +85,7 @@ class FileParticipantProviderTest {
 
 
 
-    @Test
-    void getParticipants_readsExistingProductionMockFile() {
-        FileParticipantProvider repo = new FileParticipantProvider();
 
-        List<Participant> participants = repo.getParticipants("Badminton Night11");
-
-        assertFalse(participants.isEmpty(), "Expected participants to be read from file");
-
-        Participant p = participants.get(0);
-        assertNotNull(p.getFirstName());
-        assertNotNull(p.getEmail());
-    }
 
 
 

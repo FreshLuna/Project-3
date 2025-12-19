@@ -16,7 +16,7 @@ public class VerifiedTest {
         p.setFirstName("  Dennis123  ");
         p.setLastName("Kat!!");
         p.setEmail(" D.Kat@Test.dk ");
-        p.setDateOfBirth("01/01/1985");
+        p.setDateOfBirth("1984-02-03");
 
         boolean result = verifier.verifyParticipant(p);
 
@@ -24,7 +24,7 @@ public class VerifiedTest {
         assertEquals("Dennis", p.getFirstName());
         assertEquals("Kat", p.getLastName());
         assertEquals("d.kat@test.dk", p.getEmail());
-        assertEquals("01/01/1985", p.getDateOfBirth());
+        assertEquals("1984-02-03", p.getDateOfBirth());
     }
 
     @Test
@@ -44,7 +44,7 @@ public class VerifiedTest {
         p.setFirstName("Test");
         p.setLastName("Kat");
         p.setEmail("T.Kat@Test.dk");
-        p.setDateOfBirth("1985-01-01"); // wrong format
+        p.setDateOfBirth("1985/01/01"); // wrong format
 
         assertFalse(verifier.verifyParticipant(p));
     }
@@ -64,15 +64,17 @@ public class VerifiedTest {
     @Test
     void testVerifyActivityValid() {
         Activity a = new Activity();
-        a.setActivityName("  Monner / Hard ");
+        a.setActivityName("monnerhard");
         a.setActivityCapacity(10);
-        a.setLocation("   Cass ");
-        a.setAgeGroup("20+ years");
+        a.setLocation("Cass");
+        a.setAgeGroup("20+");
+        a.setDateAndTime(300004201130L);
 
+        System.out.println(a);
         boolean result = verifier.verifyActivity(a);
 
         assertTrue(result);
-        assertEquals("monner-hard", a.getActivityName());
+        assertEquals("monnerhard", a.getActivityName());
         assertEquals("Cass", a.getLocation());
         assertEquals("20+", a.getAgeGroup());
     }

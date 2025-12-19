@@ -1,4 +1,4 @@
-package Test;
+package Test.integrationTest;
 
 import Classes.Activity;
 import Controller.*;
@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-
+import Test.FakeTLSEmailSender;
+import Test.FakeActivityProvider;
+import Test.FakeParticipantProvider;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SignupControllerIntegrationTest {

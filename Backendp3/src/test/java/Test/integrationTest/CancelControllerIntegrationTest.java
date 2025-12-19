@@ -1,10 +1,13 @@
-package Test;
+package Test.integrationTest;
 
 import Classes.Activity;
 import Controller.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import Test.FakeTLSEmailSender;
+import Test.FakeActivityProvider;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -72,22 +75,22 @@ public class CancelControllerIntegrationTest {
 
         assertTrue(result.isSuccess());
     // we expect emails sent to the cancelling participant, the promoted participant and the last participant that moves up on our wait list
-        assertEquals(3, fakeSender.sentMails.size());
+        Assertions.assertEquals(3, fakeSender.sentMails.size());
 
 // promoted
-        assertTrue(
+        Assertions.assertTrue(
                 fakeSender.sentMails.stream()
                         .anyMatch(m -> m.to.equals("c@mail.com"))
         );
 
 // canceled
-        assertTrue(
+        Assertions.assertTrue(
                 fakeSender.sentMails.stream()
                         .anyMatch(m -> m.to.equals("a@mail.com"))
         );
 
 // waiting list update
-        assertTrue(
+        Assertions.assertTrue(
                 fakeSender.sentMails.stream()
                         .anyMatch(m -> m.to.equals("d@mail.com"))
         );
