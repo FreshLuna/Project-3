@@ -5,11 +5,13 @@
 3.  Run the Program: ```sh java EchoMultiServer```
 
 ## Coding the project
-1. It is important to run backend and frontend in a different IDE window, Consider installing intelliJ.
-3. The backend files are located in the _backendp3_ folder.
-4. Make sure the backend is running while running the frontend part.
+1. It is important to run backend and frontend in a different terminal, Consider installing intelliJ.
+2. The backend files are located in the _backendp3_ folder.
+3. Make sure the backend is running while running the frontend part.
 
 
 # Trouble shooting:
-if the program doesnt compile most likely the directory for the keystore.jks file is wrong
+If the program doesnt compile most likely the directory for the keystore.jks file is wrong
 you can temporarily use the full path for the file or attempt to troubleshoot yourself.
+
+Open the CONFIGFOLDER and find FilePath. In file path all directories will be listed and can be changed depending on the ide setup 
