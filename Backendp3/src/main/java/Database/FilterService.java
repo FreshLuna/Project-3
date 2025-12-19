@@ -56,7 +56,7 @@ public class FilterService {
         return new ArrayList<>(result);
     }
 
-    public static String filterFromJson2(String body) throws Exception {
+    public static String filterFromJson(String body) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Filter filter = mapper.readValue(body, Filter.class);
         List<Activity> filtered = filterActivities(filter);

@@ -13,7 +13,7 @@ import Controller.SignupController;
 import java.io.IOException;
 import java.util.List;
 
-import static Database.FilterService.filterFromJson2;
+import static Database.FilterService.filterFromJson;
 
 
 public class PostHandler {
@@ -32,7 +32,7 @@ public class PostHandler {
         return switch (path) {
             case "/server/echo" -> body;
 
-            case "/server/filtered" -> filterFromJson2(body);
+            case "/server/filtered" -> filterFromJson(body);
 
             case "/server/participants" -> {
                 SignUpResult result = signupController.processSignup(body);
