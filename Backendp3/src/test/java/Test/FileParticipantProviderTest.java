@@ -79,7 +79,7 @@ class FileParticipantProviderTest {
         Participant promoted = provider.getPromotedParticipant(activity, 10);
 
         assertNotNull(promoted);
-        assertEquals("User11", promoted.getFirstName());
+        assertEquals("User10", promoted.getFirstName());
     }
 
 

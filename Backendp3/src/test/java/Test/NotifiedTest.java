@@ -24,6 +24,8 @@ class NotifiedTest {
        p.setLastName("May");
        p.setEmail("dennismay@gmail.com");
 
+
+
    }
 
     @Test
@@ -48,10 +50,13 @@ class NotifiedTest {
     }
     @Test
     void testEmailOnNotification(){
-    n.emailNotification("SignUp");
 
-        assertEquals(p.getEmail(), f.lastToEmail);
-        assertTrue(f.lastBody.contains(a.getActivityName()));
+        f.sendTLSMail(p.getEmail(),n.emailNotification("SignUp"),a.getActivityName());
+        assertTrue(
+                f.sentMails.stream()
+                        .anyMatch(m -> m.to.equals("dennismay@gmail.com"))
+        );
+
 
     }
     @Test

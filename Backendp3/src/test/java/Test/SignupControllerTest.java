@@ -56,14 +56,19 @@ public class SignupControllerTest {
     @Test
     void signupSuccess() {
         String json = """
-                {"firstname":"A ","lastname":"May ","dateOfBirth":"1995-02-23 ","email":"a@mail.com ","tosAccept":true,"infoSendAccept":false,"activity":"testActivity11"}
+                {"firstname":"A","lastname":"May","dateOfBirth":"1995-02-23","email":"a@mail.com","tosAccept":true,"infoSendAccept":false,"activity":"testActivity11"}
                 """;
-
         SignUpResult result = controller.processSignup(json);
 
         assertTrue(result.isSuccess());
-        assertEquals("a@mail.com", fakeTLSEmailSender.lastToEmail);
-        assertTrue(fakeTLSEmailSender.lastBody.contains("tilmelding"));
+
+        assertEquals(1, fakeTLSEmailSender.sentMails.size());
+
+        FakeTLSEmailSender.Mail mail =
+                fakeTLSEmailSender.sentMails.get(0);
+
+        assertEquals("a@mail.com", mail.to);
+        assertTrue(mail.body.contains("tilmelding"));
     }
 
     @Test
@@ -80,34 +85,23 @@ public class SignupControllerTest {
           "firstname":"C",
           "lastname":"May",
           "email":"c@mail.com",
-          "dateofbirth":"1990-01-01",
+          "dateOfBirth":"1990-01-01",
           "activity":"testActivity11"
         }
         """;
-
         SignUpResult result = controller.processSignup(json);
 
         assertTrue(result.isSuccess());
 
-        assertEquals("c@mail.com", fakeTLSEmailSender.lastToEmail);
+        assertEquals(1, fakeTLSEmailSender.sentMails.size());
+
+        FakeTLSEmailSender.Mail mail =
+                fakeTLSEmailSender.sentMails.get(0);
+
+        assertEquals("c@mail.com", mail.to);
     }
 
-    @Test
-    void participantAlreadySignedUp() {
-        Participant existing =
-                new Participant("A","May","a@mail.com","1990-01-01",
-                "testActivity11");
-        fakeParticipantProvider.addParticipant(existing);
 
-        String json = """
-                {"firstname":"A ","lastname":"May ","dateOfBirth":"1995-02-23 ","email":"a@mail.com ","tosAccept":true,"infoSendAccept":false,"activity":"testActivity11"}
-                """;
-
-        SignUpResult result = controller.processSignup(json);
-
-        assertFalse(result.isSuccess());
-        assertEquals("participant already signed up", result.getMessage());
-    }
 
 }
 

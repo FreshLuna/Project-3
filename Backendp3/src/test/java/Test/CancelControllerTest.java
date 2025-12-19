@@ -80,12 +80,7 @@ class CancelControllerTest {
     void cancelConfirmedParticipant_success() {
 
         String json = """
-                {
-                  "firstname":"A",
-                  "lastname":"May",
-                  "email":"amay@mail.com",
-                  "activity":"Yoga11"
-                }
+                {"firstname":"A","lastname":"May","email":"amay@mail.com","activity":"Yoga11"}
                 """;
 
         CancelResult result = controller.processCancel(json);
@@ -98,12 +93,7 @@ class CancelControllerTest {
     void promotesFirstWaitingListParticipant() {
 
         String json = """
-                {
-                  "firstname":"A",
-                  "lastname":"May",
-                  "email":"amay@mail.com",
-                  "activity":"Yoga11"
-                }
+                {"firstname":"A","lastname":"May","email":"amay@mail.com","activity":"Yoga11"                }
                 """;
 
         controller.processCancel(json);
@@ -119,12 +109,7 @@ class CancelControllerTest {
         activityProvider.getActivity("Yoga11").setWaitingListEnabled(false);
 
         String json = """
-        {
-          "firstname":"A",
-          "lastname":"May",
-          "email":"amay@mail.com",
-          "activity":"Yoga11"
-        }
+        {"firstname":"A","lastname":"May","email":"amay@mail.com", "activity":"Yoga11"}
         """;
 
         controller.processCancel(json);
