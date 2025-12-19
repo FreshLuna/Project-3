@@ -43,7 +43,7 @@ public class FilterService {
 
     private static List<Activity> filterActivities(Filter filter) {
 
-        Set<Activity> result = new LinkedHashSet<>(ActivityService.getActivities());
+        Set<Activity> result = new LinkedHashSet<>(ActivityService.getAllActivities());
 
         for (String field : fieldGetters.keySet()) {
             List<String> selected = filter.getFieldValues(field);
@@ -60,8 +60,6 @@ public class FilterService {
         ObjectMapper mapper = new ObjectMapper();
         Filter filter = mapper.readValue(body, Filter.class);
         List<Activity> filtered = filterActivities(filter);
-        filtered.removeIf(a -> isActivityOpen(a.getActivityNameAndID(), a.getActivityCapacity(), a.getWaitingListEnabled())
-                && !a.getWaitingListEnabled());
         return (getUpcomingActivities(filtered));
     }
 }
